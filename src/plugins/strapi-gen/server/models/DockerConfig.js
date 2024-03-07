@@ -1,0 +1,12 @@
+// models/DockerConfig.js
+// models/DockerConfig.js
+module.exports = {
+    attributes: {
+      databaseClient: { type: 'string', required: true },
+      databaseHost: { type: 'string', required: true },
+      databasePort: { type: 'number', required: true },
+      imageName: { type: 'string', required: true },
+      nodeVersion: { type: 'string', required: true },
+      port: { type: 'number', required: true },
+    },
+  };
