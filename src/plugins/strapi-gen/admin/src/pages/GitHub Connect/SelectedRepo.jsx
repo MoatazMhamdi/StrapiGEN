@@ -5,7 +5,7 @@ import './Git.css';
 
 const SelectedRepo = () => {
   const [repos, setRepos] = useState([]);
-  const [selectedRepo, setSelectedRepo] = useState(null);
+  const [selectedRepo, setSelectedRepo] = useState('');
   const history = useHistory();
 
   useEffect(() => {
@@ -31,8 +31,12 @@ const SelectedRepo = () => {
   };
 
   const handleNextButtonClick = () => {
+    if (!selectedRepo) {
+      console.error('Please select a repository');
+      return;
+    }
     history.push({
-      pathname: '/plugins/strapi-gen/Services',
+      pathname: '/plugins/strapi-gen/DockerConfigForm',
       state: { selectedRepo: selectedRepo }
     });
   };

@@ -21,7 +21,8 @@ const DockerFileGenerator = () => {
     if (!selectedRepo) {
       // Redirect to the previous page or handle this condition accordingly
       console.error('Selected repository not found');
-    }
+    }else
+    console.log('selectedRepo:',selectedRepo)
   }, [selectedRepo]);
 
   const generateDockerFile = async () => {
@@ -43,7 +44,7 @@ const DockerFileGenerator = () => {
         databaseHost,
         databasePort,
         packageManager,
-        selectedRepo // Pass selectedRepo to backend
+        selectedRepo 
       });
 
       if (response.data) {
