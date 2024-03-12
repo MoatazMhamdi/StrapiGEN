@@ -36,6 +36,11 @@ const SelectedRepo = () => {
       return;
     }
     history.push({
+      pathname: '/plugins/strapi-gen/Services',
+      
+    });
+  
+    history.push({
       pathname: '/plugins/strapi-gen/DockerConfigForm',
       state: { selectedRepo: selectedRepo }
     });

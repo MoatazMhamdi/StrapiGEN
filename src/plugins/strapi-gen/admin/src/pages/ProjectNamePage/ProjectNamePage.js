@@ -24,6 +24,9 @@ const ProjectNamePage = () => {
     history.push('/plugins/strapi-gen/GitConnect');
   };
   
+  // Conditionally enable confirm button
+  const isConfirmButtonDisabled = projectName.trim() === '';
+
   return (
     <div className="container-fluid">
       <div>
@@ -42,7 +45,11 @@ const ProjectNamePage = () => {
             placeholder={inputFocused ? '' : 'Write your project name here'}
             className="project-name-input"
           />
-          <button className="confirm-button" onClick={handleConfirm}>
+          <button
+            className="confirm-button"
+            onClick={handleConfirm}
+            disabled={isConfirmButtonDisabled}
+          >
             CONFIRM
           </button>
         </div>
