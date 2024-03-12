@@ -6,6 +6,7 @@ import { FaDocker } from "react-icons/fa";
 import { FaProjectDiagram } from "react-icons/fa";
 import { FiBox } from "react-icons/fi";
 import { FaDatabase } from "react-icons/fa";
+import strapigenImage from './logoStrapiGen.png'; // Import the image
 
 
 const OverViewPage = () => {
@@ -15,6 +16,8 @@ const OverViewPage = () => {
     <div>
       <header className="header">
         <div className="logo-container">
+        {/* <img src={strapigenImage} alt="StrapiGEN" className="strapigen-image" /> Image */}
+
           <h1 className="header-title">StrapiGen Plugin</h1>
         </div>
         <nav className="nav">

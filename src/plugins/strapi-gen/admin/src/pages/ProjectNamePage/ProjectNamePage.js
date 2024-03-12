@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './ProjectNamePage.css';
 import { useHistory } from 'react-router-dom';
+import strapigenImage from './logoStrapiGen.png'; // Import the image
+
 
 const ProjectNamePage = () => {
   const [projectName, setProjectName] = useState('');
@@ -30,6 +32,8 @@ const ProjectNamePage = () => {
   return (
     <div className="container-fluid">
       <div>
+      <img src={strapigenImage} alt="StrapiGEN" className="strapigen-image" /> {/* Image */}
+
         <h1>
           First, we need to choose a name for our project
         </h1>

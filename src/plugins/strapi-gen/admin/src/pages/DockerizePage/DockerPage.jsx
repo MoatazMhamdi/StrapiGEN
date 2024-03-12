@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './DockerFileGenerator.css';
 import axios from 'axios';
-import { useLocation} from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 const DockerFileGenerator = () => {
-  const location = useLocation(); // Use useLocation hook
-  const selectedRepo = location.state ? location.state.selectedRepo : null; // Access selectedRepo from location.state
+  const location = useLocation();
+  const history = useHistory();
+
+  const selectedRepo = location.state ? location.state.selectedRepo : null;
 
   const [port, setPort] = useState('');
   const [imageName, setImageName] = useState('');
@@ -15,19 +17,17 @@ const DockerFileGenerator = () => {
   const [databasePort, setDatabasePort] = useState('');
   const [dockerfileContent, setDockerfileContent] = useState('');
   const [packageManager, setPackageManager] = useState('');
+  const [appKeys, setAppKeys] = useState('');
+  const [nodeEnv, setNodeEnv] = useState('');
 
   useEffect(() => {
-    // Check if selectedRepo is available
     if (!selectedRepo) {
-      // Redirect to the previous page or handle this condition accordingly
       console.error('Selected repository not found');
-    }else
-    console.log('selectedRepo:',selectedRepo)
+    }
   }, [selectedRepo]);
 
   const generateDockerFile = async () => {
     try {
-      // Validation checks and axios request
       if (port === '' || isNaN(port) || parseInt(port) < 0 || parseInt(port) > 9999) {
         throw new Error('Port number must be a valid number between 0 and 9999.');
       }
@@ -44,27 +44,42 @@ const DockerFileGenerator = () => {
         databaseHost,
         databasePort,
         packageManager,
+        appKeys,
+        nodeEnv,
         selectedRepo 
       });
 
       if (response.data) {
         const data = response.data;
         setDockerfileContent(data.message);
+        alert('Dockerization successful!');
+        history.push('/plugins/strapi-gen/Overview');
       } else {
         throw new Error('Error while generating Dockerfile');
       }
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      alert('Dockerization failed: ' + error.message);
     }
   };
+
+  const nodeVersions = [
+    '12.x.x',
+    '14.x.x',
+    '16.x.x',
+    '18.x.x',
+    '20.x.x'
+  ];
 
   return (
     <div className="docker-file-generator-container">
       <div className="docker-file-generator-content">
-        <h2 className="docker-file-generator-title"><strong>Dockerize Your Project</strong></h2>
+        <h2 className="docker-file-generator-title"><strong>Dockerize Your Project 🐳</strong></h2>
         <p className="docker-file-generator-description">Add modifications to your Dockerfile and Docker Compose.</p>
+        <p className="docker-file-generator-description">when you finish Dockerize your project , you'll automaticaly generate Dockerfile / docker-compose.yml in your Selected Repository: <strong> {selectedRepo}</strong></p>
+
         <div className="docker-file-generator-inputs" style={{ marginTop: '30px', marginBottom: '30px' }}>
+          
           <div className="docker-file-generator-input">
             <label htmlFor="port" className="docker-file-generator-label">Port:</label>
             <input
@@ -78,6 +93,7 @@ const DockerFileGenerator = () => {
               max="9999"
             />
           </div>
+          {/* Image Name */}
           <div className="docker-file-generator-input">
             <label htmlFor="imageName" className="docker-file-generator-label">Image Name:</label>
             <input
@@ -89,17 +105,22 @@ const DockerFileGenerator = () => {
               className="docker-file-generator-input-field"
             />
           </div>
+          {/* Node Version */}
           <div className="docker-file-generator-input">
-            <label htmlFor="NodeVersion" className="docker-file-generator-label">Node Version:</label>
-            <input
-              type="text"
-              id="NodeVersion"
+            <label htmlFor="nodeVersion" className="docker-file-generator-label">Node Version:</label>
+            <select
+              id="nodeVersion"
               value={nodeVersion}
               onChange={(e) => setNodeVersion(e.target.value)}
-              placeholder="Enter your Node Version"
               className="docker-file-generator-input-field"
-            />
+            >
+              <option value="">Select Node Version</option>
+              {nodeVersions.map(version => (
+                <option key={version} value={version}>{version}</option>
+              ))}
+            </select>
           </div>
+          {/* Database Client */}
           <div className="docker-file-generator-input">
             <label htmlFor="databaseClient" className="docker-file-generator-label">Database Client:</label>
             <input
@@ -111,6 +132,7 @@ const DockerFileGenerator = () => {
               className="docker-file-generator-input-field"
             />
           </div>
+          {/* Database Host */}
           <div className="docker-file-generator-input">
             <label htmlFor="databaseHost" className="docker-file-generator-label">Database Host:</label>
             <input
@@ -122,6 +144,7 @@ const DockerFileGenerator = () => {
               className="docker-file-generator-input-field"
             />
           </div>
+          {/* Database Port */}
           <div className="docker-file-generator-input">
             <label htmlFor="databasePort" className="docker-file-generator-label">Database Port:</label>
             <input
@@ -133,6 +156,7 @@ const DockerFileGenerator = () => {
               className="docker-file-generator-input-field"
             />
           </div>
+          {/* Package Manager */}
           <div className="docker-file-generator-input">
             <label htmlFor="packageManager" className="docker-file-generator-label">Package Manager:</label>
             <select
@@ -145,6 +169,30 @@ const DockerFileGenerator = () => {
               <option value="npm">npm</option>
               <option value="yarn">yarn</option>
             </select>
+          </div>
+          {/* App Keys */}
+          <div className="docker-file-generator-input">
+            <label htmlFor="appKeys" className="docker-file-generator-label">App Keys:</label>
+            <input
+              type="text"
+              id="appKeys"
+              value={appKeys}
+              onChange={(e) => setAppKeys(e.target.value)}
+              placeholder="Enter app keys"
+              className="docker-file-generator-input-field"
+            />
+          </div>
+          {/* Node Environment */}
+          <div className="docker-file-generator-input">
+            <label htmlFor="nodeEnv" className="docker-file-generator-label">Node Environment:</label>
+            <input
+              type="text"
+              id="nodeEnv"
+              value={nodeEnv}
+              onChange={(e) => setNodeEnv(e.target.value)}
+              placeholder="Enter node environment"
+              className="docker-file-generator-input-field"
+            />
           </div>
         </div>
         <button onClick={generateDockerFile} className="docker-file-generator-button">Dockerize !</button>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import './Git.css';
+import { RiGithubFill } from 'react-icons/ri';
 
 const SelectedRepo = () => {
   const [repos, setRepos] = useState([]);
@@ -35,38 +36,39 @@ const SelectedRepo = () => {
       console.error('Please select a repository');
       return;
     }
-    history.push({
-      pathname: '/plugins/strapi-gen/Services',
-      
-    });
   
     history.push({
-      pathname: '/plugins/strapi-gen/DockerConfigForm',
+      pathname: '/plugins/strapi-gen/Services',
       state: { selectedRepo: selectedRepo }
     });
   };
 
   return (
     <div className="container-fluid">
-      <div>
-        <h1>Select your Github Repository</h1>
-        <p>Choose a repository to push the generated code to.</p>
-        <div className="select-container">
-          <select onChange={(e) => handleRepoSelect(e)}>
-            <option value="">Select a repository</option>
-            {repos.map((repo) => (
-              <option key={repo.id} value={repo.full_name}>
-                {repo.full_name}
-              </option>
-            ))}
-          </select>
-        </div>
-        {selectedRepo && (
-          <div>
-            <p>Selected Repository: {selectedRepo}</p>
+      <div className="center-container">
+        {/* <div className="github-icon">
+          <RiGithubFill size={50} color="#f9f9f9" />
+        </div> */}
+        <div>
+          <h1>Select your Github Repository</h1>
+          <p>Choose a repository to push the generated code to.</p>
+          <div className="select-container">
+            <select onChange={(e) => handleRepoSelect(e)}>
+              <option value="">Select a repository</option>
+              {repos.map((repo) => (
+                <option key={repo.id} value={repo.full_name}>
+                  {repo.full_name}
+                </option>
+              ))}
+            </select>
           </div>
-        )}
-        <button onClick={handleNextButtonClick}>Next</button>
+          {selectedRepo && (
+            <div>
+              <p>Selected Repository: {selectedRepo}</p>
+            </div>
+          )}
+          <button onClick={handleNextButtonClick}>Next</button>
+        </div>
       </div>
     </div>
   );

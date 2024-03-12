@@ -1,14 +1,19 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory ,useLocation} from "react-router-dom";
 import pluginId from "../../pluginId";
 import './AddEntity.css';
 
 const AddEntity = () => {
-  const history = useHistory(); // Import de useHistory
+  const history = useHistory();
+  const location = useLocation();
+  const selectedRepo = location.state ? location.state.selectedRepo : null;
 
   // Fonction de redirection vers AddAuthPage
   const redirectToAddAuth = () => {
-    history.push("/plugins/strapi-gen/AddAuth");
+    history.push({
+      pathname: '/plugins/strapi-gen/AddAuth',
+      state: { selectedRepo: selectedRepo }
+    });
   };
 
   return (

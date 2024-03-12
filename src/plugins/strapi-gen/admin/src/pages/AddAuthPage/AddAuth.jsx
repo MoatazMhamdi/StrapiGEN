@@ -1,14 +1,19 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory ,useLocation} from "react-router-dom";
 import pluginId from "../../pluginId";
 import './AddAuth.css';
 
 const AddAuthPage = () => {
-  const history = useHistory(); // Import de useHistory
+  const history = useHistory();
+  const location = useLocation();
+  const selectedRepo = location.state ? location.state.selectedRepo : null; // Import de useHistory
 
   // Fonction de redirection vers ServiceManagementPage
   const redirectToServiceManagement = () => {
-    history.push("/plugins/strapi-gen/ServiceManagement");
+    history.push({
+      pathname: '/plugins/strapi-gen/ServiceManagement',
+      state: { selectedRepo: selectedRepo }
+    });
   };
 
   return (

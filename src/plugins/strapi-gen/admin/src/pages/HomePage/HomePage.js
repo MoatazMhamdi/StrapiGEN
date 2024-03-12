@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import './HomePage.css';
+import strapigenImage from './logoStrapiGen.png'; // Import the image
 
 const HomePage = () => {
   const history = useHistory();
@@ -12,6 +13,7 @@ const HomePage = () => {
   return (
     <div className="container-fluid">
       <div>
+        <img src={strapigenImage} alt="StrapiGEN" className="strapigen-image" /> {/* Image */}
         <h1>
           Welcome to <span>StrapiGEN</span>
         </h1>

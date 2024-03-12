@@ -28,7 +28,7 @@ const App = () => {
         <Route path="/plugins/strapi-gen/ServiceManagement" component={ServiceManagementPage} />
         <Route path="/plugins/strapi-gen/selectedrepository" component={SelectedRepo} />
 
-        plugins/strapi-gen/selectedrepository
+     
         <Route path="/plugins/strapi-gen/Overview" component={OverViewPage} />
 
         <Route component={AnErrorOccurred} />

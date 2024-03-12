@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory,useLocation } from "react-router-dom";
 
 const ServiceManagementPage = () => {
   const history = useHistory();
+
+  const location = useLocation();
+  const selectedRepo = location.state ? location.state.selectedRepo : null;
+
   const redirectToOverview = () => {
     history.push("/plugins/strapi-gen/Overview");
   };
   const handleDockerizeProject = () => {
-    history.push("/plugins/strapi-gen/DockerConfigForm");
+    history.push({
+      pathname: '/plugins/strapi-gen/DockerConfigForm',
+      state: { selectedRepo: selectedRepo }
+    });
   };
   return (
     <div className="home-page">

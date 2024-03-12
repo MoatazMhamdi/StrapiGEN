@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import './Services.css';
 import { Switch } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { useHistory,useLocation } from 'react-router-dom';
 
 const ServicesType = () => {
   const [toggleChecked, setToggleChecked] = useState(false);
   const history = useHistory();
+  const location = useLocation();
+  const selectedRepo = location.state ? location.state.selectedRepo : null;
 
   const handleToggleChange = (checked) => {
     setToggleChecked(checked);
@@ -13,7 +15,10 @@ const ServicesType = () => {
 
   const handleNextButtonClick = () => {
     // Navigate to the next page
-    history.push('/plugins/strapi-gen/Entities');
+    history.push({
+      pathname: '/plugins/strapi-gen/Entities',
+      state: { selectedRepo: selectedRepo }
+    });
   };
  
   return (
