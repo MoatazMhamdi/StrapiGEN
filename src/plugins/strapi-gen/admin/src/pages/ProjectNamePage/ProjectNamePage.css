@@ -64,6 +64,16 @@
 }
 
 .strapigen-image {
-  width: 200px; 
+  width: 300px; 
   margin-top: 50px; 
+}
+.project-name-input {
+  width: 300px; /* Adjust width as needed */
+  height: 40px; /* Adjust height as needed */
+  border-radius: 8px; /* Adjust corner radius as needed */
+  border: 2px solid #333; /* Adjust border color to make it darker */
+  padding: 10px; /* Adjust padding as needed */
+  font-size: 16px; /* Adjust font size as needed */
+  background-color: #222; /* Adjust background color to make it darker */
+  color: #fff; /* Text color */
 }

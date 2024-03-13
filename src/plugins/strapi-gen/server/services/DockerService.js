@@ -91,12 +91,12 @@ module.exports = {
       }
     });
 
-    const responseDockerfile = await octokit.put(`/repos/${selectedRepo}/contents/docker2/Dockerfile`, {
+    const responseDockerfile = await octokit.put(`/repos/${selectedRepo}/contents/docker22/Dockerfile`, {
       message: 'Add Dockerfile',
       content: Buffer.from(dockerfileContent).toString('base64')
     });
 
-    const responseDockerCompose = await octokit.put(`/repos/${selectedRepo}/contents/docker2/docker-compose.yml`, {
+    const responseDockerCompose = await octokit.put(`/repos/${selectedRepo}/contents/docker22/docker-compose.yml`, {
       message: 'Add docker-compose.yml',
       content: Buffer.from(dockerComposeContent).toString('base64')
     });

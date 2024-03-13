@@ -52,14 +52,14 @@ const DockerFileGenerator = () => {
       if (response.data) {
         const data = response.data;
         setDockerfileContent(data.message);
-        alert('Dockerization successful!');
-        history.push('/plugins/strapi-gen/Overview');
+        
+        history.push('/plugins/strapi-gen/dockersuccess');
       } else {
         throw new Error('Error while generating Dockerfile');
       }
     } catch (error) {
       console.error(error);
-      alert('Dockerization failed: ' + error.message);
+      alert('Your project is already dockerized, ' + error.message);
     }
   };
 
@@ -74,9 +74,9 @@ const DockerFileGenerator = () => {
   return (
     <div className="docker-file-generator-container">
       <div className="docker-file-generator-content">
-        <h2 className="docker-file-generator-title"><strong>Dockerize Your Project 🐳</strong></h2>
+        <h2 className="docker-file-generator-title" style={{ fontSize: '3rem' , marginBottom: '20px'}}><strong>Dockerize Your Project 🐳</strong></h2>
         <p className="docker-file-generator-description">Add modifications to your Dockerfile and Docker Compose.</p>
-        <p className="docker-file-generator-description">when you finish Dockerize your project , you'll automaticaly generate Dockerfile / docker-compose.yml in your Selected Repository: <strong> {selectedRepo}</strong></p>
+        <p className="docker-file-generator-description">When you finish Dockerize your project , you'll automaticaly generate Dockerfile / docker-compose.yml in your Selected Repository: <strong> {selectedRepo}</strong></p>
 
         <div className="docker-file-generator-inputs" style={{ marginTop: '30px', marginBottom: '30px' }}>
           

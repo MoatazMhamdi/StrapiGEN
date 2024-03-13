@@ -11,6 +11,8 @@ import AddAuthPage from '../AddAuthPage/AddAuth';
 import ServiceManagementPage from '../ServiceManagement/ServiceManagmentPage';
 import OverViewPage from '../OverviewPage/OverViewPage';
 import DockerFileGenerator from '../DockerizePage/DockerPage'
+import DockerizationSuccessPage from '../DockerizePage/dockerizeSuccessfully'
+
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
       <Switch>
         <Route path="/plugins/strapi-gen" component={HomePage} exact />
         <Route path="/plugins/strapi-gen/ProjectName" component={ProjectNamePage} />
+        <Route path="/plugins/strapi-gen/dockersuccess" component={DockerizationSuccessPage} />
+
         <Route path="/plugins/strapi-gen/GitConnect" component={GitConnect} />
 
         <Route path="/plugins/strapi-gen/Services" component={ServicesType} />
