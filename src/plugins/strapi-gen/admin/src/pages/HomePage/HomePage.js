@@ -17,12 +17,12 @@ const HomePage = () => {
   return (
     <div className="docker-file-generator-container">
       <div className="docker-file-generator-content">
-        <img 
-          src={strapigenImage} 
-          alt="StrapiGEN" 
-          className="strapigen-image" 
-          style={{ width: '350px', height: 'auto', marginBottom: '-80px'}} // Adjusted width and height
-        /> {/* Image */}
+          <img 
+            src={strapigenImage} 
+            alt="StrapiGEN" 
+            className="strapigen-image" 
+            style={{ width: '350px', height: 'auto', marginBottom: '-80px'}} // Adjusted width and height
+          /> {/* Image */}
         {/* <img 
           src={apipic} 
           alt="apipic" 
@@ -32,7 +32,7 @@ const HomePage = () => {
         <h1>
           Welcome to <span>Strapi-Gen 🚀</span>
         </h1>
-        <p style={{ marginBottom: '30px'}}>Let's help you create new web Services  </p>
+        <p style={{ marginBottom: '30px'}}>Let's help you generate new web Services, Dockerize your backend project and keep it updated with your git !   </p>
         <button
           className="docker-file-generator-button" // Use the same button style as in DockerizationSuccessPage
           onClick={handleStartClick}

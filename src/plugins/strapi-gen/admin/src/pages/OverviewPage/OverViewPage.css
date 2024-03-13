@@ -4,7 +4,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #333;
+  background-color: #212134;
   color: #fff;
 }
 
@@ -41,11 +41,11 @@
   text-decoration: none;
   position: relative; /* Position relative for ::before pseudo-element */
   font-family: sans-serif;
-  transition:  0.3s; /* Add transition for smooth animation */
-  -webkit-transition: 03s;
-  -moz-transition: 0.3s;
-  -ms-transition: 0.3s;
-  -o-transition: 0.3s;
+  transition:  0.2s; /* Add transition for smooth animation */
+  -webkit-transition: 02s;
+  -moz-transition: 0.2s;
+  -ms-transition: 0.2s;
+  -o-transition: 0.2s;
 }
 
 

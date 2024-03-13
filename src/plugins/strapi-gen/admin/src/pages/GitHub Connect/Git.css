@@ -1,15 +1,16 @@
+/* Git.css */
 .container-fluid {
-  min-height: 100vh;
-  background: #1a1d29;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
+  background-color: #212134; /* Dark background color */
+  color: #f9f9f9;
 }
 
 .container-fluid > div {
   max-width: 400px;
   width: 100%;
-  color: #f9f9f9;
 }
 
 .github-container {
@@ -17,8 +18,9 @@
   border-radius: 20px;
   padding: 20px;
   margin-top: 20px;
-  display: flex; 
+  display: flex;
   align-items: center;
+  justify-content: center; /* Center the content horizontally */
 }
 
 .github-content {
@@ -27,7 +29,7 @@
 }
 
 .github-text {
-  margin-left: 10px; 
+  margin-left: 10px;
 }
 
 .github-icon {
@@ -35,11 +37,11 @@
 }
 
 .connect-button {
-  font-size: 16px; /* Adjust font size */
-  font-weight: bold; /* Set font weight to bold */
+  font-size: 16px;
+  font-weight: bold;
   background-color: #01deaf;
   color: #4d4747;
-  padding: 10px 20px; /* Adjust padding */
+  padding: 10px 20px;
   border-radius: 20px;
   border: none;
   outline: none;
@@ -52,29 +54,4 @@
 
 .toggle-container {
   margin-top: 20px;
-   /* Add margin to separate from GitHub content */
-}
-
-/* Add the following styles to enhance select dropdown */
-.select-container {
-  margin-top: 20px; /* Add margin to separate from other content */
-}
-
-.select-container select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 10px; /* Adding corner radius */
-  border: 1px solid #333; /* Darkening the border */
-  background-color: #333; /* Dark background color */
-  color: #fff; /* Light text color */
-  font-size: 16px;
-  outline: none;
-}
-
-.select-container select:hover {
-  border-color: #aaa; /* Lighter border on hover */
-}
-
-.select-container select:focus {
-  border-color: #01deaf; /* Custom focus color */
 }

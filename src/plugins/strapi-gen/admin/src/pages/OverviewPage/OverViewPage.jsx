@@ -18,7 +18,7 @@ const OverViewPage = () => {
         <div className="logo-container">
         {/* <img src={strapigenImage} alt="StrapiGEN" className="strapigen-image" /> Image */}
 
-          <h1 className="header-title">StrapiGen Plugin</h1>
+          <h1 className="header-title"style={{ color:'#029d89'}}><strong>StrapiGen Plugin</strong></h1>
         </div>
         <nav className="nav">
           <ul className="menu">
@@ -34,9 +34,15 @@ const OverViewPage = () => {
             <li className={`menu-item ${location.pathname === '/data-model' ? 'selected' : ''}`}>
               <Link to="/data-model">Data Model</Link>
             </li>
+
             <li className={`menu-item ${location.pathname === '/docker-files' ? 'selected' : ''}`}>
               <Link to="/docker-files">Docker Files</Link>
             </li>
+
+            <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/faq_section' ? 'selected' : ''}`}>
+              <Link to="/plugins/strapi-gen/faq_section">FAQ</Link>
+            </li>
+
             <li className={`menu-item ${location.pathname === '/sync-with-git' ? 'selected' : ''}`}>
               <Link to="/sync-with-git">Sync with Git</Link>
             </li>

@@ -10,8 +10,10 @@ import AddEntity from '../AddEntityPage/AddEntity';
 import AddAuthPage from '../AddAuthPage/AddAuth';
 import ServiceManagementPage from '../ServiceManagement/ServiceManagmentPage';
 import OverViewPage from '../OverviewPage/OverViewPage';
-import DockerFileGenerator from '../DockerizePage/DockerPage'
-import DockerizationSuccessPage from '../DockerizePage/dockerizeSuccessfully'
+import DockerFileGenerator from '../DockerizePage/DockerPage';
+import DockerizationSuccessPage from '../DockerizePage/dockerizeSuccessfully';
+import FAQPage from '../FAQ_Section/FAQpage';
+
 
 
 const App = () => {
@@ -31,6 +33,8 @@ const App = () => {
         <Route path="/plugins/strapi-gen/AddAuth" component={AddAuthPage} />
         <Route path="/plugins/strapi-gen/ServiceManagement" component={ServiceManagementPage} />
         <Route path="/plugins/strapi-gen/selectedrepository" component={SelectedRepo} />
+        <Route path="/plugins/strapi-gen/faq_section" component={FAQPage} />
+
 
      
         <Route path="/plugins/strapi-gen/Overview" component={OverViewPage} />
