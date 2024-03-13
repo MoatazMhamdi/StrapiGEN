@@ -27,7 +27,7 @@ const GitConnect = () => {
     <div className="container-fluid">
       <div>
         <h1>
-          Let's connect to a Git Repository
+          Let's connect to a Git Repository 🌌
         </h1>
         <p>StrapiGEN automatically pushes the generated code of your service to a git repository.</p>
         <div className="github-container">
