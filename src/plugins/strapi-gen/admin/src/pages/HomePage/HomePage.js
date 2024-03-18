@@ -22,12 +22,7 @@ const HomePage = () => {
             className="strapigen-image" 
             style={{ width: '350px', height: 'auto', marginBottom: '-80px'}} // Adjusted width and height
           /> {/* Image */}
-        {/* <img 
-          src={apipic} 
-          alt="apipic" 
-          className="apipic-image" 
-          style={{ width: '350px', height: 'auto', marginBottom: '-80px'}} // Adjusted width and height
-        /> Image */}
+        
         <h1>
           Welcome to <span>Strapi-Gen 🚀</span>
         </h1>

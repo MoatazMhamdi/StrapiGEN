@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory,useLocation } from "react-router-dom";
+import strapigenImage from './logoStrapiGen.png'; // Import the image
 
 const ServiceManagementPage = () => {
   const history = useHistory();
@@ -18,6 +19,12 @@ const ServiceManagementPage = () => {
   };
   return (
     <div className="home-page">
+       <img 
+            src={strapigenImage} 
+            alt="StrapiGEN" 
+            className="strapigen-image" 
+            style={{ width: '400px', height: 'auto', marginBottom: '-70px', marginTop: '-100px'}} // Adjusted width and height
+          /> {/* Image */}
       <div className="title-section">
         <h2>Service created successfully<span role="img" aria-label="Congratulations" style={{ fontSize: "1.5rem", marginLeft: "10px" }}>🎉</span></h2>
         <p>What should we do next?</p>

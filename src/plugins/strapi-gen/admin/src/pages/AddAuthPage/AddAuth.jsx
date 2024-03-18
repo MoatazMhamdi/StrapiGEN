@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory ,useLocation} from "react-router-dom";
-import pluginId from "../../pluginId";
+import strapigenImage from './logoStrapiGen.png'; // Import the image
 import './AddAuth.css';
 
 const AddAuthPage = () => {
@@ -18,18 +18,24 @@ const AddAuthPage = () => {
 
   return (
     <div className="home-page">
+       <img 
+            src={strapigenImage} 
+            alt="StrapiGEN" 
+            className="strapigen-image" 
+            style={{ width: '400px', height: 'auto', marginBottom: '-70px', marginTop: '-100px'}} // Adjusted width and height
+          /> {/* Image */}
       <div className="title-section">
-        <h2>Does your service need Authentication?</h2>
+        <h2>🚀 Does your service need Authentication 🚀</h2>
         <p>Choose whether or not to enable authentication and authorization for your service.</p>
       </div>
       <div className="flex space-x-10">
         {/* Ajoutez un onClick pour déclencher la redirection vers ServiceManagementPage */}
         <div className="box" onClick={redirectToServiceManagement}>
-          <h3>Include Auth Module</h3>
+          <h3 style={{color:'#029d89', marginBottom:'30px'}}>Include Auth Module</h3>
           <p>Generate the code needed for authentication and authorization.</p>
         </div>
         <div className="box" onClick={redirectToServiceManagement}>
-          <h3>Skip Auth Module</h3>
+          <h3 style={{color:'#029d89', marginBottom:'30px'}}>Skip Auth Module</h3>
           <p>Do not include code for authentication.</p>
         </div>
       </div>
