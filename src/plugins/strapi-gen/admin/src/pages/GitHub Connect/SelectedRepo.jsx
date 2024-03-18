@@ -43,7 +43,7 @@ const SelectedRepo = () => {
   };
 
   return (
-    <div className="container-fluid">
+    <div className="docker-file-generator-container" style={{marginTop: '30px'}}>
       <div className="center-container">
         <h1>Select your Github Repository</h1>
         <p>Choose a repository to push the generated code to.</p>

@@ -10,7 +10,7 @@ module.exports = {
   generateDockerFiles: async (configData, imageName, nodeVersion, port) => {
   try {
     // Extraire les données de configuration
-    const { databaseClient, databaseHost, databasePort, appKeys, nodeEnv ,packageManager,selectedRepo,imageName} = configData;
+    const { databaseClient, databaseHost, databasePort, appKeys, nodeEnv ,packageManager,selectedRepo,imageName,port} = configData;
 
     // Logique pour générer le contenu du Dockerfile
     const dockerfileContent = `FROM ${imageName}:v20.5.0-alpine
