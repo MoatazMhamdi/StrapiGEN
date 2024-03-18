@@ -2,7 +2,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import './HomePage.css';
 import strapigenImage from './logoStrapiGen.png'; // Import the image
-import apipic from './api.png'; // Import the image
 
 import './DockerFileGenerator.css'; // Import CSS for styling
 
@@ -11,7 +10,7 @@ const HomePage = () => {
   const history = useHistory();
 
   const handleStartClick = () => {
-    history.push('/plugins/strapi-gen/ProjectName');
+    history.push('/plugins/strapi-gen/GitConnect');
   };
 
   return (

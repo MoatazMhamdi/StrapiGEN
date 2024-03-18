@@ -10,10 +10,10 @@ module.exports = {
   generateDockerFiles: async (configData, imageName, nodeVersion, port) => {
   try {
     // Extraire les données de configuration
-    const { databaseClient, databaseHost, databasePort, appKeys, nodeEnv ,packageManager,selectedRepo} = configData;
+    const { databaseClient, databaseHost, databasePort, appKeys, nodeEnv ,packageManager,selectedRepo,imageName} = configData;
 
     // Logique pour générer le contenu du Dockerfile
-    const dockerfileContent = `FROM ${imageName}:${nodeVersion}-alpine
+    const dockerfileContent = `FROM ${imageName}:v20.5.0-alpine
 
     # Ajoutez d'autres instructions Docker en fonction de votre configuration
 
@@ -91,12 +91,12 @@ module.exports = {
       }
     });
 
-    const responseDockerfile = await octokit.put(`/repos/${selectedRepo}/contents/docker22/Dockerfile`, {
+    const responseDockerfile = await octokit.put(`/repos/${selectedRepo}/contents/Docker-Strapigen/Dockerfile`, {
       message: 'Add Dockerfile',
       content: Buffer.from(dockerfileContent).toString('base64')
     });
 
-    const responseDockerCompose = await octokit.put(`/repos/${selectedRepo}/contents/docker22/docker-compose.yml`, {
+    const responseDockerCompose = await octokit.put(`/repos/${selectedRepo}/contents/Docker-Strapigen/docker-compose.yml`, {
       message: 'Add docker-compose.yml',
       content: Buffer.from(dockerComposeContent).toString('base64')
     });

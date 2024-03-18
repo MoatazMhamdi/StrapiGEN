@@ -1,24 +1,30 @@
-// OverViewPage.js
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import './OverViewPage.css'; // Make sure to import your CSS file
+import './OverViewPage.css';
 import { FaDocker } from "react-icons/fa";
 import { FaProjectDiagram } from "react-icons/fa";
 import { FiBox } from "react-icons/fi";
 import { FaDatabase } from "react-icons/fa";
-import strapigenImage from './logoStrapiGen.png'; // Import the image
-
+import strapigenImage from './logoStrapiGen.png';
 
 const OverViewPage = () => {
   const location = useLocation();
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
+  const [darkMode, setDarkMode] = useState(false); // State for dark mode
+
+  const toggleSettingsMenu = () => {
+    setShowSettingsMenu(!showSettingsMenu);
+  };
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode); // Toggle dark mode state
+  };
 
   return (
-    <div>
+    <div className={darkMode ? 'dark-mode' : ''}> {/* Apply dark mode class if dark mode is enabled */}
       <header className="header">
         <div className="logo-container">
-        {/* <img src={strapigenImage} alt="StrapiGEN" className="strapigen-image" /> Image */}
-
-          <h1 className="header-title"style={{ color:'#029d89'}}><strong>StrapiGen Plugin</strong></h1>
+          <h1 className="header-title" style={{ color:'#029d89'}}><strong>StrapiGen Plugin </strong><span>Dashboard</span></h1>
         </div>
         <nav className="nav">
           <ul className="menu">
@@ -34,28 +40,35 @@ const OverViewPage = () => {
             <li className={`menu-item ${location.pathname === '/data-model' ? 'selected' : ''}`}>
               <Link to="/data-model">Data Model</Link>
             </li>
-
-            <li className={`menu-item ${location.pathname === '/docker-files' ? 'selected' : ''}`}>
-              <Link to="/docker-files">Docker Files</Link>
+            <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/DockerConfigForm' ? 'selected' : ''}`}>
+              <Link to="/plugins/strapi-gen/DockerConfigForm">Docker Files</Link>
             </li>
+            <li className={`menu-item settings ${location.pathname === '/settings' || showSettingsMenu ? 'selected' : ''}`}>
+              <div onClick={toggleSettingsMenu}>Settings</div>
+              {showSettingsMenu && (
+                <ul className="settings-menu">
+                  <li>
+                    <Link to="/settings">dark mode </Link>
+                  </li>
+                  <li>
+                    <Link to="/settings">change git repo</Link>
+                  </li>
+                </ul>
+              )}
+            </li>
+
 
             <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/faq_section' ? 'selected' : ''}`}>
               <Link to="/plugins/strapi-gen/faq_section">FAQ</Link>
             </li>
-
-            <li className={`menu-item ${location.pathname === '/sync-with-git' ? 'selected' : ''}`}>
-              <Link to="/sync-with-git">Sync with Git</Link>
-            </li>
-            <li className={`menu-item ${location.pathname === '/settings' ? 'selected' : ''}`}>
-              <Link to="/settings">Settings</Link>
-            </li>
+           
           </ul>
         </nav>
       </header>
       <div className="box-container">
         <div className="github-box">
           <div className="box-header">
-          <FaDatabase className="github-icon" /> {/* Icon */}
+            <FaDatabase className="github-icon" />
             <h2>Entities</h2>
             <p>Declare the data models for your application</p>
           </div>
@@ -65,8 +78,7 @@ const OverViewPage = () => {
       <div className="box-container">
         <div className="github-box">
           <div className="box-header">
-          <FiBox className="github-icon" /> {/* Icon */}
-
+            <FiBox className="github-icon" />
             <h2>Services</h2>
             <p>Build your Services for your application</p>
           </div>
@@ -76,24 +88,25 @@ const OverViewPage = () => {
       <div className="box-container">
         <div className="github-box">
           <div className="box-header">
-          <FaProjectDiagram className="github-icon" /> {/* Icon */}
-
+            <FaProjectDiagram className="github-icon" />
             <h2>Data Models</h2>
-            <p>Visulize your Data Models and manipulate it as you want</p>
+            <p>Visualize your Data Models and manipulate them as you want</p>
           </div>
-          <button className="connect-button">Visulize</button>
+          <button className="connect-button">Visualize</button>
         </div>
       </div>
       <div className="box-container">
         <div className="github-box">
           <div className="box-header">
-          <FaDocker className="github-icon" /> {/* Icon */}
-
+            <FaDocker className="github-icon" />
             <h2>Docker File</h2>
             <p>Generate your Docker file and Docker-composer.</p>
           </div>
           <button className="connect-button">Generate</button>
         </div>
+      </div>
+      <div className="toggle-dark-mode"> {/* Toggle dark mode button */}
+        <button onClick={toggleDarkMode}>{darkMode ? 'Light Mode' : 'Dark Mode'}</button>
       </div>
     </div>
   );

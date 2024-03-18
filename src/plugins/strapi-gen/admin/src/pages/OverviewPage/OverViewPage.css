@@ -1,4 +1,3 @@
-/* Header.css */
 .header {
   display: flex;
   justify-content: space-between;
@@ -22,14 +21,45 @@
   list-style-type: none;
   padding: 0;
 }
-.nav ul li{
+
+.menu {
+  display: flex;
   list-style-type: none;
-  font-weight: bold;
-  display: inline-block;
-  padding: 5px 10px;
+  padding: 0;
 }
+
 .menu-item {
   margin-right: 20px;
+  position: relative; /* Position relative for dropdown */
+}
+
+.settings-menu {
+  position: absolute;
+  top: 100%; /* Position dropdown below the menu item */
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: none; /* Hide dropdown by default */
+}
+
+.menu-item:hover .settings-menu {
+  display: block; /* Show dropdown on hover */
+}
+
+.settings-menu li {
+  margin: 5px 0;
+}
+
+.settings-menu li a {
+  color: #333;
+  text-decoration: none;
+}
+
+.settings-menu li a:hover {
+  color: #029d89;
 }
 
 .menu-item:last-child {
@@ -41,14 +71,8 @@
   text-decoration: none;
   position: relative; /* Position relative for ::before pseudo-element */
   font-family: sans-serif;
-  transition:  0.2s; /* Add transition for smooth animation */
-  -webkit-transition: 02s;
-  -moz-transition: 0.2s;
-  -ms-transition: 0.2s;
-  -o-transition: 0.2s;
+  transition: 0.2s; /* Add transition for smooth animation */
 }
-
-
 
 .menu-item a::before {
   content: '';
@@ -58,12 +82,9 @@
   width: 0; /* Initial width is 0 */
   background-color: #01deaf;
   bottom: -7px;
-  transition:  0.3s; /* Add transition for smooth animation */
-   -webkit-transition: 0.3s;
-   -moz-transition: 0.3s;
-   -ms-transition: 0.3s;
-   -o-transition: 0.3s;
+  transition: 0.3s; /* Add transition for smooth animation */
 }
+
 .menu-item a:hover {
   color: #01deaf;
 }
@@ -71,14 +92,15 @@
 .menu-item.selected a::before {
   width: 100%; /* Set width to 100% when selected */
   background-color: #01deaf;
-
 }
+
 .box-container {
   display: flex;
   justify-content: center;
   width: 100%; /* Set width to 100% */
   margin-top: 50px;
 }
+
 .github-box {
   background-color: #1a1d29;
   border: 2px solid rgba(255, 255, 255, 0.7);
@@ -89,8 +111,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  height: 100px;  /* Set width to 100% */
+  height: 100px; /* Set width to 100% */
 }
+
 .connect-button {
   font-size: 14px;
   font-weight: bold;
@@ -105,21 +128,23 @@
   align-self: flex-start; /* Align button to the left */
   margin-top: -61px;
 }
+
 .github-icon {
   margin-bottom: -28px;
   width: 20px;
   height: fit-content;
-  margin-left : -44px;
+  margin-left: -44px;
 }
+
 .connect-button:hover {
   background-color: #029d89;
 }
+
 .box-header {
   color: #fff;
   margin-bottom: 20px;
   text-align: left;
   margin-left: 51px;
-
 }
 
 .box-header h2 {

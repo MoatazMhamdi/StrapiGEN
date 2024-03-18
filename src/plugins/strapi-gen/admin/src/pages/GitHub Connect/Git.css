@@ -1,9 +1,10 @@
 .container-fluid {
   min-height: 100vh;
-  background: #1a1d29;
+  background: #212134;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 10px; /* Add corner radius */
 }
 
 .container-fluid > div {

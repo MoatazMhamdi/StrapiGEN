@@ -17,7 +17,7 @@ const GitConnect = () => {
 
   const handleConnectButtonClick = () => {
     // Navigate to the services page
-    history.push('/plugins/strapi-gen/Services');
+    history.push('/plugins/strapi-gen/ProjectName');
   };
   function loginwithgithub(){
    window.location.assign("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
