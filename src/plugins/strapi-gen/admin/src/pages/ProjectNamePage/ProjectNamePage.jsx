@@ -47,7 +47,7 @@ const ProjectNamePage = () => {
   };
 
   return (
-    <div className="docker-file-generator-container">
+    <div className="docker-file-generator-container" style={{marginTop: '30px'}}>
       <div className="docker-file-generator-content">
         <img src={strapigenImage} alt="StrapiGEN" className="strapigen-image" style={{marginBottom: '-60px'}}/>
   
