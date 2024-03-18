@@ -56,57 +56,45 @@ const OverViewPage = () => {
                 </ul>
               )}
             </li>
-
-
             <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/faq_section' ? 'selected' : ''}`}>
               <Link to="/plugins/strapi-gen/faq_section">FAQ</Link>
             </li>
-           
           </ul>
         </nav>
       </header>
       <div className="box-container">
-        <div className="github-box">
-          <div className="box-header">
-            <FaDatabase className="github-icon" />
-            <h2>Entities</h2>
-            <p>Declare the data models for your application</p>
+        <div className="github-box" style={{ backgroundColor: '#212134', padding: '30px', borderRadius: '20px', border: '2px solid rgba(255, 255, 255, 0.7)' }}>
+          <div className="box-header" style={{ paddingBottom: '30px', paddingTop: '30px' }}>
+            <FaDatabase className="github-icon" style={{ color: '#029d89', marginBottom: '30px', marginTop: '30px' }} />
+            <h2 style={{ color: '#fff' }}>Entities</h2>
+            <p style={{ color: '#fff' }}>Declare the data models for your application</p>
           </div>
-          <button className="connect-button">Build</button>
+          <button className="connect-button" style={{ color: '#fff' }}>Build</button>
         </div>
-      </div>
-      <div className="box-container">
-        <div className="github-box">
-          <div className="box-header">
-            <FiBox className="github-icon" />
-            <h2>Services</h2>
-            <p>Build your Services for your application</p>
+        <div className="github-box" style={{ backgroundColor: '#212134', padding: '30px', borderRadius: '20px', border: '2px solid rgba(255, 255, 255, 0.7)' }}>
+          <div className="box-header" style={{ paddingBottom: '30px', paddingTop: '30px' }}>
+            <FiBox className="github-icon" style={{ color: '#029d89', marginBottom: '30px', marginTop: '30px' }} />
+            <h2 style={{ color: '#fff' }}>Services</h2>
+            <p style={{ color: '#fff' }}>Build your Services for your application</p>
           </div>
-          <button className="connect-button">Build</button>
+          <button className="connect-button" style={{ color: '#fff' }}>Build</button>
         </div>
-      </div>
-      <div className="box-container">
-        <div className="github-box">
-          <div className="box-header">
-            <FaProjectDiagram className="github-icon" />
-            <h2>Data Models</h2>
-            <p>Visualize your Data Models and manipulate them as you want</p>
+        <div className="github-box" style={{ backgroundColor: '#212134', padding: '30px', borderRadius: '20px', border: '2px solid rgba(255, 255, 255, 0.7)' }}>
+          <div className="box-header" style={{ paddingBottom: '30px', paddingTop: '30px' }}>
+            <FaProjectDiagram className="github-icon" style={{ color: '#029d89', marginBottom: '30px', marginTop: '30px' }} />
+            <h2 style={{ color: '#fff' }}>Data Models</h2>
+            <p style={{ color: '#fff' }}>Visualize your Data Models and manipulate them as you want</p>
           </div>
-          <button className="connect-button">Visualize</button>
+          <button className="connect-button" style={{ color: '#fff' }}>Visualize</button>
         </div>
-      </div>
-      <div className="box-container">
-        <div className="github-box">
-          <div className="box-header">
-            <FaDocker className="github-icon" />
-            <h2>Docker File</h2>
-            <p>Generate your Docker file and Docker-composer.</p>
+        <div className="github-box" style={{ backgroundColor: '#212134', padding: '30px', borderRadius: '20px', border: '2px solid rgba(255, 255, 255, 0.7)' }}>
+          <div className="box-header" style={{ paddingBottom: '30px', paddingTop: '30px' }}>
+            <FaDocker className="github-icon" style={{ color: '#029d89', marginBottom: '30px', marginTop: '30px' }} />
+            <h2 style={{ color: '#fff' }}>Docker File</h2>
+            <p style={{ color: '#fff' }}>Generate your Docker file and Docker-composer.</p>
           </div>
-          <button className="connect-button">Generate</button>
+          <button className="connect-button" style={{ color: '#fff' }}>Generate</button>
         </div>
-      </div>
-      <div className="toggle-dark-mode"> {/* Toggle dark mode button */}
-        <button onClick={toggleDarkMode}>{darkMode ? 'Light Mode' : 'Dark Mode'}</button>
       </div>
     </div>
   );
