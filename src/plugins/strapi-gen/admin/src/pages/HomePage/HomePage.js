@@ -14,7 +14,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="docker-file-generator-container" style={{marginTop:'30px'}}>
+    <div className="docker-file-generator-container" style={{marginTop:'40px'}}>
       <div className="docker-file-generator-content">
           <img 
             src={strapigenImage} 

@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import './ProjectNamePage.css';
 import { useHistory } from 'react-router-dom';
+import { Switch } from 'antd';
 import strapigenImage from './logoStrapiGen.png';
 
 const ProjectNamePage = () => {
   const [projectName, setProjectName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [visibility, setVisibility] = useState(false);
   const history = useHistory();
 
   const handleInputChange = (event) => {
     setProjectName(event.target.value);
     setErrorMessage('');
+  };
+
+  const handleToggleChange = (checked) => {
+    setVisibility(checked);
   };
 
   const handleConfirm = async () => {
@@ -27,7 +33,7 @@ const ProjectNamePage = () => {
           Authorization: 'token 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',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: projectName }),
+        body: JSON.stringify({ name: projectName, private: visibility }), // Set private option based on visibility state
       });
       const data = await response.json();
       if (response.status === 201) {
@@ -37,7 +43,7 @@ const ProjectNamePage = () => {
           state: { selectedRepo: data.full_name },
         });
       } else if (response.status === 422) {
-        alert('this repository name is already in use in your github account! try other one :)');
+        alert('This repository name is already in use in your GitHub account! Please try another one.');
       } else {
         console.error('Failed to create repository:', data.message);
       }
@@ -47,14 +53,14 @@ const ProjectNamePage = () => {
   };
 
   return (
-    <div className="docker-file-generator-container" style={{marginTop: '30px'}}>
+    <div className="docker-file-generator-container" style={{ marginTop: '40px' }}>
       <div className="docker-file-generator-content">
-        <img src={strapigenImage} alt="StrapiGEN" className="strapigen-image" style={{marginBottom: '-60px'}}/>
-  
+        <img src={strapigenImage} alt="StrapiGEN" className="strapigen-image" style={{ marginBottom: '-60px' }} />
+
         <h1>First, we need to choose a name for your project</h1>
-        <p>Give your project a meaningful name.</p>
-        <p style={{marginBottom: '40px'}}>the name of the project you type is a generated empty github repository  </p>
-  
+        <p style={{ marginBottom: '40px' }}>Give your project a meaningful name. The name of the project you type is a generated empty GitHub repository</p>
+       
+
         <div className="input-container">
           <div>
             <input
@@ -64,10 +70,14 @@ const ProjectNamePage = () => {
               placeholder="Write your project name here.."
               className="project-name-input"
             />
-            {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+          </div>
+          <div className="toggle-container">
+            <Switch checked={visibility} onChange={handleToggleChange} />
+            <span className="toggle-label"> Set this repository to Private</span>
           </div>
           <div>
-            <button className="docker-file-generator-button" onClick={handleConfirm} style={{marginTop: '40px'}}>
+            <button className="docker-file-generator-button" onClick={handleConfirm} style={{ marginTop: '40px', marginBottom: '40px'  }}>
               CONFIRM
             </button>
           </div>

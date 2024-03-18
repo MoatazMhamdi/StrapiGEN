@@ -3,50 +3,67 @@ import './Git.css';
 import { RiGithubFill } from 'react-icons/ri';
 import { Switch } from 'antd';
 import { useHistory } from 'react-router-dom';
+import strapigenImage from './logoStrapiGen.png'; // Import the image
 
 const GitConnect = () => {
-  const [git, setGit] = useState('');
-  const [inputFocused, setInputFocused] = useState(false);
   const [toggleChecked, setToggleChecked] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const history = useHistory();
-  const CLIENT_ID ='e9d29cdcac4030c9ba3f';
+  const CLIENT_ID = 'e9d29cdcac4030c9ba3f';
 
   const handleToggleChange = (checked) => {
     setToggleChecked(checked);
+    setErrorMessage('');
   };
 
   const handleConnectButtonClick = () => {
+    if (!toggleChecked) {
+      setErrorMessage('Please allow push access to the GitHub account.');
+      return;
+    }
     // Navigate to the services page
     history.push('/plugins/strapi-gen/ProjectName');
   };
-  function loginwithgithub(){
-   window.location.assign("https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID);
+
+  const loginWithGithub = () => {
+    window.location.assign(
+      'https://github.com/login/oauth/authorize?client_id=' + CLIENT_ID
+    );
   };
- 
+
+  const handleAuthorizationRefused = () => {
+    setErrorMessage('Authorization to GitHub was refused. Please try again.');
+    setToggleChecked(false); // Reset toggle
+  };
+
   return (
-    <div className="container-fluid">
-      <div>
-        <h1>
-          Let's connect to a Git Repository 🌌
-        </h1>
-        <p>StrapiGEN automatically pushes the generated code of your service to a git repository.</p>
+    <div className="docker-file-generator-container" style={{ marginTop: '40px' }}>
+      <div className="docker-file-generator-content">
+        <img
+          src={strapigenImage}
+          alt="StrapiGEN"
+          className="strapigen-image"
+          style={{ width: '350px', height: 'auto', marginBottom: '-80px' }}
+        />
+        <div className="github-text">
+          <p> Let's connect to your Github Account 🌌</p>
+          <span>🚀 Authorize your GitHub account will allow you to synchronize the project with your GitHub account! 🚀</span>
+        </div>
         <div className="github-container">
           <div className="github-content">
             <div className="github-icon">
-              <RiGithubFill size={50} color="#f9f9f9" />
+              <RiGithubFill size={50} color="#f9f9f9" style={{ marginLeft: '200px' }} />
             </div>
-            <div className="github-text">
-              GitHub
-            </div>
-            <button className="connect-button" onClick={loginwithgithub}>
+            <button className="connect-button" onClick={loginWithGithub} style={{ marginLeft: '350px', marginTop: '20px' }}>
               Connect
             </button>
           </div>
         </div>
-         <div className="toggle-container">
-            <Switch checked={toggleChecked} onChange={handleToggleChange} />
-            <span className="toggle-label">Push the generated code to preview repository on GitHub</span>
-          </div>
+        <div className="toggle-container">
+          <Switch checked={toggleChecked} onChange={handleToggleChange} />
+          <span className="toggle-label">Push the generated code to preview repository on GitHub</span>
+        </div>
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       </div>
     </div>
   );
