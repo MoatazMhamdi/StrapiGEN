@@ -9,6 +9,8 @@ import strapigenImage from './logoStrapiGen.png';
 
 const OverViewPage = () => {
   const location = useLocation();
+  const selectedRepo = location.state ? location.state.selectedRepo : null;
+
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const [darkMode, setDarkMode] = useState(false); // State for dark mode
 
@@ -19,6 +21,7 @@ const OverViewPage = () => {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode); // Toggle dark mode state
   };
+  console.log('repo is overview :',selectedRepo)
 
   return (
     <div className={darkMode ? 'dark-mode' : ''}> {/* Apply dark mode class if dark mode is enabled */}
@@ -44,8 +47,12 @@ const OverViewPage = () => {
               <Link to="/plugins/strapi-gen/DockerConfigForm">Docker Files</Link>
             </li>
             <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/settings' ? 'selected' : ''}`}>
-              <Link to="/plugins/strapi-gen/settings">Setting</Link>
-            </li>
+            <Link to={{
+              pathname: '/plugins/strapi-gen/settings',
+              state: { selectedRepo: selectedRepo } // Pass the selectedRepo as state
+            }}>Settings</Link>
+          </li>
+
             <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/faq_section' ? 'selected' : ''}`}>
               <Link to="/plugins/strapi-gen/faq_section">FAQ</Link>
             </li>
