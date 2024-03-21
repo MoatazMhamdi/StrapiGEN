@@ -43,18 +43,8 @@ const OverViewPage = () => {
             <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/DockerConfigForm' ? 'selected' : ''}`}>
               <Link to="/plugins/strapi-gen/DockerConfigForm">Docker Files</Link>
             </li>
-            <li className={`menu-item settings ${location.pathname === '/settings' || showSettingsMenu ? 'selected' : ''}`}>
-              <div onClick={toggleSettingsMenu}>Settings</div>
-              {showSettingsMenu && (
-                <ul className="settings-menu">
-                  <li>
-                    <Link to="/settings">dark mode </Link>
-                  </li>
-                  <li>
-                    <Link to="/settings">change git repo</Link>
-                  </li>
-                </ul>
-              )}
+            <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/settings' ? 'selected' : ''}`}>
+              <Link to="/plugins/strapi-gen/settings">Setting</Link>
             </li>
             <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/faq_section' ? 'selected' : ''}`}>
               <Link to="/plugins/strapi-gen/faq_section">FAQ</Link>

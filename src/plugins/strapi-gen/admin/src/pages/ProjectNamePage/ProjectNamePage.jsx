@@ -3,6 +3,7 @@ import './ProjectNamePage.css';
 import { useHistory } from 'react-router-dom';
 import { Switch } from 'antd';
 import strapigenImage from './logoStrapiGen.png';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const ProjectNamePage = () => {
   const [projectName, setProjectName] = useState('');
@@ -52,15 +53,19 @@ const ProjectNamePage = () => {
     }
   };
 
+  const handleOtherAction = () => {
+    history.push('/plugins/strapi-gen/selectedrepository');
+  };
+
   return (
     <div className="docker-file-generator-container" style={{ marginTop: '40px' }}>
       <div className="docker-file-generator-content">
         <img src={strapigenImage} alt="StrapiGEN" className="strapigen-image" style={{ marginBottom: '-60px' }} />
-
+  
         <h1>First, we need to choose a name for your project</h1>
         <p style={{ marginBottom: '40px' }}>Give your project a meaningful name. The name of the project you type is a generated empty GitHub repository</p>
        
-
+  
         <div className="input-container">
           <div>
             <input
@@ -77,8 +82,13 @@ const ProjectNamePage = () => {
             <span className="toggle-label"> Set this repository to Private</span>
           </div>
           <div>
-            <button className="docker-file-generator-button" onClick={handleConfirm} style={{ marginTop: '40px', marginBottom: '40px'  }}>
-              CONFIRM
+            <button className="docker-file-generator-button" onClick={handleConfirm} style={{ marginTop: '40px', marginBottom: '40px' }}>
+            <i className="fas fa-plus"></i> Create Repo
+            </button>
+            {/* New button added here */}
+            <button className="btn btn-outline-info" onClick={handleOtherAction} style={{ marginTop: '40px', marginBottom: '40px', marginLeft: '10px' }}>
+            <i className="fas fa-folder"></i> Select Existent Repo
+
             </button>
           </div>
         </div>

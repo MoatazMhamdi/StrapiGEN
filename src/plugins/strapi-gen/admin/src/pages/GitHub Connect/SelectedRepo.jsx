@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import './DockerFileGenerator.css'; // Import the CSS file for styling
 import strapigenImage from './logoStrapiGen.png'; // Import the image
 
-
 const SelectedRepo = () => {
   const [repos, setRepos] = useState([]);
   const [selectedRepo, setSelectedRepo] = useState('');
@@ -60,34 +59,33 @@ const SelectedRepo = () => {
   };
 
   return (
-    <div className="docker-file-generator-container" style={{marginTop:'40px'}}> {/* Apply the container styling */}
-      <div className="docker-file-generator-content"> {/* Apply the content styling */}
-      <img 
-            src={strapigenImage} 
-            alt="StrapiGEN" 
-            className="strapigen-image" 
-            style={{ width: '350px', height: 'auto', marginBottom: '-80px'}} // Adjusted width and height
-          /> {/* Image */}
+    <div className="docker-file-generator-container" style={{marginTop:'40px'}}>
+      <div className="docker-file-generator-content">
+        <img 
+          src={strapigenImage} 
+          alt="StrapiGEN" 
+          className="strapigen-image" 
+          style={{ width: '350px', height: 'auto', marginBottom: '-80px'}} 
+        />
         <h1 className="docker-file-generator-title" style={{marginBottom:'30px',marginTop:'50px'}}>Select your Github Repository</h1>
-         {/* Apply title styling */}
-         {user && (
-          <div className="user-info"> {/* Container for user information */}
-            <p className="user-name">hello Mr/Mrs {user.login} 👋, StrapiGen is Happy to serve you 🚀</p> {/* Display user name */}
+        {user && (
+          <div className="user-info">
+            <p className="user-name">hello Mr/Mrs {user.login} 👋, StrapiGen is Happy to serve you 🚀</p>
           </div>
         )}
-        <p className="docker-file-generator-description" style={{marginBottom:'30px'}}>Choose a repository to push the generated web services you'll create or to dockerize your project ⚡️</p> {/* Apply description styling */}
-        <div className="docker-file-generator-inputs"> {/* Apply inputs container styling */}
-          <select onChange={(e) => handleRepoSelect(e)} className="docker-file-generator-select"> {/* Apply input styling */}
+        <p className="docker-file-generator-description" style={{marginBottom:'30px'}}>Choose a repository to push the generated web services you'll create or to dockerize your project ⚡️</p>
+        <div className="docker-file-generator-inputs">
+          <select onChange={(e) => handleRepoSelect(e)} className="docker-file-generator-select">
             <option value="">Select a repository</option>
             {repos.map((repo) => (
               <option key={repo.id} value={repo.full_name}>
-                {repo.full_name}
+                {repo.full_name} - <span style={{ color: repo.private ? 'red' : 'green' }}>{repo.private ? 'Private' : 'Public'}</span>
               </option>
             ))}
           </select>
         </div>
         {selectedRepo && <p>Selected Repository: {selectedRepo}</p>}
-        <button onClick={handleNextButtonClick} className="docker-file-generator-button" style={{marginTop:'50px'}}>Next</button> {/* Apply button styling */}
+        <button onClick={handleNextButtonClick} className="docker-file-generator-button" style={{marginTop:'50px'}}>Next</button>
       </div>
     </div>
   );

@@ -13,6 +13,10 @@ import OverViewPage from '../OverviewPage/OverViewPage';
 import DockerFileGenerator from '../DockerizePage/DockerPage';
 import DockerizationSuccessPage from '../DockerizePage/dockerizeSuccessfully';
 import FAQPage from '../FAQ_Section/FAQpage';
+import ProjectSettings from '../Setting/setting';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 
@@ -28,6 +32,7 @@ const App = () => {
 
         <Route path="/plugins/strapi-gen/Services" component={ServicesType} />
         <Route path="/plugins/strapi-gen/DockerConfigForm" component={DockerFileGenerator} />
+        <Route path="/plugins/strapi-gen/settings" component={ProjectSettings} />
 
         <Route path="/plugins/strapi-gen/Entities" component={AddEntity} />
         <Route path="/plugins/strapi-gen/AddAuth" component={AddAuthPage} />
