@@ -82,12 +82,12 @@ const ProjectNamePage = () => {
             <span className="toggle-label"> Set this repository to Private</span>
           </div>
           <div>
-            <button className="docker-file-generator-button" onClick={handleConfirm} style={{ marginTop: '40px', marginBottom: '40px' }}>
+            <button className="docker-file-generator-button" onClick={handleConfirm} style={{ marginTop: '40px', marginBottom: '40px' , marginRight:'20px'}}>
             <i className="fas fa-plus"></i> Create Repo
             </button>
             {/* New button added here */}
             <button className="btn btn-outline-info" onClick={handleOtherAction} style={{ marginTop: '40px', marginBottom: '40px', marginLeft: '10px' }}>
-            <i className="fas fa-folder"></i> Select Existent Repo
+            <i className="fas fa-folder"></i> Select Existant Repo
 
             </button>
           </div>

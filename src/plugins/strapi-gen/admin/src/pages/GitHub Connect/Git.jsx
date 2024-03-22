@@ -61,7 +61,7 @@ const GitConnect = () => {
         </div>
         <div className="toggle-container">
           <Switch checked={toggleChecked} onChange={handleToggleChange} />
-          <span className="toggle-label">Push the generated code to preview repository on GitHub</span>
+          <span className="toggle-label">Allow Github Synchronization</span>
         </div>
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       </div>

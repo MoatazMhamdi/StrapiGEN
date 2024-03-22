@@ -31,17 +31,17 @@ ProjectSettings {
     background-color: #3e8e41;
   }
   .dark-textfield {
-    background-color: #333;
+    background-color: #222;
     color: #fff;
-    border: 1px solid #555;
+    border: 1px solid #333;
     padding: 8px;
     border-radius: 4px;
     width: 100%; /* Adjust width as needed */
 }
 .dark-dropdown {
-    background-color: #333;
+    background-color: #222;
     color: #fff;
-    border: 1px solid #555;
+    border: 1px solid #333;
     padding: 8px;
     border-radius: 4px;
     width: 100%; /* Adjust width as needed */
