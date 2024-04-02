@@ -1,0 +1,27 @@
+{
+  "kind": "singleType",
+  "collectionName": "customers",
+  "info": {
+    "singularName": "customer",
+    "pluralName": "customers",
+    "displayName": "Customer"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nom": {
+      "type": "string"
+    },
+    "prenom": {
+      "type": "string"
+    },
+    "adresse": {
+      "type": "string"
+    },
+    "num_telephone": {
+      "type": "biginteger"
+    }
+  }
+}

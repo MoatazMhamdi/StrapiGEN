@@ -1,0 +1,16 @@
+[
+    
+    {
+      "method": "GET",
+      "path": "/class-diagram",
+      "handler": "DiagramController.generateClassDiagram"
+     
+      },
+      {
+        "method": "POST",
+        "path": "/class-diagram",
+        "handler": "DiagramController.generateClassDiagram"
+       
+        }
+    
+]
