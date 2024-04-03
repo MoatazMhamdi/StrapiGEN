@@ -60,6 +60,12 @@ const OverViewPage = () => {
               state: { selectedRepo: selectedRepo } // Pass the selectedRepo as state
             }}>Settings</Link>
           </li>
+          <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/settings' ? 'selected' : ''}`}>
+            <Link to={{
+              pathname: '/plugins/strapi-gen/ServiceGenerate',
+              state: { selectedRepo: selectedRepo } // Pass the selectedRepo as state
+            }}>motaz</Link>
+          </li>
 
             <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/faq_section' ? 'selected' : ''}`}>
               <Link to="/plugins/strapi-gen/faq_section">FAQ</Link>
