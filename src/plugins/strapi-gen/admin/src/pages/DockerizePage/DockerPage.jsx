@@ -39,7 +39,6 @@ const DockerFileGenerator = () => {
       const response = await axios.post('http://localhost:1337/strapi-gen/generate-docker-files', {
         port,
         imageName,
-        nodeVersion,
         databaseClient,
         databaseHost,
         databasePort,
@@ -63,13 +62,7 @@ const DockerFileGenerator = () => {
     }
   };
 
-  const nodeVersions = [
-    '12.x.x',
-    '14.x.x',
-    '16.x.x',
-    '18.x.x',
-    '20.x.x',
-  ];
+  
 
   return (
     <div className="docker-file-generator-container" style={{marginTop: '40px'}}>
@@ -82,7 +75,7 @@ const DockerFileGenerator = () => {
         <div className="docker-file-generator-inputs" style={{ marginTop: '30px', marginBottom: '30px' }}>
           
           <div className="docker-file-generator-input">
-            <label htmlFor="port" className="docker-file-generator-label" style={{color:'#027368'}}><strong>Port:</strong></label>
+            <label htmlFor="port" className="docker-file-generator-label" style={{color:'#029d89'}}><strong>Port:</strong></label>
             <input
               type="number"
               id="port"
@@ -96,7 +89,7 @@ const DockerFileGenerator = () => {
           </div>
           {/* Image Name */}
           <div className="docker-file-generator-input">
-            <label htmlFor="imageName" className="docker-file-generator-label" style={{color:'#027368'}}><strong>Image Name:</strong></label>
+            <label htmlFor="imageName" className="docker-file-generator-label" style={{color:'#029d89'}}><strong>Image Name:</strong></label>
             <input
               type="text"
               id="imageName"
@@ -106,24 +99,10 @@ const DockerFileGenerator = () => {
               className="docker-file-generator-input-field"
             />
           </div>
-          {/* Node Version */}
-          <div className="docker-file-generator-input">
-            <label htmlFor="nodeVersion" className="docker-file-generator-label" style={{color:'#027368'}}><strong>Node Version:</strong></label>
-            <select
-              id="nodeVersion"
-              value={nodeVersion}
-              onChange={(e) => setNodeVersion(e.target.value)}
-              className="docker-file-generator-input-field"
-            >
-              <option value="">Select Node Version</option>
-              {nodeVersions.map(version => (
-                <option key={version} value={version}>{version}</option>
-              ))}
-            </select>
-          </div>
+       
           {/* Database Client */}
           <div className="docker-file-generator-input">
-            <label htmlFor="databaseClient" className="docker-file-generator-label" style={{color:'#027368'}}><strong>Database Client:</strong></label>
+            <label htmlFor="databaseClient" className="docker-file-generator-label" style={{color:'#029d89'}}><strong>Database Client:</strong></label>
             <input
               type="text"
               id="databaseClient"
@@ -135,7 +114,7 @@ const DockerFileGenerator = () => {
           </div>
           {/* Database Host */}
           <div className="docker-file-generator-input">
-            <label htmlFor="databaseHost" className="docker-file-generator-label" style={{color:'#027368'}}><strong>Database Host:</strong></label>
+            <label htmlFor="databaseHost" className="docker-file-generator-label" style={{color:'#029d89'}}><strong>Database Host:</strong></label>
             <input
               type="text"
               id="databaseHost"
@@ -147,7 +126,7 @@ const DockerFileGenerator = () => {
           </div>
           {/* Database Port */}
           <div className="docker-file-generator-input">
-            <label htmlFor="databasePort" className="docker-file-generator-label" style={{color:'#027368'}}><strong>Database Port:</strong></label>
+            <label htmlFor="databasePort" className="docker-file-generator-label" style={{color:'#029d89'}}><strong>Database Port:</strong></label>
             <input
               type="text"
               id="databasePort"
@@ -159,7 +138,7 @@ const DockerFileGenerator = () => {
           </div>
           {/* Package Manager */}
           <div className="docker-file-generator-input">
-            <label htmlFor="packageManager" className="docker-file-generator-label" style={{color:'#027368'}}><strong>Package Manager:</strong></label>
+            <label htmlFor="packageManager" className="docker-file-generator-label" style={{color:'#029d89'}}><strong>Package Manager:</strong></label>
             <select
               id="packageManager"
               value={packageManager}
@@ -173,7 +152,7 @@ const DockerFileGenerator = () => {
           </div>
           {/* App Keys */}
           <div className="docker-file-generator-input">
-            <label htmlFor="appKeys" className="docker-file-generator-label" style={{color:'#027368'}}><strong>App Keys:</strong></label>
+            <label htmlFor="appKeys" className="docker-file-generator-label" style={{color:'#029d89'}}><strong>App Keys:</strong></label>
             <input
               type="text"
               id="appKeys"
@@ -185,7 +164,7 @@ const DockerFileGenerator = () => {
           </div>
           {/* Node Environment */}
           <div className="docker-file-generator-input">
-            <label htmlFor="nodeEnv" className="docker-file-generator-label"style={{color:'#027368'}}><strong>Node Environment:</strong></label>
+            <label htmlFor="nodeEnv" className="docker-file-generator-label"style={{color:'#029d89'}}><strong>Node Environment:</strong></label>
             <input
               type="text"
               id="nodeEnv"

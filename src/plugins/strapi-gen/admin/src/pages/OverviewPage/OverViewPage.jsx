@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import './OverViewPage.css';
 import { FaDocker } from "react-icons/fa";
 import { FaProjectDiagram } from "react-icons/fa";
@@ -9,6 +9,8 @@ import strapigenImage from './logoStrapiGen.png';
 
 const OverViewPage = () => {
   const location = useLocation();
+  const history = useHistory();
+
   const selectedRepo = location.state ? location.state.selectedRepo : null;
 
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
@@ -17,6 +19,12 @@ const OverViewPage = () => {
   const toggleSettingsMenu = () => {
     setShowSettingsMenu(!showSettingsMenu);
   };
+
+  
+
+ const handleGenerateService = () => {
+  history.push('/plugins/strapi-gen/ServiceGenerate');
+};
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode); // Toggle dark mode state
@@ -27,7 +35,7 @@ const OverViewPage = () => {
     <div className={darkMode ? 'dark-mode' : ''}> {/* Apply dark mode class if dark mode is enabled */}
       <header className="header">
         <div className="logo-container">
-          <h1 className="header-title" style={{ color:'#029d89'}}><strong>StrapiGen Plugin </strong><span>Dashboard</span></h1>
+          <h1 className="header-title" style={{ color:'#029d89'}}><strong>StrapiGen Plugin </strong><span class="weak">Dashboard</span></h1>
         </div>
         <nav className="nav">
           <ul className="menu">
@@ -66,7 +74,7 @@ const OverViewPage = () => {
             <h2 style={{ color: '#fff' }}>Entities</h2>
             <p style={{ color: '#fff' }}>Declare the data models for your application</p>
           </div>
-          <button className="connect-button" style={{ color: '#fff' }}>Build</button>
+          <button className="connect-button" onClick = {handleGenerateService} style={{ color: '#fff' }}>Build</button>
         </div>
         <div className="github-box" style={{ backgroundColor: '#212134', padding: '30px', borderRadius: '20px', border: '2px solid rgba(255, 255, 255, 0.7)' }}>
           <div className="box-header" style={{ paddingBottom: '30px', paddingTop: '30px' }}>

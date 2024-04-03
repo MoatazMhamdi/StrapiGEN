@@ -109,7 +109,7 @@
   border-radius: 20px;
   padding: 20px;
   text-align: center;
-  width: 300px; /* Set a fixed width for each box */
+  width: 350px; /* Set a fixed width for each box */
   height: fit-content; /* Adjust height based on content */
 }
 

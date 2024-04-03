@@ -1,3 +1,5 @@
+const GeneratedBackendController = require('../controllers/GeneratedBackendController');
+
 module.exports = [
   {
     method: 'GET',
@@ -63,4 +65,17 @@ module.exports = [
       auth: false,
     },
   },
+
+  {
+    method: 'POST',
+    path: '/generate-backend',
+   
+    handler: 'GeneratedBackendController.generateBackend', // Access exported function
+    config: {
+     
+      auth: false,
+     
+    }
+  },
+
 ];
