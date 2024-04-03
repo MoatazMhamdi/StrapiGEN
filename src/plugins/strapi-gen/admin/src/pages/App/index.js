@@ -15,6 +15,7 @@ import DockerizationSuccessPage from '../DockerizePage/dockerizeSuccessfully';
 import FAQPage from '../FAQ_Section/FAQpage';
 import ProjectSettings from '../Setting/setting';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ContentTypeList from '../EntityComponant/EntityListPage';// Assuming the path is correct
 import GenerateCodeComponent from '../ServiceGeneration/GenerateCodeComponent';
 
 
@@ -43,6 +44,7 @@ const App = () => {
         <Route path="/plugins/strapi-gen/faq_section" component={FAQPage} />
 
         <Route path="/plugins/strapi-gen/ServiceGenerate" component={GenerateCodeComponent} />
+        <Route path="/plugins/strapi-gen/ListEntity" component={ContentTypeList} />
 
      
         <Route path="/plugins/strapi-gen/Overview" component={OverViewPage} />

@@ -5,7 +5,7 @@ import { FaDocker } from "react-icons/fa";
 import { FaProjectDiagram } from "react-icons/fa";
 import { FiBox } from "react-icons/fi";
 import { FaDatabase } from "react-icons/fa";
-import strapigenImage from './logoStrapiGen.png';
+//import strapigenImage from './logoStrapiGen.png';
 
 const OverViewPage = () => {
   const location = useLocation();
@@ -21,6 +21,9 @@ const OverViewPage = () => {
   };
 
   
+  const handleEntityList = () => {
+    history.push('/plugins/strapi-gen/ListEntity');
+  };
 
  const handleGenerateService = () => {
   history.push('/plugins/strapi-gen/ServiceGenerate');
@@ -35,7 +38,7 @@ const OverViewPage = () => {
     <div className={darkMode ? 'dark-mode' : ''}> {/* Apply dark mode class if dark mode is enabled */}
       <header className="header">
         <div className="logo-container">
-          <h1 className="header-title" style={{ color:'#029d89'}}><strong>StrapiGen Plugin </strong><span class="weak">Dashboard</span></h1>
+          <h1 className="header-title" style={{ color:'#029d89'}}><strong>StrapiGen Plugin </strong><span className="weak">Dashboard</span></h1>
         </div>
         <nav className="nav">
           <ul className="menu">
@@ -80,7 +83,7 @@ const OverViewPage = () => {
             <h2 style={{ color: '#fff' }}>Entities</h2>
             <p style={{ color: '#fff' }}>Declare the data models for your application</p>
           </div>
-          <button className="connect-button" onClick = {handleGenerateService} style={{ color: '#fff' }}>Build</button>
+          <button className="connect-button" onClick = {handleEntityList} style={{ color: '#fff' }}>Build</button>
         </div>
         <div className="github-box" style={{ backgroundColor: '#212134', padding: '30px', borderRadius: '20px', border: '2px solid rgba(255, 255, 255, 0.7)' }}>
           <div className="box-header" style={{ paddingBottom: '30px', paddingTop: '30px' }}>
@@ -88,7 +91,7 @@ const OverViewPage = () => {
             <h2 style={{ color: '#fff' }}>Services</h2>
             <p style={{ color: '#fff' }}>Build your Services for your application</p>
           </div>
-          <button className="connect-button" style={{ color: '#fff' }}>Build</button>
+          <button className="connect-button" onClick = {handleGenerateService} style={{ color: '#fff' }}>Build</button>
         </div>
         <div className="github-box" style={{ backgroundColor: '#212134', padding: '30px', borderRadius: '20px', border: '2px solid rgba(255, 255, 255, 0.7)' }}>
           <div className="box-header" style={{ paddingBottom: '30px', paddingTop: '30px' }}>
