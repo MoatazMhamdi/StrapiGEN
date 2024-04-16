@@ -39,25 +39,26 @@ const ContentTypeList = () => {
   }, []);
 
   const filteredContentTypes = contentTypeList.filter(
-  contentType => !['admin', 'upload', 'content-releases', 'i18n', 'users-permissions'].includes(contentType.plugin)
+    contentType => ![ 'upload', 'content-releases', 'i18n', 'users-permissions'].includes(contentType.plugin) && 
+    !['role', 'api-token', 'permission', 'api-token-permission','transfer-token','transfer-token-permission'].includes(contentType.apiID)
   );
 
   return (
     <div className="app">
-     <header className="header">
+      <header className="header">
         <div className="logo-container">
           <h1 className="header-title">StrapiGen Plugin</h1>
         </div>
         <nav className="nav">
-          <ul className="menu">
+        <ul className="menu">
             <li className={`menu-item ${location.pathname === '/overview' ? 'selected' : ''}`}>
               <Link to="/overview">Overview</Link>
             </li>
             <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/ModelPage' ? 'selected' : ''}`}>
               <Link to="/plugins/strapi-gen/ModelPage">Modules</Link>
             </li>
-            <li className={`menu-item ${location.pathname === '/entities' ? 'selected' : ''}`}>
-              <Link to="/entities">Entities</Link>
+            <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/Entities' ? 'selected' : ''}`}>
+              <Link to="/plugins/strapi-gen/Entities">Entities</Link>
             </li>
             <li className={`menu-item ${location.pathname === '/data-model' ? 'selected' : ''}`}>
               <Link to="/data-model">Data Model</Link>
@@ -85,10 +86,13 @@ const ContentTypeList = () => {
             {filteredContentTypes.map((contentType, index) => (
               <li key={index} className="entity-item">
                 <FaDatabase className="entity-icon" />
-                <span className="entity-name">{contentType.schema.displayName}</span>
-                <button className="delete-button">
+                <Link to={`/plugins/strapi-gen/entities/${contentType.uid}`}>
+                  <span className="entity-name">{contentType.schema.displayName}</span>
+                </Link>
+
+                {/* <button className="delete-button">
                   <FontAwesomeIcon icon={faTrash} />
-                </button>
+                </button> */}
               </li>
             ))}
           </ul>
@@ -99,6 +103,3 @@ const ContentTypeList = () => {
 };
 
 export default ContentTypeList;
-
-
-

@@ -386,34 +386,26 @@ export interface ApiBlogBlog extends Schema.CollectionType {
   };
 }
 
-export interface ApiUser1User1 extends Schema.CollectionType {
-  collectionName: 'user1s';
+export interface ApiTestTest extends Schema.SingleType {
+  collectionName: 'tests';
   info: {
-    singularName: 'user1';
-    pluralName: 'user1s';
-    displayName: 'User1';
+    singularName: 'test';
+    pluralName: 'tests';
+    displayName: 'Test';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    name: Attribute.String;
-    LastName: Attribute.String;
-    dateNaissance: Attribute.Date;
+    test: Attribute.String;
+    testbooleen: Attribute.Boolean;
+    testnumber: Attribute.Integer;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::user1.user1',
-      'oneToOne',
-      'admin::user'
-    > &
+    createdBy: Attribute.Relation<'api::test.test', 'oneToOne', 'admin::user'> &
       Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::user1.user1',
-      'oneToOne',
-      'admin::user'
-    > &
+    updatedBy: Attribute.Relation<'api::test.test', 'oneToOne', 'admin::user'> &
       Attribute.Private;
   };
 }
@@ -848,7 +840,7 @@ declare module '@strapi/types' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'api::blog.blog': ApiBlogBlog;
-      'api::user1.user1': ApiUser1User1;
+      'api::test.test': ApiTestTest;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::content-releases.release': PluginContentReleasesRelease;
