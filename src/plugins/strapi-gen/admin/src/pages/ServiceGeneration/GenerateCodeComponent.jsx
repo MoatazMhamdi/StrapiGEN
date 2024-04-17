@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaSpinner } from 'react-icons/fa'; // Importing the spinner icon from react-icons/fa
 import axios from 'axios';
-import { useHistory } from 'react-router-dom'; // Import useHistory from react-router-dom
+import { useHistory ,useLocation} from 'react-router-dom'; // Import useHistory from react-router-dom
 import './GenerateCodeComponent.css'; // Import CSS file
 import './DockerFileGenerator.css'; // Import CSS for styling
 
@@ -15,7 +15,12 @@ const CodeGenerator = () => {
   const [responseJson, setResponseJson] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory(); // Get the history object
+  const location = useLocation();
+  const selectedRepo = location.state ? location.state.selectedRepo : null;
 
+  console.log('Selected Repo hedha:', selectedRepo);
+  
+  
   const toggleMethod = (methodName) => {
     setMethod((prevState) => ({
       ...prevState,
@@ -30,6 +35,7 @@ const CodeGenerator = () => {
         'http://localhost:1337/strapi-gen/generate-backend',
         {
           method: Object.keys(method).filter((key) => method[key]).join(','),
+          selectedRepo
         }
       );
       console.log(response.data.message); // Success message from backend
