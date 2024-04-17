@@ -1,0 +1,12 @@
+{
+  "entity": "Task",
+  "attributes": [
+    "attribute1",
+    "attribute2"
+  ],
+  "methods": [
+    "method1()",
+    "method2()"
+  ],
+  "relationships": []
+}

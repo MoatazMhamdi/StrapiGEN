@@ -1,0 +1,87 @@
+.model-page {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  .model-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .model-title {
+    color: white;
+  }
+  
+  .entity {
+    color: white;
+   flex-basis: calc(32% - 2rem);
+    margin: 1rem;
+    border: 1px solid blue;
+    padding: 1rem;
+    border-radius: 4px;
+    position: relative;
+    margin-bottom: 0;
+  }
+  
+  .entity h2 {
+    margin-top: 0;
+  }
+  
+  .entity ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .entity li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .relationship-line {
+    position: absolute;
+    left: 45%;
+    right: 45%;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 1px;
+    background-color: #ccc;
+  }
+  .relationship-one-to-one,
+  .relationship-one-to-many {
+    position: absolute;
+    top: 50%;
+    transform: translateY(500%);
+    font-size: 12px;
+    font-weight: bold;
+    color: #777;
+    padding: 2px 4px;
+    border-radius: 3px;
+    background-color: #fff;
+  }
+  
+  .relationship-one-to-one {
+    left: -20px;
+  }
+  
+  .relationship-one-to-many {
+    right: -20px;
+  }
+  
+  .relationship-one-to-many-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+  }
+  
+  .relationship-one-to-many-container .relationship-line {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin: 0 10px;
+  }

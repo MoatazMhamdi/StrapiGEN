@@ -1,0 +1,161 @@
+/* General Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 60px;
+  color: white;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.header-title {
+  margin-left: 5px;
+  font-size: 20px;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 250px;
+  background-color: #333;
+  color: #333;
+  overflow-y: auto;
+}
+
+.entity-list {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #333;
+}
+
+.entities {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.entity-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.entity-item:hover {
+  background-color: #e0e0e0;
+}
+
+.entity-icon {
+  margin-right: 5px;
+}
+
+/* Main Content Styles */
+.main-content {
+  flex-grow: 1;
+  margin-left: 20px;
+  padding: 20px;
+}
+
+/* Model Page Styles */
+.model-page {
+  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.model-title {
+  color: white;
+}
+
+.model-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+/* Entity Styles */
+.entity {
+  color: white;
+  flex-basis: calc(32% - 2rem);
+  margin: 1rem;
+  border: 1px solid blue;
+  padding: 1rem;
+  border-radius: 4px;
+  position: relative;
+  margin-bottom: 0;
+}
+
+.entity h2 {
+  margin-top: 0;
+}
+
+.entity ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.entity li {
+  margin-bottom: 0.5rem;
+}
+
+/* Relationship Styles */
+.relationship-line {
+  position: absolute;
+  left: 45%;
+  right: 45%;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1px;
+  background-color: #ccc;
+}
+
+.relationship-one-to-one,
+.relationship-one-to-many {
+  position: absolute;
+  top: 50%;
+  transform: translateY(500%);
+  font-size: 12px;
+  font-weight: bold;
+  color: #777;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background-color: #fff;
+}
+
+.relationship-one-to-one {
+  left: -20px;
+}
+
+.relationship-one-to-many {
+  right: -20px;
+}
+
+.relationship-one-to-many-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+}
+
+.relationship-one-to-many-container .relationship-line {
+  width: 100%;
+  height: 1px;
+  background-color: #ccc;
+  margin: 0 10px;
+}

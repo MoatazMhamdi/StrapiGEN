@@ -1,0 +1,133 @@
+/* Header.css */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #333;
+  color: #fff;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.header-title {
+  margin-left: 10px;
+}
+
+.nav {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+.nav ul li{
+  list-style-type: none;
+  font-weight: bold;
+  display: inline-block;
+  padding: 5px 10px;
+}
+.menu-item {
+  margin-right: 20px;
+}
+
+.menu-item:last-child {
+  margin-right: 0;
+}
+
+.menu-item a {
+  color: #fff;
+  text-decoration: none;
+  position: relative; /* Position relative for ::before pseudo-element */
+  font-family: sans-serif;
+  transition:  0.3s; /* Add transition for smooth animation */
+  -webkit-transition: 03s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+}
+
+
+
+.menu-item a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  height: 3px;
+  width: 0; /* Initial width is 0 */
+  background-color: #01deaf;
+  bottom: -7px;
+  transition:  0.3s; /* Add transition for smooth animation */
+   -webkit-transition: 0.3s;
+   -moz-transition: 0.3s;
+   -ms-transition: 0.3s;
+   -o-transition: 0.3s;
+}
+.menu-item a:hover {
+  color: #01deaf;
+}
+
+.menu-item.selected a::before {
+  width: 100%; /* Set width to 100% when selected */
+  background-color: #01deaf;
+
+}
+.box-container {
+  display: flex;
+  justify-content: center;
+  width: 100%; /* Set width to 100% */
+  margin-top: 50px;
+}
+.github-box {
+  background-color: #1a1d29;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100px;  /* Set width to 100% */
+}
+.connect-button {
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #01deaf;
+  color: #4d4747;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-left: auto;
+  align-self: flex-start; /* Align button to the left */
+  margin-top: -61px;
+}
+.github-icon {
+  margin-bottom: -28px;
+  width: 20px;
+  height: fit-content;
+  margin-left : -44px;
+}
+.connect-button:hover {
+  background-color: #029d89;
+}
+.box-header {
+  color: #fff;
+  margin-bottom: 20px;
+  text-align: left;
+  margin-left: 51px;
+
+}
+
+.box-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #01deaf;
+}
+
+.box-header p {
+  font-size: 16px;
+}

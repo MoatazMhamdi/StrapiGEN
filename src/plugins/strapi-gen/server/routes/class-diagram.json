@@ -1,0 +1,19 @@
+[
+    
+  {
+    "method": "GET",
+    "path": "/strapi-gen/class-diagram/:entityName",
+    "handler": "diagram.getClassDiagram",
+    "config": {
+      "policies": []
+    }
+  }
+  ,
+      {
+        "method": "POST",
+        "path": "/class-diagram",
+        "handler": "DiagramController.generateClassDiagram"
+       
+        }
+    
+]
