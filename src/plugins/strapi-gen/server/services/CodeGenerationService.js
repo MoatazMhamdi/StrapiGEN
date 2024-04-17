@@ -21,13 +21,11 @@ async generateCode(method) {
     // Define templates for different request types
     const templates = {
     POST: `
-        import Blog from "../models/backendModels.js";
 
-        // Import your models
 
-        export async function addBlog(req, res, next) {
+    exports.addBlog = async function(req, res, next) {
         const blogs = new Blog({
-            Title: req.body.Title,
+         Title: req.body.Title,
             Description: req.body.Description,
             image: req.body.image,
             Sujet: req.body.Sujet,
@@ -39,7 +37,7 @@ async generateCode(method) {
         }
     `,
     GET: `
-        export async function getAllBlogs(req, res, next) {
+    exports.getAllBlogs = async function(req, res, next) {
         try {
             const blogs = await Blog.find().exec();
             res.status(200).json(blogs);
@@ -50,7 +48,7 @@ async generateCode(method) {
         }
     `,
     PATCH: `
-        export async function PATCHBlog(req, res) {
+    exports.PATCHBlog  = async function (req, res) {
         try {
             const blogsId = req.params.id; // Corrected from req.param.id
 
@@ -76,7 +74,7 @@ async generateCode(method) {
         }
     `,
     DELETE: `
-        export async function deleteBlog(req, res, next) {
+    exports.deleteBlog = async function (req, res, next) {
         try {
             const blogId = req.params.id; // Corrected from req.param.id
 
@@ -104,135 +102,154 @@ async generateCode(method) {
     };
 
     // Validate request method (assuming `method` can only be uppercase)
-    if (!method || !method.toUpperCase().split(',').every(m => Object.keys(templates).includes(m))) {
-    throw new Error(`Unsupported request methods: ${method}`);
-    }
+  // Validate request method (assuming `method` can only be uppercase)
+  const methods = method.toUpperCase().split(',').map(m => m.trim());
+  if (methods.some(m => !Object.keys(templates).includes(m))) {
+      throw new Error(`Unsupported request methods: ${method}`);
+  }
 
-    // Generate code for all valid methods in the request
-    let renderedCode = '';
-    const methods = method.toUpperCase().split(',');
-    for (const m of methods) {
-    const template = templates[m];
-    if (template) {
-        renderedCode += Mustache.render(template, { Attributes: Object.keys(modelSchema.attributes).join(', ') });
-    } else {
-        // Handle unsupported method within the loop
-        throw new Error(`Unsupported request method: ${m}`);
-    }
-    }
+  // Generate code for all valid methods in the request
+  let renderedCode = '';
+  let importsAdded = false; 
+
+      const imports = `const Blog = require("../models/backendModels.js");\n\n`;
+
+  methods.forEach(m => {
+      const template = templates[m];
+      if (template) {
+        if (!importsAdded) {
+            renderedCode += imports; // Add imports only once
+            importsAdded = true;
+        }
+          renderedCode += template;
+      } else {
+          // Handle unsupported method within the loop
+          throw new Error(`Unsupported request method: ${m}`);
+      }
+  });
 
     return renderedCode;
 },
 async generateModels(model) {
-    // Sample model schema (ideally, this should be a parameter as well)
-    // Sample model schema
-    const modelSchema = {
-    kind: 'collectionType',
-    collectionName: 'blogs',
-    attributes: {
-        Title: { type: 'string', required: true, maxLength: 20 },
-        Description: { type: 'string', required: true },
-        image: { type: 'string', required: true },
-        Sujet: { type: 'string' },  
-    },
-    };
+    if (typeof model !== 'string') {
+        throw new TypeError(`Model parameter must be a string, but received: ${typeof model}`);
+    }
 
+    const modelSchema = {
+        kind: 'collectionType',
+        collectionName: 'blogs',
+        attributes: {
+            Title: { type: 'string', required: true, maxLength: 20 },
+            Description: { type: 'string', required: true },
+            image: { type: 'string', required: true },
+            Sujet: { type: 'string' },  
+        },
+    };
+   
     const requestType = 'models';
 
-    // Define a template for the backend function
-    const template = `
+    const templates = {
+        BLOGS: `
+            const mongoose = require('mongoose');
+            const { Schema } = mongoose;
+        
+            const blogsSchema = new Schema({
+                Title: { type: 'string', required: true, maxLength: 20 },
+                Description: { type: 'string', required: true },
+                image: { type: 'string', required: true },
+                Sujet: { type: 'string' },  
+            });
+        
+            const blogs = mongoose.model('blogs', blogsSchema);
+        
+            module.exports = blogs;
+        `,
+        User: `
+            // Define your UserModel template here
+        `,
+    };
 
-    import mongoose from 'mongoose'; // Importer Mongoose
-    const { Schema, model } = mongoose; // Utiliser Schema et model du module mongoose
-    const blogsSchema = new mongoose.Schema({
-    Title: { type: 'string', required: true, maxLength: 20 },
-    Description: { type: 'string', required: true },
-    image: { type: 'string', required: true },
-    Sujet: { type: 'string' },  
-    });
-
-    const blogs = mongoose.model('blogs', blogsSchema);
-    export default model("backendModels",blogsSchema);
-
-    `;
-
+    const models = model.toUpperCase().split(',').map(m => m.trim());
+    if (models.some(m => !Object.keys(templates).includes(m))) {
+        throw new Error(`invalid model data: ${model}`);
+    }
     // Extract attribute names from the model schema
-    const attributes = Object.keys(modelSchema.attributes);
+    let renderedCode = '';
 
-    // Render the template with the extracted attributes and request type
-    const renderedCode = Mustache.render(template, {
-    RequestType: requestType.toUpperCase(),
-    Attributes: attributes.join(', '),
+    models.forEach(model => {
+        const template = templates[model];
+        if (template) {
+            renderedCode += template;
+        }
     });
 
     // Return the rendered code
     return renderedCode;
 },
-async generateRoutes(route) {
-    // Sample model schema (ideally, this should be a parameter as well)
-    // Sample model schema
+async generateRoutes(method) {
+    if (!Array.isArray(method) || method.length === 0) {
+        throw new Error('No methods selected for route generation.');
+    }
+
     const modelSchema = {
-    kind: 'collectionType',
-    collectionName: 'blogs',
-    attributes: {
-        Title: { type: 'string', required: true, maxLength: 20 },
-        Description: { type: 'string', required: true },
-        image: { type: 'string', required: true },
-        Sujet: { type: 'string' },  
-    },
+        kind: 'collectionType',
+        collectionName: 'blogs',
+        attributes: {
+            Title: { type: 'string', required: true, maxLength: 20 },
+            Description: { type: 'string', required: true },
+            image: { type: 'string', required: true },
+            Sujet: { type: 'string' },
+        },
     };
 
     const requestType = 'routes';
 
-    // Define a template for the backend function
-    // Define a template for the backend function
-    const template = `
+    const templates = {
+        POST: `
+        router.route("/")
+            .post(blogs.addBlog);
 
-    import express from 'express';
-    import * as blogs   from '../controllers/backendCode.js';
+      `,
+        GET: `
+        router.route("/All")
+            .get(blogs.getAllBlogs);
 
-    const router = express.Router();
+      `,
+        PATCH: `
+        router.route("/updateBlog/:id")
+            .patch(blogs.PATCHBlog);
 
-    router.route("/")
-        .post(blogs.addBlog)
+      `,
+        DELETE: `
+        router.route("/delete/:id")
+            .delete(blogs.deleteBlog);
 
+      `,
+    };
 
-    router.route("/updateBlog/:id")
-        .patch(blogs.PATCHBlog)
+    let renderedCode = '';
+    let importsAdded = false; // Flag to track if imports are already added
 
+    const imports = `const express = require('express');\nconst router = express.Router();\n
+    const blogs = require('../controllers/backendCode.js');\n\n`;
 
-    router.route("/delete/:id")
-        .delete(blogs.deleteBlog)
-
-
-
-
-        router.route('/All')
-    .get(blogs.getAllBlogs)
-
-    export default router;
-    
-
-    
-    `;
-
-
-
-    // Extract attribute names from the model schema
-    const attributes = Object.keys(modelSchema.attributes);
-
-    // Render the template with the extracted attributes and request type
-    const renderedCode = Mustache.render(template, {
-    RequestType: requestType.toUpperCase(),
-    Attributes: attributes.join(', '),
+    method.forEach(method => {
+        const template = templates[method];
+        if (template) {
+            if (!importsAdded) {
+                renderedCode += imports; // Add imports only once
+                importsAdded = true;
+            }
+            renderedCode += template;
+        }
     });
+    renderedCode += `\nmodule.exports = router;`;
 
-    // Return the rendered code
+
     return renderedCode;
 },
 async generateServerdotjs(index) {
-    // Sample model schema (ideally, this should be a parameter as well)
-    // Sample model schema
+
     const modelSchema = {
     kind: 'collectionType',
     collectionName: 'blogs',
@@ -249,35 +266,23 @@ async generateServerdotjs(index) {
 
     const requestType = 'index';
 
-
 const template = `
-import  express  from 'express'; // Importer express
-import mongoose from 'mongoose'; // Importer Mongoose
-import morgan from 'morgan';
-
-
-
-
-import blogRoutes from './routes/backendRoutes.js';
-import cookieParser from 'cookie-parser';
-
-
-
-
-import cors from 'cors'
-
+const express = require('express'); // Import express using require
+const mongoose = require('mongoose'); // Import Mongoose using require
+const morgan = require('morgan');
+const blogRoutes = require('./routes/backendRoutes.js'); // Import routes using require
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const hostname = '127.0.0.1';
-const app =express();
+const app = express();
 const port = process.env.port || 9090;
 const databaseName = 'ReadyBackendDB';
-
 
 // Cela afichera les requêtes MongoDB dans le terminal
 mongoose.set('debug', true);
 // Utilisation des promesses ES6 pour Mongoose, donc aucune callback n'est nécessaire
 mongoose.Promise = global.Promise;
-
 
 // Se connecter à MongoDB
 mongoose
@@ -292,27 +297,17 @@ mongoose
     console.log(err);
 });
 
-
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
-
-
-
-
 app.use('/blog',blogRoutes);
-
-
-
 
 /**
  * Démarrer le serveur à l'écoute des connexions
  */
 app.listen(port, hostname,() => {
     console.log('Server running at http://localhost:9090/');
-
-
 })
 
 
@@ -332,5 +327,16 @@ const renderedCode = Mustache.render(template, {
 
 // Return the rendered code
 return renderedCode;
+},
+async generateBackend(request) {
+    const { method, model } = request;
+
+    // Generate code for generateCode method
+    const generatedCode = await this.generateCode(method);
+    const generatedModels = await this.generateModels(model)
+    const generatedRoutes = await this.generateRoutes([method]);
+
+    
+    return { generatedCode,generatedModels, generatedRoutes };
 },
 };

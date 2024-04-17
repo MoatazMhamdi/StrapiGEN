@@ -12,14 +12,20 @@ const CodeGenerator = () => {
     PATCH: false,
     DELETE: false,
   });
+
+  const [modelName, setModelName] = useState('');
+
   const [responseJson, setResponseJson] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory(); // Get the history object
   const location = useLocation();
   const selectedRepo = location.state ? location.state.selectedRepo : null;
 
-  console.log('Selected Repo hedha:', selectedRepo);
+  console.log('Selected Repo :', selectedRepo);
   
+  const handleModelNameChange = (event) => {
+    setModelName(event.target.value);
+  };
   
   const toggleMethod = (methodName) => {
     setMethod((prevState) => ({
@@ -35,11 +41,12 @@ const CodeGenerator = () => {
         'http://localhost:1337/strapi-gen/generate-backend',
         {
           method: Object.keys(method).filter((key) => method[key]).join(','),
+          model: modelName,
           selectedRepo
         }
       );
       console.log(response.data.message); // Success message from backend
-      setResponseJson(response.data); // Set response JSON
+      setResponseJson(response.data.message); // Set response JSON
     } catch (error) {
       console.error('Error generating code:', error);
       // Handle error
@@ -53,117 +60,111 @@ const CodeGenerator = () => {
   };
 
   return (
-    <div className="docker-file-generator-container">
-      <div className="docker-file-generator-content">
-        <div className="back-button-container">
-          <button className="back-button" onClick={navigateBack}>
-            Back
-          </button>
-        </div>
-        <h2 className="docker-file-generator-title">
-          <strong style={{ fontSize: '3rem', marginBottom: '20px' }}>
-            Generate Rest API
-          </strong>
-        </h2>
-        <p className="docker-file-generator-description">
-          Your project will be automatically generated with all the selected
-          rest API Toggle, and thanks
-        </p>
-        <div style={{ borderRadius: '20px', padding: '20px' }}>
-          <div className="toggle-container">
-            <p style={{ color: 'white', marginRight: '15px' }}>
-              tap to ensure the method Post, Endpoint:{' '}
-              <strong style={{ color: 'green' }}>'/'</strong>
-            </p>
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={method.POST}
-                onChange={() => toggleMethod('POST')}
-              />
-              <span className="toggle-slider"></span>
-            </label>
-            <label style={{ color: 'blue', marginLeft: '10px' }}>/POST</label>
-          </div>
+    <div className='container'>
 
-          <div className="toggle-container">
-            <p style={{ color: 'white', marginRight: '15px' }}>
-              tap to ensure the method, Endpoint:{' '}
-              <strong style={{ color: 'green' }}>'/All'</strong>
-            </p>
+      <div className='row align-items-center'>
+        <div className='col-3'>
+          <div className='container'>
+            <div className='row'>
+              <h2 className="docker-file-generator-title">
+                <strong style={{ fontSize: '1rem', marginBottom: '20px' }}>Select the desired Model</strong></h2>
+            </div>
+            <div className='row'>
+              {/* <label>
+                <input
+                  type="checkbox"
+                  checked={modelName === 'BLOGS'}
+                  onChange={() => setModelName(modelName === 'BLOGS' ? '' : 'BLOGS')}
+                />
+                BLOGS
+              </label> */}
+              <div className="container">
+      <ul className="ks-cboxtags">
+        <li>
+          <input type="checkbox" id="checkboxOne" value="BLOGS"
+          checked={modelName === 'BLOGS'}
+          onChange={() => setModelName(modelName === 'BLOGS' ? '' : 'BLOGS')}
+           />
+          <label htmlFor="checkboxOne">BLOGS</label>
+        </li>
+        {/* Add other list items similarly */}
+      </ul>
+    </div>
 
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={method.GET}
-                onChange={() => toggleMethod('GET')}
-              />
-              <span className="toggle-slider"></span>
-            </label>
-            <label style={{ color: 'green', marginLeft: '10px' }}>/GET</label>
-          </div>
-
-          <div className="toggle-container">
-            <p style={{ color: 'white', marginRight: '15px' }}>
-              tap to ensure the method, Endpoint:{' '}
-              <strong style={{ color: 'green' }}>'/updateBlog/:id'</strong>
-            </p>
-
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={method.PATCH}
-                onChange={() => toggleMethod('PATCH')}
-              />
-              <span className="toggle-slider"></span>
-            </label>
-            <label style={{ color: 'purple', marginLeft: '10px' }}>
-              /PATCH
-            </label>
-          </div>
-
-          <div className="toggle-container">
-            <p style={{ color: 'white', marginRight: '15px' }}>
-              tap to ensure the method Delete, Endpoint:{' '}
-              <strong style={{ color: 'green' }}>'/delete/:id'</strong>
-            </p>
-
-            <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={method.DELETE}
-                onChange={() => toggleMethod('DELETE')}
-                           />
-              <span className="toggle-slider"></span>
-            </label>
-            <label style={{ color: 'red', marginLeft: '10px' }}>
-              /DELETE
-            </label>
-          </div>
-        </div>
-        <button
-          className="docker-file-generator-button"
-          onClick={generateCode}
-          style={{ marginTop: '30px' }}
-        >
-          {isLoading ? (
-            <FaSpinner className="spinner-icon" spin />
-          ) : (
-            'Generate Code'
-          )}
-        </button>
-        {/* Popup modal */}
-        {responseJson && (
-          <div className="modal">
-            <div className="modal-content">
-              <span className="close" onClick={() => setResponseJson(null)}>
-                &times;
-              </span>
-              <p>Rest Api Created Successfully!</p> {/* Add your message here */}
-              <pre>{JSON.stringify(responseJson, null, 2)}</pre>
             </div>
           </div>
-        )}
+        </div>
+        <div className='col-9'>
+          <div className="docker-file-generator-container">
+
+            <div className="docker-file-generator-content">
+              <h2 className="docker-file-generator-title">
+                <strong style={{ fontSize: '3rem', marginBottom: '20px' }}>Generate Code</strong></h2>
+
+              <p className="docker-file-generator-description">Your project will be automatically generated with all the selected rest API Toggle , and thanks </p>
+              <div style={{ borderRadius: '20px', padding: '20px' }}>
+
+                <div className="toggle-container">
+
+                  <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode Post, Endpoint: "/"</p>
+                  <label className="toggle-switch">
+                    <input type="checkbox" checked={method.POST} onChange={() => toggleMethod('POST')} />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <label style={{ color: 'blue', marginLeft: '10px' }}>/POST</label>
+                </div>
+
+
+                <div className="toggle-container">
+                  <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode Get, Endpoint: "/All"</p>
+
+                  <label className="toggle-switch">
+                    <input type="checkbox" checked={method.GET} onChange={() => toggleMethod('GET')} />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <label style={{ color: 'green', marginLeft: '10px' }}>/GET</label>
+                </div>
+
+                <div className="toggle-container">
+                  <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode Patch, Endpoint: "/updateBlog/:id"</p>
+
+                  <label className="toggle-switch">
+                    <input type="checkbox" checked={method.PATCH} onChange={() => toggleMethod('PATCH')} />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <label style={{ color: 'purple', marginLeft: '10px' }}>/PATCH</label>
+                </div>
+
+
+                <div className="toggle-container">
+                  <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode Delete, Endpoint: "/delete/:id"</p>
+
+                  <label className="toggle-switch">
+
+                    <input type="checkbox" checked={method.DELETE} onChange={() => toggleMethod('DELETE')} />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <label style={{ color: 'red', marginLeft: '10px' }}>/DELETE</label>
+                </div>
+
+
+              </div>
+              <button className="docker-file-generator-button" onClick={generateCode} style={{ marginTop: '30px' }}>
+                {isLoading ? <FaSpinner className="spinner-icon" /> : 'Generate Code'}
+              </button>
+              {/* Popup modal */}
+              {responseJson && (
+                <div className="modal">
+                  <div className="modal-content">
+                    <span className="close" onClick={() => setResponseJson(null)}>&times;</span>
+                    <h2 className='success_message'>{responseJson}</h2>
+                    <pre>{JSON.stringify(responseJson, null, 2)}</pre>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

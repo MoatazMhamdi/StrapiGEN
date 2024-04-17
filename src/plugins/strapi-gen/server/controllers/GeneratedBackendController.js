@@ -12,9 +12,12 @@ module.exports = {
 
       const backendCode = await generateCode.generateCode(method);
       const backendModels = await generateCode.generateModels(model);
-      const backendRoutes = await generateCode.generateRoutes(route);
+      const backendRoutes = await generateCode.generateRoutes(method.split(','));
       const backendIndex = await generateCode.generateServerdotjs(index);
 
+      if (!method || method.trim() === '') {
+        throw new Error('No HTTP methods selected for route generation.');
+      }
       // Define directory for generated files (adjust as needed)
       const codeDir = path.join(__dirname, '../../../../../../../ReadyProductBackend');
       const codeDirC = path.join(__dirname, '../../../../../../../ReadyProductBackend/controllers');

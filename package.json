@@ -10,9 +10,9 @@
     "strapi": "strapi"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@fortawesome/fontawesome-free": "^6.5.1",
     "@octokit/core": "^6.0.1",
     "@octokit/rest": "^20.0.2",
     "@strapi/plugin-cloud": "4.20.0",
@@ -28,6 +28,7 @@
     "axios": "^1.6.7",
     "better-sqlite3": "8.6.0",
     "bootstrap": "^5.3.3",
+    "esprima": "^4.0.1",
     "fs": "^0.0.1-security",
     "mustache": "^4.2.0",
     "react": "^18.0.0",
@@ -50,6 +51,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/inversify": "^2.0.33"
+    "@types/inversify": "^2.0.33",
+    "@types/jest": "^29.5.12"
   }
 }

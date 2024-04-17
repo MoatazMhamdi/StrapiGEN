@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Services.css';
 import { Switch } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
-import strapigenImage from './logoStrapiGen.png'; // Import the image
+//import strapigenImage from './logoStrapiGen.png'; // Import the image
 
 
 const ServicesType = () => {
@@ -23,7 +23,7 @@ const ServicesType = () => {
   const handleNextButtonClick = () => {
     // Navigate to the next page
     history.push({
-      pathname: '/plugins/strapi-gen/Entities',
+      pathname: '/plugins/strapi-gen/Entitiees',
       state: { selectedRepo: selectedRepo }
     });
   };
@@ -32,7 +32,7 @@ const ServicesType = () => {
     <div className="docker-file-generator-container" style={{marginTop:'40px'}}>
       <div className="docker-file-generator-content">
       <img 
-            src={strapigenImage} 
+            src={} 
             alt="StrapiGEN" 
             className="strapigen-image" 
             style={{ width: '400px', height: 'auto', marginBottom: '-70px', marginTop: '-100px'}} // Adjusted width and height
