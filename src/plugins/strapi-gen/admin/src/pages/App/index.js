@@ -38,7 +38,7 @@ const App = () => {
         <Route path="/plugins/strapi-gen/DockerConfigForm" component={DockerFileGenerator} />
         <Route path="/plugins/strapi-gen/settings" component={ProjectSettings} />
 
-        <Route path="/plugins/strapi-gen/Entities" component={AddEntity} />
+        <Route path="/plugins/strapi-gen/Entitiies" component={AddEntity} />
         <Route path="/plugins/strapi-gen/AddAuth" component={AddAuthPage} />
         <Route path="/plugins/strapi-gen/ServiceManagement" component={ServiceManagementPage} />
         <Route path="/plugins/strapi-gen/selectedrepository" component={SelectedRepo} />

@@ -23,7 +23,7 @@ const OverViewPage = () => {
 
   
   const handleEntityList = () => {
-    history.push('/plugins/strapi-gen/ListEntity');
+    history.push('/plugins/strapi-gen/Entities');
   };
 
  const handleGenerateService = () => {
@@ -50,7 +50,7 @@ const OverViewPage = () => {
               <Link to="/modules">Modules</Link>
             </li>
             <li className={`menu-item ${location.pathname === '/entities' ? 'selected' : ''}`}>
-              <Link to="/entities">Entities</Link>
+              <Link to="/plugins/strapi-gen/Entities">Entities</Link>
             </li>
             <li className={`menu-item ${location.pathname === '/data-model' ? 'selected' : ''}`}>
               <Link to="/data-model">Data Model</Link>

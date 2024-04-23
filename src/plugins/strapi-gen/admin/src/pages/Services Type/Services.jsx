@@ -25,7 +25,7 @@ const ServicesType = () => {
   const handleNextButtonClick = () => {
     // Navigate to the next page
     history.push({
-      pathname: '/plugins/strapi-gen/Entities',
+      pathname: '/plugins/strapi-gen/Entitiies',
       state: { selectedRepo: selectedRepo }
     });
   };
