@@ -36,6 +36,13 @@ const ProjectSettings = () => {
         setSelectedRepo(selectedFullName);
     };
 
+
+    const handleLogout = () => {
+        history.push('/auth/login');
+      };
+
+
+
     const handleDeleteProject = async () => {
         try {
             if (selectedRepo) {
@@ -44,7 +51,7 @@ const ProjectSettings = () => {
     
                 if (confirmed) {
                     // Make a DELETE request to GitHub API to delete the repository
-                    await axios.delete(`https://api.github.com/repos/${selectedRepo}`, {
+                    await axios.delete('https://api.github.com/repos/${selectedRepo}', {
                         headers: {
                             Authorization: 'token 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',
                         },
@@ -52,6 +59,7 @@ const ProjectSettings = () => {
     
                     // Optionally, you can show a success message or perform any other action upon successful deletion
                     console.log('Repository deleted successfully.');
+                    alert('Your Repository was successfully deleted');
     
                     // Optionally, you can redirect the user to a different page after deletion
                     // history.push('/redirect-url');
@@ -72,7 +80,7 @@ const ProjectSettings = () => {
                 setSelectedRepo(projectName);
                 
                 // Make a PATCH request to GitHub API to update repository name
-                await axios.patch(`https://api.github.com/repos/${selectedRepo}`, {
+                await axios.patch('https://api.github.com/repos/${selectedRepo}', {
                     name: projectName
                 }, {
                     headers: {
@@ -164,6 +172,13 @@ const ProjectSettings = () => {
                         />
                         <button className="btn btn-info" style={{ margin: '15px' }} onClick={handleSaveSettings}>
                             PATCH
+                        </button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <label htmlFor="description">Logout from your session:</label>
+                        
+                        <button className="btn btn-danger" style={{ margin: '15px' }} onClick={handleLogout}>
+                            Logout <i className="fas fa-sign-out-alt"></i>
                         </button>
                     </div>
                     <div style={{ position: 'relative', marginBottom: '10px', borderRadius: '12px', marginTop: '40px' }}>

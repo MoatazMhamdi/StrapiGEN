@@ -1,51 +1,111 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons';
 import { FaDatabase } from 'react-icons/fa';
 import axios from 'axios';
+import * as go from 'gojs';
 import './EntitiesListPage.css';
+
 
 const ContentTypeList = () => {
   const [contentTypeList, setContentTypeList] = useState([]);
-  const location = useLocation();
-
-  const fetchContentTypes = async () => {
-    try {
-      const response = await axios.get('/api/content-type-builder/content-types');
-      if (response.data && Array.isArray(response.data.data)) {
-        const modifiedData = response.data.data.map(contentType => ({
-          uid: contentType.uid,
-          plugin: contentType.plugin,
-          apiID: contentType.apiID,
-          schema: {
-            displayName: contentType.schema.displayName,
-            kind: contentType.schema.kind,
-            pluralName: contentType.schema.pluralName,
-            description: contentType.schema.description,
-          }
-        }));
-        setContentTypeList(modifiedData);
-      } else {
-        console.error('Erreur: Le format de la réponse est inattendu:', response.data);
-      }
-    } catch (error) {
-      console.error('Erreur lors de la récupération des types de contenu:', error);
-    }
-  };
+  const [showDiagram, setShowDiagram] = useState(false);
+  const diagramRef = useRef(null);
 
   useEffect(() => {
-    fetchContentTypes();
+    axios.get('/api/content-type-builder/content-types')
+      .then(response => {
+        setContentTypeList(response.data.data);
+      })
+      .catch(error => console.error('Erreur lors de la récupération:', error));
   }, []);
+
+  useEffect(() => {
+    if (showDiagram && contentTypeList.length > 0) {
+      initDiagram();
+    }
+  }, [showDiagram, contentTypeList]);
 
   const filteredContentTypes = contentTypeList.filter(
     contentType => ![ 'upload', 'content-releases', 'i18n', 'users-permissions'].includes(contentType.plugin) && 
-    !['role', 'api-token', 'permission', 'api-token-permission','transfer-token','transfer-token-permission'].includes(contentType.apiID)
+    !['role', 'api-token', 'permission', 'api-token-permission', 'transfer-token', 'transfer-token-permission'].includes(contentType.apiID)
   );
+  const initDiagram = () => {
+  const $ = go.GraphObject.make;
+  const diagram = $(go.Diagram, diagramRef.current, {
+    "undoManager.isEnabled": true,
+    layout: $(go.TreeLayout, { angle: 90, layerSpacing: 35 }),
+    "initialContentAlignment": go.Spot.Center
+  });
+
+  diagram.nodeTemplate =
+    $(go.Node, "Auto",
+      $(go.Shape, "RoundedRectangle", { strokeWidth: 0, fill: "white" }),
+      $(go.Panel, "Vertical",
+        $(go.TextBlock, { margin: 8 },
+          new go.Binding("text", "name")),
+        $(go.Panel, "Vertical",
+          { margin: 10 },
+          new go.Binding("itemArray", "attributes"),
+          {
+            itemTemplate:
+              $(go.Panel,
+                $(go.TextBlock, { margin: 2 },
+                  new go.Binding("text", "", attr => `${attr.name}: ${attr.type}${attr.required ? ' (required)' : ''}`))              )
+          }
+        )
+      )
+    );
+
+  // Ajouter ceci pour visualiser les liens
+  diagram.linkTemplate =
+  $(go.Link,
+    { routing: go.Link.Orthogonal, corner: 5 },
+    $(go.Shape, { strokeWidth: 2, stroke: "black" }),  // Ligne de liaison
+    $(go.Shape, { toArrow: "Standard", stroke: null, fill: "black" })  // Flèche à l'extrémité
+  );
+
+  // Modèle avec relations
+  const model = new go.GraphLinksModel(
+    [
+      // Nœuds
+      ...filteredContentTypes.map(type => ({
+        key: type.uid,
+        name: type.schema.displayName,
+        attributes: Object.entries(type.schema.attributes).map(([key, value]) => ({
+          name: key,
+          type: value.type,
+          required: value.required || false
+        }))
+      }))
+      // // Ajouter de nouvelles classes ici
+      // { key: "Comment", name: "Comment", attributes: [{name: "content", type: "string"}, {name: "date", type: "date"}]},
+      // { key: "Profile", name: "Profile", attributes: [{name: "bio", type: "string"}, {name: "birthday", type: "date"}]},
+      // { key: "Category", name: "Category", attributes: [{name: "name", type: "string"}, {name: "description", type: "string"}]}
+    ],
+    [
+      // Liens
+      { from: "User", to: "Blog" },
+      { from: "Blog", to: "Comment" },
+      // { from: "User", to: "Profile" },
+      // { from: "Blog", to: "Category" }
+    ]
+  );
+
+  diagram.model = model;
+};
+
+  
+  
+
+  const toggleView = () => {
+    setShowDiagram(!showDiagram);
+  };
 
   return (
     <div className="app">
-      <header className="header">
+     <header className="header">
         <div className="logo-container">
           <h1 className="header-title">StrapiGen Plugin</h1>
         </div>
@@ -77,25 +137,25 @@ const ContentTypeList = () => {
       </header>
       <main className="main-content">
         <div className="toolbar">
-          <button className="filter-button">
-            <FontAwesomeIcon icon={faFilter} />
+          <button className="filter-button" onClick={toggleView}>
+            <FontAwesomeIcon icon={showDiagram ? faToggleOff : faToggleOn} />
           </button>
         </div>
         <div className="content">
-          <ul className="entities">
-            {filteredContentTypes.map((contentType, index) => (
-              <li key={index} className="entity-item">
-                <FaDatabase className="entity-icon" />
-                <Link to={`/plugins/strapi-gen/entities/${contentType.uid}`}>
-                  <span className="entity-name">{contentType.schema.displayName}</span>
-                </Link>
-
-                {/* <button className="delete-button">
-                  <FontAwesomeIcon icon={faTrash} />
-                </button> */}
-              </li>
-            ))}
-          </ul>
+          {showDiagram ? (
+            <div ref={diagramRef} style={{ width: '1000px', height: '400px', backgroundColor: '#DAE4E4' }}></div>
+          ) : (
+            <ul className="entities">
+              {filteredContentTypes.map((contentType, index) => (
+                <li key={index} className="entity-item">
+                  <FaDatabase className="entity-icon" />
+                  <Link to={`/plugins/strapi-gen/entities/${contentType.uid}`}>
+                    <span className="entity-name">{contentType.schema.displayName}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </main>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSpinner } from 'react-icons/fa'; // Importing the spinner icon from react-icons/fa
 import axios from 'axios';
 import { useHistory ,useLocation} from 'react-router-dom'; // Import useHistory from react-router-dom
@@ -14,9 +14,10 @@ const CodeGenerator = () => {
   });
 
   const [modelName, setModelName] = useState('');
-
   const [responseJson, setResponseJson] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [workflowStatus, setWorkflowStatus] = useState(null);
+  const [workflowRuns, setWorkflowRuns] = useState([]); // State to hold workflow runs
   const history = useHistory(); // Get the history object
   const location = useLocation();
   const selectedRepo = location.state ? location.state.selectedRepo : null;
@@ -35,25 +36,63 @@ const CodeGenerator = () => {
   };
 
   const generateCode = async () => {
-    setIsLoading(true); // Set loading state to true
+    setIsLoading(true);
     try {
       const response = await axios.post(
         'http://localhost:1337/strapi-gen/generate-backend',
         {
           method: Object.keys(method).filter((key) => method[key]).join(','),
           model: modelName,
-          selectedRepo
+          selectedRepo: selectedRepo // Include selectedRepo in the request body
         }
       );
-      console.log(response.data.message); // Success message from backend
-      setResponseJson(response.data.message); // Set response JSON
+      console.log(response.data.message);
+      setResponseJson(response.data.message);
+      fetchWorkflowStatus();
+
     } catch (error) {
       console.error('Error generating code:', error);
       // Handle error
     } finally {
-      setIsLoading(false); // Set loading state to false
+      setIsLoading(false);
     }
   };
+  const fetchWorkflowStatus = async () => {
+    try {
+      const response = await axios.get(`https://api.github.com/repos/${selectedRepo}/actions/runs`, {
+        headers: {
+          Authorization: `Bearer <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>`,
+        },
+      });
+      console.log('Workflow status:', response.data);
+      // Get the status of the latest workflow run
+      const latestRun = response.data.workflow_runs[0];
+      setWorkflowStatus(latestRun.status);
+      fetchWorkflowRuns(); // Fetch workflow runs after getting status
+    } catch (error) {
+      console.error('Error fetching workflow status:', error);
+    }
+  };
+
+  const fetchWorkflowRuns = async () => {
+    try {
+      const response = await axios.get(`https://api.github.com/repos/${selectedRepo}/actions/runs`, {
+        headers: {
+          Authorization: `Bearer <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>`,
+        },
+      });
+      console.log('Workflow runs:', response.data);
+      setWorkflowRuns(response.data.workflow_runs);
+    } catch (error) {
+      console.error('Error fetching workflow runs:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedRepo) {
+      fetchWorkflowRuns();
+    }
+  }, [selectedRepo]);
 
   const navigateBack = () => {
     history.push('/plugins/strapi-gen/Overview'); // Navigate to the specified route
@@ -156,8 +195,9 @@ const CodeGenerator = () => {
               {responseJson && (
                 <div className="modal">
                   <div className="modal-content">
-                    <span className="close" onClick={() => setResponseJson(null)}>&times;</span>
-                    <h2 className='success_message'>{responseJson}</h2>
+                    <span className="close" onClick={() => setResponseJson(null)}  style={{ color: 'red'}}>&times;</span>
+                    <h2  className='success_message' style={{ color: 'blue'}}>{responseJson}</h2>
+                    <p style={{ color: 'purple', marginRight: '2rem' }}>Click <a href={`https://github.com/${selectedRepo}`}>GitHub Repository</a> to view the repository.</p>
                     <pre>{JSON.stringify(responseJson, null, 2)}</pre>
                   </div>
                 </div>
@@ -166,6 +206,22 @@ const CodeGenerator = () => {
           </div>
         </div>
       </div>
+       {/* Display workflow runs */}
+    <div className="row">
+      <div className="col">
+        <h3>Workflow Runs</h3>
+        <ul>
+          {workflowRuns.map((run) => (
+            <li key={run.id}>
+              <p>Run ID: {run.id}</p>
+              <p>Status: {run.status}</p>
+              <p>Conclusion: {run.conclusion}</p>
+              {/* Add more details as needed */}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
     </div>
   );
 };

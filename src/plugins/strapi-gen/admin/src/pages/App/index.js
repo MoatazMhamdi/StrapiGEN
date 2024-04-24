@@ -18,7 +18,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ContentTypeList from '../EntityComponant/EntityListPage';// Assuming the path is correct
 import GenerateCodeComponent from '../ServiceGeneration/GenerateCodeComponent';
 import EntityDetails from '../EntityComponant/EntityDetailsPage';
-
+import RenderOAuthPage from '../Render/RenderPage';
+import MyForm from '../Render/inputRender';
 
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
@@ -49,6 +50,8 @@ const App = () => {
         <Route path="/plugins/strapi-gen/entities" component={ContentTypeList} />
      
         <Route path="/plugins/strapi-gen/Overview" component={OverViewPage} />
+        <Route path="/plugins/strapi-gen/renderOauth" component={RenderOAuthPage} />
+        <Route path="/plugins/strapi-gen/inputRenderhandler" component={MyForm} />
 
         <Route component={AnErrorOccurred} />
       </Switch>

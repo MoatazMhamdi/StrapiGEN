@@ -3,6 +3,9 @@ const path = require('path');
 const generateCode = require('../services/CodeGenerationService');
 const { execSync } = require('child_process');
 const { Octokit } = require('@octokit/rest');
+const http = require('http');
+
+
 
 module.exports = {
   async generateBackend(ctx) {
@@ -38,7 +41,7 @@ module.exports = {
         fs.mkdirSync(codeDirR);
       }
 
-      // Write files
+      //Write files
       fs.writeFileSync(path.join(codeDirC, 'backendCode.js'), backendCode);
       fs.writeFileSync(path.join(codeDirM, 'backendModels.js'), backendModels);
       fs.writeFileSync(path.join(codeDirR, 'backendRoutes.js'), backendRoutes);
@@ -58,9 +61,9 @@ console.log('hedha see',selectedRepo)
 
       // Push files to GitHub
       const responseBackendCode = await octokit.repos.createOrUpdateFileContents({
-        owner,
+       owner,
         repo,
-        path: 'Controller/backendCode.js',
+        path: 'controllers/backendCode.js',
         message: 'Add backend code',
         content: Buffer.from(backendCode).toString('base64'),
       });
@@ -68,7 +71,7 @@ console.log('hedha see',selectedRepo)
       const responseBackendModels = await octokit.repos.createOrUpdateFileContents({
         owner,
         repo,
-        path: 'Model/backendModels.js',
+        path: 'models/backendModels.js',
         message: 'Add backend models',
         content: Buffer.from(backendModels).toString('base64'),
       });
@@ -76,7 +79,7 @@ console.log('hedha see',selectedRepo)
       const responseBackendRoutes = await octokit.repos.createOrUpdateFileContents({
         owner,
         repo,
-        path: 'Route/backendRoutes.js',
+        path: 'routes/backendRoutes.js',
         message: 'Add backend routes',
         content: Buffer.from(backendRoutes).toString('base64'),
       });
@@ -90,10 +93,35 @@ console.log('hedha see',selectedRepo)
       });
 
       // Success response (optional)
+      const options = {
+        hostname: 'localhost', // Change to your GitRunner.js server hostname or IP
+        port: 3000, // Change to your GitRunner.js server port
+        path: '/webhook',
+        method: 'POST',
+      };
+      
+      console.log('Webhook Endpoint:', `http://${options.hostname}:${options.port}${options.path}`);
+
+      const req = http.request(options, (res) => {
+        console.log(`GitRunner.js statusCode: ${res.statusCode}`);
+      });
+      
+      req.on('error', (error) => {
+        console.error('GitRunner.js request error:', error);
+      });
+      
+      // Log the payload before sending
+        console.log('Payload:', JSON.stringify({ ref: 'refs/heads/main', selectedRepo }));
+
+      // Send the webhook payload
+          req.write(JSON.stringify({ ref: 'refs/heads/main', selectedRepo }));
+           req.end();
+      // Return response to the client
       ctx.send({ message: 'Code generated and pushed to GitHub successfully!' });
     } catch (error) {
       console.error('Error generating backend code:', error);
       ctx.throw(500, 'Internal server error');
     }
+    
   }
 };
