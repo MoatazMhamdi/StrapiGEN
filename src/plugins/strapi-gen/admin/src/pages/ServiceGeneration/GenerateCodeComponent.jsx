@@ -21,6 +21,8 @@ const CodeGenerator = () => {
   const history = useHistory(); // Get the history object
   const location = useLocation();
   const selectedRepo = location.state ? location.state.selectedRepo : null;
+  const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; 
+
 
   console.log('Selected Repo :', selectedRepo);
   
@@ -43,7 +45,8 @@ const CodeGenerator = () => {
         {
           method: Object.keys(method).filter((key) => method[key]).join(','),
           model: modelName,
-          selectedRepo: selectedRepo // Include selectedRepo in the request body
+          selectedRepo: selectedRepo ,
+          tokenGitOauth: tokenGitOauth
         }
       );
       console.log(response.data.message);

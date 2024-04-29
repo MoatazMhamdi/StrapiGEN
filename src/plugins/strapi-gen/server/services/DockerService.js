@@ -10,7 +10,7 @@ module.exports = {
   generateDockerFiles: async (configData, imageName, nodeVersion, port) => {
   try {
     // Extraire les données de configuration
-    const { databaseClient, databaseHost, databasePort, appKeys, nodeEnv ,packageManager,selectedRepo,imageName,port} = configData;
+    const { databaseClient, databaseHost, databasePort, appKeys, nodeEnv ,packageManager,selectedRepo,imageName,port,tokenGitOauth} = configData;
 
     // Logique pour générer le contenu du Dockerfile
     const dockerfileContent = `FROM ${imageName}:v20.5.0-alpine
@@ -86,10 +86,10 @@ module.exports = {
     const octokit = axios.create({
       baseURL: 'https://api.github.com/',
       headers: {
-        'Authorization': 'token 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',
-        'Content-Type': 'application/json'
+          'Authorization': `token ${tokenGitOauth}`, // Use the token from the request payload
+          'Content-Type': 'application/json'
       }
-    });
+  });
 
     const responseDockerfile = await octokit.put(`/repos/${selectedRepo}/contents/Docker-Strapigen/Dockerfile`, {
       message: 'Add Dockerfile',

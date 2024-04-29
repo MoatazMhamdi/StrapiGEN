@@ -11,7 +11,7 @@ module.exports = {
   async generateBackend(ctx) {
     console.log('eazeaeaze');
     try {
-      const { method, model, route, index, selectedRepo } = ctx.request.body; // Changed variable name to selectedRepo
+      const { method, model, route, index, selectedRepo ,tokenGitOauth} = ctx.request.body; // Changed variable name to selectedRepo
 
       const backendCode = await generateCode.generateCode(method);
       const backendModels = await generateCode.generateModels(model);
@@ -56,7 +56,7 @@ module.exports = {
 console.log('hedha see',selectedRepo)
       // Push code to GitHub repository
       const octokit = new Octokit({
-        auth: 'token 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', // Replace with your GitHub personal access token
+        auth: `token ${tokenGitOauth}`, // Use the token from the request payload
       });
 
       // Push files to GitHub

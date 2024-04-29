@@ -23,7 +23,7 @@ const TokenPage = () => {
         <img src={strapigenImage} alt="StrapiGEN" className="strapigen-image" style={{ marginBottom: '-60px' }} />
   
         <h1>First, you need to follow these steps down below to continue the process</h1>
-        <p style={{ marginBottom: '40px' }}>click <a href='https://github.com/settings/tokens' target='_blank' rel="noopener noreferrer">here</a> and generate a new api classic token and paste it in the text field below!</p>
+        <p style={{ marginBottom: '40px' }}>click <a href='https://github.com/settings/tokens' target='_blank' rel="noopener noreferrer">here</a> and generate a new api classic token and allow all the field of accessibility and paste it in the text field below</p>
        
   
         <div className="input-container">

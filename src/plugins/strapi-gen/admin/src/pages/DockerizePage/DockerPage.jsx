@@ -8,6 +8,7 @@ const DockerFileGenerator = () => {
   const history = useHistory();
 
   const selectedRepo = location.state ? location.state.selectedRepo : null;
+  const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; 
 
   const [port, setPort] = useState('');
   const [imageName, setImageName] = useState('');
@@ -45,7 +46,8 @@ const DockerFileGenerator = () => {
         packageManager,
         appKeys,
         nodeEnv,
-        selectedRepo 
+        selectedRepo,
+        tokenGitOauth
       });
 
       if (response.data) {
