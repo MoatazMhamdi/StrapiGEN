@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FaSpinner } from 'react-icons/fa'; // Importing the spinner icon from react-icons/fa
 import axios from 'axios';
-import { useHistory ,useLocation} from 'react-router-dom'; // Import useHistory from react-router-dom
+import { useHistory, useLocation } from 'react-router-dom'; // Import useHistory from react-router-dom
 import './GenerateCodeComponent.css'; // Import CSS file
 import './DockerFileGenerator.css'; // Import CSS for styling
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 const CodeGenerator = () => {
   const [method, setMethod] = useState({
@@ -11,7 +12,13 @@ const CodeGenerator = () => {
     GET: false,
     PATCH: false,
     DELETE: false,
+    LOGIN: false,
+    REGISTER: false,
+    FORGETPASSWORD: false,
+    OTP: false,
+    RESETPASSWORD: false,
   });
+  const [selectedModels, setSelectedModels] = useState([]);
 
   const [modelName, setModelName] = useState('');
   const [responseJson, setResponseJson] = useState(null);
@@ -23,10 +30,23 @@ const CodeGenerator = () => {
   const selectedRepo = location.state ? location.state.selectedRepo : null;
 
   console.log('Selected Repo :', selectedRepo);
-  
+
   const handleModelNameChange = (event) => {
     setModelName(event.target.value);
   };
+
+
+  const toggleModel = (modelName) => {
+    console.log('Toggling model:', modelName); // Add this line
+    setSelectedModels(prevSelectedModels => {
+      if (prevSelectedModels.includes(modelName)) {
+        return prevSelectedModels.filter(name => name !== modelName);
+      } else {
+        return [...prevSelectedModels, modelName];
+      }
+    });
+  };
+  
   
   const toggleMethod = (methodName) => {
     setMethod((prevState) => ({
@@ -35,6 +55,10 @@ const CodeGenerator = () => {
     }));
   };
 
+
+  // call back endpoint 
+  const selectedModelNames = selectedModels.join(','); // init the model name req.body 
+
   const generateCode = async () => {
     setIsLoading(true);
     try {
@@ -42,7 +66,9 @@ const CodeGenerator = () => {
         'http://localhost:1337/strapi-gen/generate-backend',
         {
           method: Object.keys(method).filter((key) => method[key]).join(','),
-          model: modelName,
+         // model: modelName,
+         model: selectedModelNames,
+
           selectedRepo: selectedRepo // Include selectedRepo in the request body
         }
       );
@@ -118,18 +144,31 @@ const CodeGenerator = () => {
                 BLOGS
               </label> */}
               <div className="container">
-      <ul className="ks-cboxtags">
-        <li>
-          <input type="checkbox" id="checkboxOne" value="BLOGS"
-          checked={modelName === 'BLOGS'}
-          onChange={() => setModelName(modelName === 'BLOGS' ? '' : 'BLOGS')}
-           />
-          <label htmlFor="checkboxOne">BLOGS</label>
-        </li>
-        {/* Add other list items similarly */}
-      </ul>
-    </div>
-
+                <ul className="ks-cboxtags">
+                  <li>
+                    <input type="checkbox" id="checkboxOne" value="BLOGS"
+                      checked={selectedModels.includes('BLOGS')}
+                      onChange={() => toggleModel('BLOGS')}
+                    />
+                    <label htmlFor="checkboxOne">BLOGS</label>
+                  </li>
+                  {/* Add other list items similarly */}
+                </ul>
+              </div>
+           
+              <div className="container">
+                <ul className="ks-cboxtags">
+                  <li>
+                    <input type="checkbox" id="checkboxTwo" value="USERS"
+                     checked={selectedModels.includes('USERS')}
+                     onChange={() => toggleModel('USERS')}
+                    />
+                    <label htmlFor="checkboxTwo">USERS</label>
+                  </li>
+                  {/* Add other list items similarly */}
+                </ul>
+              </div>
+             
             </div>
           </div>
         </div>
@@ -142,9 +181,10 @@ const CodeGenerator = () => {
 
               <p className="docker-file-generator-description">Your project will be automatically generated with all the selected rest API Toggle , and thanks </p>
               <div style={{ borderRadius: '20px', padding: '20px' }}>
-
+   <p style={{fontWeight : 'bold', color: '#029d89'}}>Generate Blogs Module !</p>
+                  <p> ────────────────── </p>
                 <div className="toggle-container">
-
+                
                   <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode Post, Endpoint: "/"</p>
                   <label className="toggle-switch">
                     <input type="checkbox" checked={method.POST} onChange={() => toggleMethod('POST')} />
@@ -152,7 +192,7 @@ const CodeGenerator = () => {
                   </label>
                   <label style={{ color: 'blue', marginLeft: '10px' }}>/POST</label>
                 </div>
-
+             
 
                 <div className="toggle-container">
                   <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode Get, Endpoint: "/All"</p>
@@ -185,7 +225,63 @@ const CodeGenerator = () => {
                   </label>
                   <label style={{ color: 'red', marginLeft: '10px' }}>/DELETE</label>
                 </div>
+                  <p style={{fontWeight : 'bold', color: 'green'}}>Generate User Auth Module !</p>
+                  <p> ────────────────── </p>
 
+                <div className="toggle-container">
+
+                  <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode Login usin jwt, Endpoint: "/login"</p>
+                  <label className="toggle-switch">
+                    <input type="checkbox" checked={method.LOGIN} onChange={() => toggleMethod('LOGIN')} />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <label style={{ color: 'white', marginLeft: '10px' }}>/LOGIN</label>
+                </div>
+
+
+                <div className="toggle-container">
+                  <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode Register User, Endpoint: "/register"</p>
+
+                  <label className="toggle-switch">
+                    <input type="checkbox" checked={method.REGISTER} onChange={() => toggleMethod('REGISTER')} />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <label style={{ color: 'white', marginLeft: '10px' }}>/REGISTER</label>
+                </div>
+
+                <div className="toggle-container">
+                  <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode Forget Password, Endpoint: "/forgetPass"</p>
+
+                  <label className="toggle-switch">
+                    <input type="checkbox" checked={method.FORGETPASSWORD} onChange={() => toggleMethod('FORGETPASSWORD')} />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <label style={{ color: 'white', marginLeft: '10px' }}>/FORGETPASSWORD</label>
+                </div>
+
+
+                <div className="toggle-container">
+                  <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode verify OTP, Endpoint: "/otp"</p>
+
+                  <label className="toggle-switch">
+
+                    <input type="checkbox" checked={method.OTP} onChange={() => toggleMethod('OTP')} />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <label style={{ color: 'white', marginLeft: '10px' }}>/OTP</label>
+                </div>
+
+
+                <div className="toggle-container">
+                  <p style={{ color: 'white', marginRight: '15px' }}>tap to enssure the methode Reset Password, Endpoint: "/resetPass"</p>
+
+                  <label className="toggle-switch">
+
+                    <input type="checkbox" checked={method.RESETPASSWORD} onChange={() => toggleMethod('RESETPASSWORD')} />
+                    <span className="toggle-slider"></span>
+                  </label>
+                  <label style={{ color: 'white', marginLeft: '10px' }}>/RESETPASSWORD</label>
+                </div>
 
               </div>
               <button className="docker-file-generator-button" onClick={generateCode} style={{ marginTop: '30px' }}>
@@ -195,8 +291,8 @@ const CodeGenerator = () => {
               {responseJson && (
                 <div className="modal">
                   <div className="modal-content">
-                    <span className="close" onClick={() => setResponseJson(null)}  style={{ color: 'red'}}>&times;</span>
-                    <h2  className='success_message' style={{ color: 'blue'}}>{responseJson}</h2>
+                    <span className="close" onClick={() => setResponseJson(null)} style={{ color: 'red' }}>&times;</span>
+                    <h2 className='success_message' style={{ color: 'blue' }}>{responseJson}</h2>
                     <p style={{ color: 'purple', marginRight: '2rem' }}>Click <a href={`https://github.com/${selectedRepo}`}>GitHub Repository</a> to view the repository.</p>
                     <pre>{JSON.stringify(responseJson, null, 2)}</pre>
                   </div>
@@ -206,22 +302,22 @@ const CodeGenerator = () => {
           </div>
         </div>
       </div>
-       {/* Display workflow runs */}
-    <div className="row">
-      <div className="col">
-        <h3>Workflow Runs</h3>
-        <ul>
-          {workflowRuns.map((run) => (
-            <li key={run.id}>
-              <p>Run ID: {run.id}</p>
-              <p>Status: {run.status}</p>
-              <p>Conclusion: {run.conclusion}</p>
-              {/* Add more details as needed */}
-            </li>
-          ))}
-        </ul>
+      {/* Display workflow runs */}
+      <div className="row">
+        <div className="col">
+          <h3>Workflow Runs</h3>
+          <ul>
+            {workflowRuns.map((run) => (
+              <li key={run.id}>
+                <p>Run ID: {run.id}</p>
+                <p>Status: {run.status}</p>
+                <p>Conclusion: {run.conclusion}</p>
+                {/* Add more details as needed */}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

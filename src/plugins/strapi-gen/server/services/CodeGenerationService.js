@@ -6,6 +6,7 @@ const Mustache = require('mustache');
 
 module.exports = {
 async generateCode(method) {
+  
     // Sample model schema (ideally, this should be a parameter)
     const modelSchema = {
     kind: 'collectionType',
@@ -100,11 +101,14 @@ async generateCode(method) {
         }
     `,
     };
-
+    const supportedMethods = ['POST', 'GET', 'PATCH', 'DELETE'];
+    // const methods = method.toUpperCase().split(',').map(m => m.trim());
+    // if (methods.some(m => )) {
+    //     throw new Error(`Unsupported request methods: ${method}`); }
     // Validate request method (assuming `method` can only be uppercase)
   // Validate request method (assuming `method` can only be uppercase)
   const methods = method.toUpperCase().split(',').map(m => m.trim());
-  if (methods.some(m => !Object.keys(templates).includes(m))) {
+  if (methods.some(m => !Object.keys(templates).includes(m) && !supportedMethods.includes(m) )) {
       throw new Error(`Unsupported request methods: ${method}`);
   }
 

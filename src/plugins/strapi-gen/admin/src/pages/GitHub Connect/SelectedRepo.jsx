@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import './DockerFileGenerator.css'; // Import the CSS file for styling
-import strapigenImage from './logoStrapiGen.png'; // Import the image
 
 const SelectedRepo = () => {
   const [repos, setRepos] = useState([]);
@@ -62,7 +61,7 @@ const SelectedRepo = () => {
     <div className="docker-file-generator-container" style={{marginTop:'40px'}}>
       <div className="docker-file-generator-content">
         <img 
-          src={strapigenImage} 
+   
           alt="StrapiGEN" 
           className="strapigen-image" 
           style={{ width: '350px', height: 'auto', marginBottom: '-80px'}} 
