@@ -19,16 +19,6 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/accessTokenPath/git',
-    handler: 'githubController.githubC',
-    config: {
-     
-      auth: false,
-     
-    }
-  },
-  {
-    method: 'POST',
     path: '/custom-entities',
     handler: 'EntityController.create',
     config: {

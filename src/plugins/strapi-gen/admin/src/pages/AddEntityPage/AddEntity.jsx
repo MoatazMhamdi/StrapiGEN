@@ -8,14 +8,18 @@ const AddEntity = () => {
   const history = useHistory();
   const location = useLocation();
   const selectedRepo = location.state ? location.state.selectedRepo : null;
+  const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; // Access tokenGitOauth from location state
+
 
   // Fonction de redirection vers AddAuthPage
   const redirectToAddAuth = () => {
     history.push({
       pathname: '/plugins/strapi-gen/AddAuth',
-      state: { selectedRepo: selectedRepo }
+      state: { selectedRepo: selectedRepo, 
+      tokenGitOauth: tokenGitOauth }, // Include token in state
     });
   };
+  console.log(' hedha houwa ',tokenGitOauth)
 
   return (
     <div className="home-page">

@@ -13,6 +13,8 @@ const OverViewPage = () => {
   const history = useHistory();
 
   const selectedRepo = location.state ? location.state.selectedRepo : null;
+  const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; // Access tokenGitOauth from location state
+
 
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const [darkMode, setDarkMode] = useState(false); // State for dark mode
@@ -34,6 +36,8 @@ const OverViewPage = () => {
     setDarkMode(!darkMode); // Toggle dark mode state
   };
   console.log('repo is overview :',selectedRepo)
+  console.log('gittoken :',tokenGitOauth)
+
 
   return (
     <div> {/* Apply dark mode class if dark mode is enabled */}
@@ -58,12 +62,14 @@ const OverViewPage = () => {
             <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/DockerConfigForm' ? 'selected' : ''}`}>
             <Link to={{
               pathname: '/plugins/strapi-gen/DockerConfigForm',
-              state: { selectedRepo: selectedRepo } // Pass the selectedRepo as state
+              state: { selectedRepo: selectedRepo ,
+              tokenGitOauth: tokenGitOauth} // Pass the selectedRepo as state
             }}>Settings</Link>            </li>
             <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/settings' ? 'selected' : ''}`}>
             <Link to={{
               pathname: '/plugins/strapi-gen/settings',
-              state: { selectedRepo: selectedRepo } // Pass the selectedRepo as state
+              state: { selectedRepo: selectedRepo ,
+              tokenGitOauth: tokenGitOauth} // Pass the selectedRepo as state
             }}>Settings</Link>
           </li>
           <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/ServiceGenerate' ? 'selected' : ''}`}>

@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import { AnErrorOccurred } from '@strapi/helper-plugin';
 import HomePage from '../HomePage/HomePage';
 import ProjectNamePage from '../ProjectNamePage/ProjectNamePage';
+import tokenPage from '../ProjectNamePage/tokenPage';
 import GitConnect from '../GitHub Connect/Git';
 import SelectedRepo from '../GitHub Connect/SelectedRepo';
 import ServicesType from '../Services Type/Services';
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/plugins/strapi-gen" component={HomePage} exact />
         <Route path="/plugins/strapi-gen/ProjectName" component={ProjectNamePage} />
         <Route path="/plugins/strapi-gen/dockersuccess" component={DockerizationSuccessPage} />
+        <Route path="/plugins/strapi-gen/tokenGithubInput" component={tokenPage} />
 
         <Route path="/plugins/strapi-gen/GitConnect" component={GitConnect} />
 

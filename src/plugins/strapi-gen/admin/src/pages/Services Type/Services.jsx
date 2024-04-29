@@ -13,6 +13,8 @@ const ServicesType = () => {
   const history = useHistory();
   const location = useLocation();
   const selectedRepo = location.state ? location.state.selectedRepo : null;
+  const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; // Access tokenGitOauth from location state
+
 
   const handleToggleChange = (checked) => {
     setToggleChecked(checked);
@@ -26,9 +28,11 @@ const ServicesType = () => {
     // Navigate to the next page
     history.push({
       pathname: '/plugins/strapi-gen/Entitiies',
-      state: { selectedRepo: selectedRepo }
+      state: { selectedRepo: selectedRepo, 
+      tokenGitOauth: tokenGitOauth }, // Include token in state
     });
   };
+  console.log('aze', tokenGitOauth)
  
   return (
     <div className="docker-file-generator-container" style={{marginTop:'40px'}}>

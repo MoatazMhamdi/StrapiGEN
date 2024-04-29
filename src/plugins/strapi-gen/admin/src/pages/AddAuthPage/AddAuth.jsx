@@ -7,14 +7,18 @@ const AddAuthPage = () => {
   const history = useHistory();
   const location = useLocation();
   const selectedRepo = location.state ? location.state.selectedRepo : null; // Import de useHistory
+  const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; // Access tokenGitOauth from location state
+
 
   // Fonction de redirection vers ServiceManagementPage
   const redirectToServiceManagement = () => {
     history.push({
       pathname: '/plugins/strapi-gen/ServiceManagement',
-      state: { selectedRepo: selectedRepo }
+      state: { selectedRepo: selectedRepo, 
+      tokenGitOauth: tokenGitOauth }, // Include token in state
     });
   };
+console.log('token:',tokenGitOauth)
 
   return (
     <div className="home-page">

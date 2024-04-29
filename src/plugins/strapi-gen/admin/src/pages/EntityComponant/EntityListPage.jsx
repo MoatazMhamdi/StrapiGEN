@@ -88,36 +88,50 @@ const ContentTypeList = () => {
 
   return (
     <div>
-    <header className="header">
+    {/* <header className="header">
         <div className="logo-container">
-          <h1 className="header-title">StrapiGen Plugin</h1>
+          <h3 className="header-title" style={{ color:'#029d89'}}><strong>StrapiGen Plugin </strong><span className="weak">Dashboard</span></h3>
         </div>
         <nav className="nav">
-        <ul className="menu">
+          <ul className="menu">
             <li className={`menu-item ${location.pathname === '/overview' ? 'selected' : ''}`}>
               <Link to="/overview">Overview</Link>
             </li>
-            <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/ModelPage' ? 'selected' : ''}`}>
-              <Link to="/plugins/strapi-gen/ModelPage">Modules</Link>
+            <li className={`menu-item ${location.pathname === '/modules' ? 'selected' : ''}`}>
+              <Link to="/modules">Modules</Link>
             </li>
-            <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/Entities' ? 'selected' : ''}`}>
+            <li className={`menu-item ${location.pathname === '/entities' ? 'selected' : ''}`}>
               <Link to="/plugins/strapi-gen/Entities">Entities</Link>
             </li>
             <li className={`menu-item ${location.pathname === '/data-model' ? 'selected' : ''}`}>
               <Link to="/data-model">Data Model</Link>
             </li>
-            <li className={`menu-item ${location.pathname === '/docker-files' ? 'selected' : ''}`}>
-              <Link to="/docker-files">Docker Files</Link>
-            </li>
-            <li className={`menu-item ${location.pathname === '/sync-with-git' ? 'selected' : ''}`}>
-              <Link to="/sync-with-git">Sync with Git</Link>
-            </li>
-            <li className={`menu-item ${location.pathname === '/settings' ? 'selected' : ''}`}>
-              <Link to="/settings">Settings</Link>
+            <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/DockerConfigForm' ? 'selected' : ''}`}>
+            <Link to={{
+              pathname: '/plugins/strapi-gen/DockerConfigForm',
+              state: { selectedRepo: selectedRepo ,
+              tokenGitOauth: tokenGitOauth} // Pass the selectedRepo as state
+            }}>Settings</Link>            </li>
+            <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/settings' ? 'selected' : ''}`}>
+            <Link to={{
+              pathname: '/plugins/strapi-gen/settings',
+              state: { selectedRepo: selectedRepo ,
+              tokenGitOauth: tokenGitOauth} // Pass the selectedRepo as state
+            }}>Settings</Link>
+          </li>
+          <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/ServiceGenerate' ? 'selected' : ''}`}>
+            <Link to={{
+              pathname: '/plugins/strapi-gen/ServiceGenerate',
+              state: { selectedRepo: selectedRepo } // Pass the selectedRepo as state
+            }}>Service</Link>
+          </li>
+
+            <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/faq_section' ? 'selected' : ''}`}>
+              <Link to="/plugins/strapi-gen/faq_section">FAQ</Link>
             </li>
           </ul>
         </nav>
-      </header>
+      </header> */}
     <div className="docker-file-generator-container">
       
       <div className="docker-file-generator-content">
@@ -126,7 +140,9 @@ const ContentTypeList = () => {
         <main className="main-content">
           <div className="toolbar">
             <button className="filter-button" onClick={toggleView}>
+
               <FontAwesomeIcon icon={showDiagram ? faToggleOff : faToggleOn} />
+              Change Display of entities
             </button>
           </div>
           <div className="content">

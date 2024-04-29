@@ -4,25 +4,29 @@
 
   const ServiceManagementPage = () => {
     const history = useHistory();
-
     const location = useLocation();
     const selectedRepo = location.state ? location.state.selectedRepo : null;
+    const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; // Access tokenGitOauth from location state
+
 
  
     const redirectToOverview = () => {
       history.push({
         pathname: '/plugins/strapi-gen/Overview',
-        state: { selectedRepo: selectedRepo }
+        state: { selectedRepo: selectedRepo, 
+        tokenGitOauth: tokenGitOauth }, // Include token in state
       });
     };
     const handleDockerizeProject = () => {
       history.push({
         pathname: '/plugins/strapi-gen/DockerConfigForm',
-        state: { selectedRepo: selectedRepo }
+        state: { selectedRepo: selectedRepo, 
+        tokenGitOauth: tokenGitOauth }, // Include token in state
       });
     };
 
     console.log('repo is services  :',selectedRepo)
+    console.log('token: ',tokenGitOauth)
 
     return (
       <div className="home-page">

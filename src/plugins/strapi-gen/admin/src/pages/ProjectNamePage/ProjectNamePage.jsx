@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
-import './ProjectNamePage.css';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Switch } from 'antd';
 import strapigenImage from './logoStrapiGen.png';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const ProjectNamePage = () => {
+  const location = useLocation();
+  const history = useHistory();
+
   const [projectName, setProjectName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [visibility, setVisibility] = useState(false);
-  const history = useHistory();
+  const [token, setToken] = useState('');
 
+  useEffect(() => {
+    if (location.state && location.state.tokenGitOauth) {
+      setToken(location.state.tokenGitOauth);
+    }
+  }, [location.state]);
+
+  console.log('il token Mr:',token)
   const handleInputChange = (event) => {
     setProjectName(event.target.value);
     setErrorMessage('');
@@ -31,17 +39,17 @@ const ProjectNamePage = () => {
       const response = await fetch('https://api.github.com/user/repos', {
         method: 'POST',
         headers: {
-          Authorization: 'token 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',
+          Authorization: `token ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ name: projectName, private: visibility }), // Set private option based on visibility state
       });
       const data = await response.json();
       if (response.status === 201) {
-        // Redirect to SelectedRepo page with selected repository information
+        // Redirect to SelectedRepo page with selected repository information and token
         history.push({
           pathname: '/plugins/strapi-gen/selectedrepository',
-          state: { selectedRepo: data.full_name },
+          state: { selectedRepo: data.full_name, tokenGitOauth: token },
         });
       } else if (response.status === 422) {
         alert('This repository name is already in use in your GitHub account! Please try another one.');
@@ -52,9 +60,10 @@ const ProjectNamePage = () => {
       console.error('Error creating repository:', error);
     }
   };
+  console.log('il token Mr:',token)
 
   const handleOtherAction = () => {
-    history.push('/plugins/strapi-gen/selectedrepository');
+    history.push('/plugins/strapi-gen/selectedrepository', { tokenGitOauth: token });
   };
 
   return (
@@ -83,12 +92,10 @@ const ProjectNamePage = () => {
           </div>
           <div>
             <button className="docker-file-generator-button" onClick={handleConfirm} style={{ marginTop: '40px', marginBottom: '40px' , marginRight:'20px'}}>
-            <i className="fas fa-plus"></i> Create Repo
+              <i className="fas fa-plus"></i> Create Repo
             </button>
-            {/* New button added here */}
             <button className="btn btn-outline-info" onClick={handleOtherAction} style={{ marginTop: '40px', marginBottom: '40px', marginLeft: '10px' }}>
-            <i className="fas fa-folder"></i> Select Existant Repo
-
+              <i className="fas fa-folder"></i> Select Existing Repo
             </button>
           </div>
         </div>
