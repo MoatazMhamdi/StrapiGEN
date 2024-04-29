@@ -116,7 +116,7 @@ async generateCode(method) {
   let renderedCode = '';
   let importsAdded = false; 
 
-      const imports = `const Blog = require("../models/backendModels.js");\n\n`;
+      const imports = `const Blog = require("../models/backendBLOGSModels.js");\n\n`;
 
   methods.forEach(m => {
       const template = templates[m];
@@ -168,9 +168,9 @@ async generateModels(model) {
         
             module.exports = blogs;
         `,
-        User: `
-            // Define your UserModel template here
-        `,
+        USERS: `
+      
+    `,
     };
 
     const models = model.toUpperCase().split(',').map(m => m.trim());
@@ -235,7 +235,7 @@ async generateRoutes(method) {
     let importsAdded = false; // Flag to track if imports are already added
 
     const imports = `const express = require('express');\nconst router = express.Router();\n
-    const blogs = require('../controllers/backendCode.js');\n\n`;
+    const blogs = require('../controllers/backendBLOGSCode.js');\n\n`;
 
     method.forEach(method => {
         const template = templates[method];
@@ -274,7 +274,8 @@ const template = `
 const express = require('express'); // Import express using require
 const mongoose = require('mongoose'); // Import Mongoose using require
 const morgan = require('morgan');
-const blogRoutes = require('./routes/backendRoutes.js'); // Import routes using require
+const blogRoutes = require('./routes/backendBLOGSRoutes.js'); // Import routes using require
+const usersRoutes = require('./routes/backendUSERSRoutes.js'); // Import routes using require
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
@@ -306,6 +307,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use('/blog',blogRoutes);
+app.use('/',usersRoutes);
 
 /**
  * Démarrer le serveur à l'écoute des connexions

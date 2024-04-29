@@ -91,6 +91,12 @@ function handleWebhook(req, res) {
           "cookie-parser": "^1.4.6",
           "jade": "^1.11.0",
           "http-errors": "^2.0.0"
+          "bcrypt": "^5.1.1",
+          "bcryptjs": "^2.4.3",
+          "jsonwebtoken": "^9.0.2",
+          "otp-generator": "^4.0.1",
+          "twilio": "^4.19.3"
+
         }
       }
       `;

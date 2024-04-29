@@ -13,6 +13,49 @@ module.exports = {
       const { method, model, route, index, selectedRepo } = ctx.request.body;
 
       let backendCode, backendModels, backendRoutes, backendIndex;
+     let backendUserController, backendUserModel , backendUserRoutes;
+      if (model === 'BLOGS') {
+        backendCode = await generateCode.generateCode(method);
+        backendModels = await generateCode.generateModels(model);
+        backendRoutes = await generateCode.generateRoutes(method.split(','));
+        backendIndex = await generateCode.generateServerdotjs(index);
+      } else if (model === 'USERS') {
+        backendUserController = await generateUser.GenerateUserController(method);
+        backendUserModel = await generateUser.GenerateUserModel(model);
+        backendUserRoutes = await generateUser.GenerateUserRoutes(method.split(','));
+        backendIndex = await generateCode.generateServerdotjs(index);
+      } else if (model === 'USERS , BLOGS' || model === 'BLOGS , USERS') {
+        // Split the model string to get individual models
+        const models = model.split(' , ');
+        
+        // Generate code for each model
+        for (const model of models) {
+          if (model === 'BLOGS') {
+            backendCode = await generateCode.generateCode(method);
+            backendModels = await generateCode.generateModels(model);
+            backendRoutes = await generateCode.generateRoutes(method.split(','));
+            backendIndex = await generateCode.generateServerdotjs(index);
+            // Push files for BLOGS service
+           const [owner, repo] = selectedRepo.split('/');
+           await pushFilesToGitHub(owner, repo, 'BLOGS', backendCode, backendModels, backendRoutes, backendIndex);
+          } else if (model === 'USERS') {
+            backendUserController = await generateUser.GenerateUserController(method);
+            backendUserModel = await generateUser.GenerateUserModel(model);
+            backendUserRoutes = await generateUser.GenerateUserRoutes(method.split(','));
+            backendIndex = await generateCode.generateServerdotjs(index);
+            // Push files for USERS service
+           const [owner, repo] = selectedRepo.split('/');
+           await pushFilesToGitHub(owner, repo, 'USERS', backendUserController, backendUserModel , backendUserRoutes, backendIndex);
+          }
+        }
+        // Return early since files are pushed inside the loop
+        ctx.send({ message: 'Code generated and pushed to GitHub successfully!' });
+        return;
+      } else {
+        ctx.send({ message: 'Select a model plz!' });
+        console.log('select a model');
+        return;
+      }
 
       // Define directory for generated files
       const codeDir = path.join(__dirname, '../../../../../../../ReadyProductBackend');
@@ -34,58 +77,18 @@ module.exports = {
         fs.mkdirSync(codeDirR);
       }
 
-      if (model === 'BLOGS' || model === 'USERS') {
-        if (model === 'BLOGS') {
-          backendCode = await generateCode.generateCode(method);
-          backendModels = await generateCode.generateModels(model);
-          backendRoutes = await generateCode.generateRoutes(method.split(','));
-          backendIndex = await generateCode.generateServerdotjs(index);
-        } else if (model === 'USERS') {
-          backendCode = await generateUser.GenerateUserController(method);
-          backendModels = await generateUser.GenerateUserModel(model);
-          backendRoutes = await generateUser.GenerateUserRoutes(method.split(','));
-          backendIndex = await generateCode.generateServerdotjs(index);
-        }
-
-        // Write generated code to files
-        fs.writeFileSync(path.join(codeDirC, 'backendCode.js'), backendCode);
-        fs.writeFileSync(path.join(codeDirM, 'backendModels.js'), backendModels);
-        fs.writeFileSync(path.join(codeDirR, 'backendRoutes.js'), backendRoutes);
-        fs.writeFileSync(path.join(codeDir, 'Server.js'), backendIndex);
-      } else if (model === 'USERS , BLOGS' || model === 'BLOGS , USERS') {
-        // Split the model string to get individual models
-        const models = model.split(' , ');
-
-        // Generate code for each model
-        for (const model of models) {
-          if (model === 'BLOGS') {
-            backendCode = await generateCode.generateCode(method);
-            backendModels = await generateCode.generateModels(model);
-            backendRoutes = await generateCode.generateRoutes(method.split(','));
-            backendIndex = await generateCode.generateServerdotjs(index);
-          } else if (model === 'USERS') {
-            backendCode = await generateUser.GenerateUserController(method);
-            backendModels = await generateUser.GenerateUserModel(model);
-            backendRoutes = await generateUser.GenerateUserRoutes(method.split(','));
-            backendIndex = await generateCode.generateServerdotjs(index);
-          }
-
-          // Write generated code to files
-          fs.writeFileSync(path.join(codeDirC, 'backendCode.js'), backendCode);
-          fs.writeFileSync(path.join(codeDirM, 'backendModels.js'), backendModels);
-          fs.writeFileSync(path.join(codeDirR, 'backendRoutes.js'), backendRoutes);
-          fs.writeFileSync(path.join(codeDir, 'Server.js'), backendIndex);
-
-          // Return early since files are pushed inside the loop
-          ctx.send({ message: 'Code generated and pushed to GitHub successfully!' });
-          return;
-        }
-      } else {
-        ctx.send({ message: 'Select a model plz!' });
-        console.log('select a model');
-        return;
+      if (model === 'BLOGS') {
+      // Write generated code to files
+      fs.writeFileSync(path.join(codeDirC, 'backendBLOGSCode.js'), backendCode);
+      fs.writeFileSync(path.join(codeDirM, 'backendBLOGSModels.js'), backendModels);
+      fs.writeFileSync(path.join(codeDirR, 'backendBLOGSRoutes.js'), backendRoutes);
+      fs.writeFileSync(path.join(codeDir, 'Server.js'), backendIndex);
+      }else if (model === 'USERS'){
+      fs.writeFileSync(path.join(codeDirC, 'backendUSERSCode.js'), backendUserController);
+      fs.writeFileSync(path.join(codeDirM, 'backendUSERSModels.js'), backendUserModel);
+      fs.writeFileSync(path.join(codeDirR, 'backendUSERSRoutes.js'), backendUserRoutes);
+      fs.writeFileSync(path.join(codeDir, 'Server.js'), backendIndex);
       }
-
       // Run npm commands to generate package.json and install dependencies
       execSync('npm init -y', { cwd: codeDir });
       execSync('npm install', { cwd: codeDir });
@@ -93,9 +96,9 @@ module.exports = {
 
       // Push code to GitHub repository
       const [owner, repo] = selectedRepo.split('/');
-      await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex);
+      await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex,backendUserController, backendUserModel , backendUserRoutes);
 
-      // Log the payload before sending
+     // Log the payload before sending
       console.log('Payload:', JSON.stringify({ ref: 'refs/heads/main', selectedRepo }));
 
       // Send the webhook payload
@@ -126,15 +129,15 @@ module.exports = {
   },
 };
 
-async function pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex) {
+async function pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendUserRoutes) {
   const octokit = new Octokit({
     auth: 'token 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', // Replace with your GitHub personal access token
   });
-
+if (model === 'BLOGS') {
   // Define file paths based on model
-  const codeFilePath = `controllers/backendCode.js`;
-  const modelsFilePath = `models/backendModels.js`;
-  const routesFilePath = `routes/backendRoutes.js`;
+  const codeFilePath = `controllers/backendBLOGSCode.js`;
+  const modelsFilePath = `models/backendBLOGSModels.js`;
+  const routesFilePath = `routes/backendBLOGSRoutes.js`;
   const indexFilePath = `Server.js`;
 
   // Push files to GitHub
@@ -171,4 +174,45 @@ async function pushFilesToGitHub(owner, repo, model, backendCode, backendModels,
   });
 
   console.log(`Files pushed to GitHub for ${model}`);
+}else if (model === 'USERS'){
+  const codeFilePath = `controllers/backendUSERSCode.js`;
+  const modelsFilePath = `models/backendUSERSModels.js`;
+  const routesFilePath = `routes/backendUSERSRoutes.js`;
+  const indexFilePath = `Server.js`;
+
+  // Push files to GitHub
+  await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path: codeFilePath,
+    message: `Add backend code for ${model}`,
+    content: Buffer.from(backendUserController).toString('base64'),
+  });
+
+  await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path: modelsFilePath,
+    message: `Add backend models for ${model}`,
+    content: Buffer.from(backendUserModel).toString('base64'),
+  });
+
+  await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path: routesFilePath,
+    message: `Add backend routes for ${model}`,
+    content: Buffer.from(backendUserRoutes).toString('base64'),
+  });
+
+  await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path: indexFilePath,
+    message: `Add backend index for ${model}`,
+    content: Buffer.from(backendIndex).toString('base64'),
+  });
+
+  console.log(`Files pushed to GitHub for ${model}`);
+}
 }

@@ -22,5 +22,6 @@ jobs:
           npm init -y
           npm install
           npm install express mongoose morgan cors cookie-parser jade http-errors
+          npm install bcrypt bcryptjs jsobwebtoken otp-generator twilio
 
       # Remove the Run tests step entirely

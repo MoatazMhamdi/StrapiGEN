@@ -21,14 +21,53 @@ module.exports = {
         // Define templates for different request types
         const templates = {
             LOGIN: `
-                export function login(req, res, next) {
-                    // Login functionality
+            exports.login function (req, res, next) {
+              
+                  
                 }
             `,
             REGISTER: `
-                export async function FarmerSignUp(req, res, next) {
-                    // Registration functionality
-                }
+                export.Register async function (req, res, next) {
+                    User.findOne({ name: req.body.name })
+                    .then(user => {
+                        if (!user) {
+                            return res.status(401).json({ message: 'User is not registered' });
+                        }
+              
+                        bcrypt.compare(req.body.password, user.password)
+                            .then(valid => {
+                                if (!valid) {
+                                    return res.status(401).json({ message: 'Password incorrect' });
+                                } else {
+                                    const maxAge = 1 * 60 * 60;
+                                    const token = jwt.sign(
+                                        { userId: user._id, role: user.role, numTel: user.numTel },
+                                        "" + process.env.JWT_SECRET,
+                                        { expiresIn: maxAge } // 1hr in sec
+                                    );
+                                    res.cookie("jwt", token, {
+                                        httpOnly: true,
+                                        maxAge: maxAge * 1000, // 1hr in ms
+                                        Secure: true,
+                                    });
+              
+                                    res.status(200).json({
+                                        userId: user._id,
+                                        message: "User successfully Logged in",
+                                        jwt: token,
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error in bcrypt.compare:', error);
+                                res.status(500).json({ error: 'Internal Server Error' });
+                            });
+                    })
+                    .catch(error => {
+                        console.error('Error in User.findOne:', error);
+                        res.status(500).json({ error: 'Internal Server Error' });
+                    });
+                 }
             `,
             FORGETPASSWORD: `
                 export async function forgetPassword(req, res, next) {
@@ -58,10 +97,16 @@ module.exports = {
     
         // Generate code for all valid methods in the request
         let renderedCode = '';
-    
+        let importsAdded = false; 
+        const imports = `const User = require("../models/backendUSERSModels.js");\n\n`;
+
         methods.forEach(m => {
             const template = templates[m];
             if (template) {
+                if (!importsAdded) {
+                    renderedCode += imports; // Add imports only once
+                    importsAdded = true;
+                }
                 renderedCode += template;
             } else {
                 // Handle unsupported method within the loop
@@ -92,19 +137,19 @@ async GenerateUserModel(model) {
 
     const templates = {
         USERS: `
-            const mongoose = require('mongoose');
-            const { Schema } = mongoose;
-        
-            const blogsSchema = new Schema({
-                Title: { type: 'string', required: true, maxLength: 20 },
-                Description: { type: 'string', required: true },
-                image: { type: 'string', required: true },
-                Sujet: { type: 'string' },  
-            });
-        
-            const blogs = mongoose.model('blogs', blogsSchema);
-        
-            module.exports = blogs;
+        const mongoose = require('mongoose');
+        const { Schema } = mongoose;
+    
+        const usersSchema = new Schema({
+            username: { type: 'string', required: true, maxLength: 20 },
+            email: { type: 'string', required: true },
+            numTel: { type: 'string', required: true },
+            paswword: { type: 'string', required: true },  
+        });
+    
+        const users = mongoose.model('users', usersSchema);
+    
+        module.exports = users;
         `,
         User: `
             // Define your UserModel template here
@@ -148,13 +193,13 @@ async GenerateUserRoutes(method) {
 
     const templates = {
         LOGIN: `
-        router.route("/")
-            .post(blogs.addBlog);
+        router.route("/login")
+            .post(users.login);
 
       `,
       REGISTER: `
-        router.route("/All")
-            .get(blogs.getAllBlogs);
+        router.route("/register")
+            .post(users.Register);
 
       `,
       FORGETPASSWORD: `
@@ -178,7 +223,7 @@ async GenerateUserRoutes(method) {
     let importsAdded = false; // Flag to track if imports are already added
 
     const imports = `const express = require('express');\nconst router = express.Router();\n
-    const blogs = require('../controllers/backendCode.js');\n\n`;
+    const users = require('../controllers/backendUSERSCode.js');\n\n`;
 
     method.forEach(method => {
         const template = templates[method];

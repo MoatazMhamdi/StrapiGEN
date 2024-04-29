@@ -18,6 +18,7 @@ const CodeGenerator = () => {
     OTP: false,
     RESETPASSWORD: false,
   });
+
   const [selectedModels, setSelectedModels] = useState([]);
 
   const [modelName, setModelName] = useState('');
@@ -30,23 +31,13 @@ const CodeGenerator = () => {
   const selectedRepo = location.state ? location.state.selectedRepo : null;
 
   console.log('Selected Repo :', selectedRepo);
-
+  
+ 
   const handleModelNameChange = (event) => {
     setModelName(event.target.value);
   };
-
-
-  const toggleModel = (modelName) => {
-    console.log('Toggling model:', modelName); // Add this line
-    setSelectedModels(prevSelectedModels => {
-      if (prevSelectedModels.includes(modelName)) {
-        return prevSelectedModels.filter(name => name !== modelName);
-      } else {
-        return [...prevSelectedModels, modelName];
-      }
-    });
-  };
   
+
   
   const toggleMethod = (methodName) => {
     setMethod((prevState) => ({
@@ -55,10 +46,6 @@ const CodeGenerator = () => {
     }));
   };
 
-
-  // call back endpoint 
-  const selectedModelNames = selectedModels.join(','); // init the model name req.body 
-
   const generateCode = async () => {
     setIsLoading(true);
     try {
@@ -66,9 +53,8 @@ const CodeGenerator = () => {
         'http://localhost:1337/strapi-gen/generate-backend',
         {
           method: Object.keys(method).filter((key) => method[key]).join(','),
-         // model: modelName,
-         model: selectedModelNames,
-
+          // model: modelName,
+          model: modelName, // Pass the array of selected models
           selectedRepo: selectedRepo // Include selectedRepo in the request body
         }
       );
@@ -147,21 +133,14 @@ const CodeGenerator = () => {
                 <ul className="ks-cboxtags">
                   <li>
                     <input type="checkbox" id="checkboxOne" value="BLOGS"
-                      checked={selectedModels.includes('BLOGS')}
-                      onChange={() => toggleModel('BLOGS')}
+                      checked={modelName === 'BLOGS'}
+                      onChange={() => setModelName(modelName === 'BLOGS' ? '' : 'BLOGS')}
                     />
                     <label htmlFor="checkboxOne">BLOGS</label>
-                  </li>
-                  {/* Add other list items similarly */}
-                </ul>
-              </div>
-           
-              <div className="container">
-                <ul className="ks-cboxtags">
-                  <li>
+
                     <input type="checkbox" id="checkboxTwo" value="USERS"
-                     checked={selectedModels.includes('USERS')}
-                     onChange={() => toggleModel('USERS')}
+                      checked={modelName === 'USERS'}
+                      onChange={() => setModelName(modelName === 'USERS' ? '' : 'USERS')}
                     />
                     <label htmlFor="checkboxTwo">USERS</label>
                   </li>
