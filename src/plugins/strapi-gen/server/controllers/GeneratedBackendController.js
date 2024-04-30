@@ -13,7 +13,7 @@ module.exports = {
       const { method, model, route, index, selectedRepo } = ctx.request.body;
 
       let backendCode, backendModels, backendRoutes, backendIndex;
-     let backendUserController, backendUserModel , backendUserRoutes;
+      let backendUserController, backendUserModel , backendUserRoutes;
       if (model === 'BLOGS') {
         backendCode = await generateCode.generateCode(method);
         backendModels = await generateCode.generateModels(model);
@@ -78,17 +78,16 @@ module.exports = {
       }
 
       if (model === 'BLOGS') {
-      // Write generated code to files
-      fs.writeFileSync(path.join(codeDirC, 'backendBLOGSCode.js'), backendCode);
-      fs.writeFileSync(path.join(codeDirM, 'backendBLOGSModels.js'), backendModels);
-      fs.writeFileSync(path.join(codeDirR, 'backendBLOGSRoutes.js'), backendRoutes);
-      fs.writeFileSync(path.join(codeDir, 'Server.js'), backendIndex);
-      }else if (model === 'USERS'){
-      fs.writeFileSync(path.join(codeDirC, 'backendUSERSCode.js'), backendUserController);
-      fs.writeFileSync(path.join(codeDirM, 'backendUSERSModels.js'), backendUserModel);
-      fs.writeFileSync(path.join(codeDirR, 'backendUSERSRoutes.js'), backendUserRoutes);
-      fs.writeFileSync(path.join(codeDir, 'Server.js'), backendIndex);
+        // Write generated code to files
+        fs.writeFileSync(path.join(codeDirC, 'backendBLOGSCode.js'), backendCode);
+        fs.writeFileSync(path.join(codeDirM, 'backendBLOGSModels.js'), backendModels);
+        fs.writeFileSync(path.join(codeDirR, 'backendBLOGSRoutes.js'), backendRoutes);
+      } else if (model === 'USERS') {
+        fs.writeFileSync(path.join(codeDirC, 'backendUSERSCode.js'), backendUserController);
+        fs.writeFileSync(path.join(codeDirM, 'backendUSERSModels.js'), backendUserModel);
+        fs.writeFileSync(path.join(codeDirR, 'backendUSERSRoutes.js'), backendUserRoutes);
       }
+
       // Run npm commands to generate package.json and install dependencies
       execSync('npm init -y', { cwd: codeDir });
       execSync('npm install', { cwd: codeDir });
@@ -96,9 +95,9 @@ module.exports = {
 
       // Push code to GitHub repository
       const [owner, repo] = selectedRepo.split('/');
-      await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex,backendUserController, backendUserModel , backendUserRoutes);
+      await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendUserRoutes);
 
-     // Log the payload before sending
+      // Log the payload before sending
       console.log('Payload:', JSON.stringify({ ref: 'refs/heads/main', selectedRepo }));
 
       // Send the webhook payload
@@ -133,86 +132,122 @@ async function pushFilesToGitHub(owner, repo, model, backendCode, backendModels,
   const octokit = new Octokit({
     auth: 'token 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', // Replace with your GitHub personal access token
   });
-if (model === 'BLOGS') {
-  // Define file paths based on model
-  const codeFilePath = `controllers/backendBLOGSCode.js`;
-  const modelsFilePath = `models/backendBLOGSModels.js`;
-  const routesFilePath = `routes/backendBLOGSRoutes.js`;
-  const indexFilePath = `Server.js`;
+  if (model === 'BLOGS') {
+    // Define file paths based on model
+    const codeFilePath = `controllers/backendBLOGSCode.js`;
+    const modelsFilePath = `models/backendBLOGSModels.js`;
+    const routesFilePath = `routes/backendBLOGSRoutes.js`;
+    const indexFilePath = `Server.js`;
 
-  // Push files to GitHub
-  await octokit.repos.createOrUpdateFileContents({
-    owner,
-    repo,
-    path: codeFilePath,
-    message: `Add backend code for ${model}`,
-    content: Buffer.from(backendCode).toString('base64'),
-  });
+    // Push files to GitHub
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: codeFilePath,
+      message: `Add backend code for ${model}`,
+      content: Buffer.from(backendCode).toString('base64'),
+    });
 
-  await octokit.repos.createOrUpdateFileContents({
-    owner,
-    repo,
-    path: modelsFilePath,
-    message: `Add backend models for ${model}`,
-    content: Buffer.from(backendModels).toString('base64'),
-  });
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: modelsFilePath,
+      message: `Add backend models for ${model}`,
+      content: Buffer.from(backendModels).toString('base64'),
+    });
 
-  await octokit.repos.createOrUpdateFileContents({
-    owner,
-    repo,
-    path: routesFilePath,
-    message: `Add backend routes for ${model}`,
-    content: Buffer.from(backendRoutes).toString('base64'),
-  });
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: routesFilePath,
+      message: `Add backend routes for ${model}`,
+      content: Buffer.from(backendRoutes).toString('base64'),
+    });
 
-  await octokit.repos.createOrUpdateFileContents({
-    owner,
-    repo,
-    path: indexFilePath,
-    message: `Add backend index for ${model}`,
-    content: Buffer.from(backendIndex).toString('base64'),
-  });
+    // Check if backendIndex file exists
+    const indexFileExists = await checkFileExists(owner, repo, indexFilePath);
+    if (!indexFileExists) {
+      await octokit.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: indexFilePath,
+        message: `Add backend index for ${model}`,
+        content: Buffer.from(backendIndex).toString('base64'),
+      });
+      console.log(`Backend index file created and pushed to GitHub for ${model}`);
+    } else {
+      console.log(`Backend index file already exists for ${model}`);
+    }
 
-  console.log(`Files pushed to GitHub for ${model}`);
-}else if (model === 'USERS'){
-  const codeFilePath = `controllers/backendUSERSCode.js`;
-  const modelsFilePath = `models/backendUSERSModels.js`;
-  const routesFilePath = `routes/backendUSERSRoutes.js`;
-  const indexFilePath = `Server.js`;
+    console.log(`Files pushed to GitHub for ${model}`);
+  } else if (model === 'USERS') {
+    // Define file paths based on model
+    const codeFilePath = `controllers/backendUSERSCode.js`;
+    const modelsFilePath = `models/backendUSERSModels.js`;
+    const routesFilePath = `routes/backendUSERSRoutes.js`;
+    const indexFilePath = `Server.js`;
 
-  // Push files to GitHub
-  await octokit.repos.createOrUpdateFileContents({
-    owner,
-    repo,
-    path: codeFilePath,
-    message: `Add backend code for ${model}`,
-    content: Buffer.from(backendUserController).toString('base64'),
-  });
+    // Push files to GitHub
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: codeFilePath,
+      message: `Add backend code for ${model}`,
+      content: Buffer.from(backendUserController).toString('base64'),
+    });
 
-  await octokit.repos.createOrUpdateFileContents({
-    owner,
-    repo,
-    path: modelsFilePath,
-    message: `Add backend models for ${model}`,
-    content: Buffer.from(backendUserModel).toString('base64'),
-  });
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: modelsFilePath,
+      message: `Add backend models for ${model}`,
+      content: Buffer.from(backendUserModel).toString('base64'),
+    });
 
-  await octokit.repos.createOrUpdateFileContents({
-    owner,
-    repo,
-    path: routesFilePath,
-    message: `Add backend routes for ${model}`,
-    content: Buffer.from(backendUserRoutes).toString('base64'),
-  });
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: routesFilePath,
+      message: `Add backend routes for ${model}`,
+      content: Buffer.from(backendUserRoutes).toString('base64'),
+    });
 
-  await octokit.repos.createOrUpdateFileContents({
-    owner,
-    repo,
-    path: indexFilePath,
-    message: `Add backend index for ${model}`,
-    content: Buffer.from(backendIndex).toString('base64'),
-  });
+    // Check if backendIndex file exists
+    const indexFileExists = await checkFileExists(owner, repo, indexFilePath);
+    if (!indexFileExists) {
+      await octokit.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: indexFilePath,
+        message: `Add backend index for ${model}`,
+        content: Buffer.from(backendIndex).toString('base64'),
+      });
+      console.log(`Backend index file created and pushed to GitHub for ${model}`);
+    } else {
+      console.log(`Backend index file already exists for ${model}`);
+    }
 
-  console.log(`Files pushed to GitHub for ${model}`);
+    console.log(`Files pushed to GitHub for ${model}`);
+  }
 }
+
+async function checkFileExists(owner, repo, filePath) {
+  const octokit = new Octokit({
+    auth: 'token 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', // Replace with your GitHub personal access token
+  });
+
+  try {
+    await octokit.repos.getContent({
+      owner,
+      repo,
+      path: filePath,
+    });
+    return true; // File exists
+  } catch (error) {
+    if (error.status === 404) {
+      return false; // File does not exist
+    } else {
+      throw error;
+    }
+  }
 }
