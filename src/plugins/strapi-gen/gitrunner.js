@@ -65,40 +65,28 @@ function handleWebhook(req, res) {
       // Create the package.json content
       const packageJsonContent = `
       {
-        "name": "EEE",
+        "name": "readyproductbackend",
         "version": "1.0.0",
-        "description": "",
         "main": "Server.js",
         "scripts": {
-          "test": "echo \\"Error: no test specified\\" && exit 1"
-        },
-        "repository": {
-          "type": "git",
-          "url": "git+https://github.com/RaedKharrat/EEE.git"
+          "start": "node server.js"
         },
         "keywords": [],
         "author": "",
         "license": "ISC",
-        "bugs": {
-          "url": "https://github.com/RaedKharrat/EEE/issues"
-        },
-        "homepage": "https://github.com/RaedKharrat/EEE#readme",
         "dependencies": {
-          "express": "^4.19.2",
-          "mongoose": "^8.3.2",
-          "morgan": "^1.10.0",
-          "cors": "^2.8.5",
           "cookie-parser": "^1.4.6",
+          "cors": "^2.8.5",
+          "express": "^4.19.2",
+          "http-errors": "^2.0.0",
           "jade": "^1.11.0",
-          "http-errors": "^2.0.0"
-          "bcrypt": "^5.1.1",
-          "bcryptjs": "^2.4.3",
-          "jsonwebtoken": "^9.0.2",
-          "otp-generator": "^4.0.1",
-          "twilio": "^4.19.3"
-
-        }
+          "mongoose": "^8.3.3",
+          "morgan": "^1.10.0"
+        },
+        "description": ""
       }
+      
+      
       `;
       // const packageLockJsonContent = `
       // {

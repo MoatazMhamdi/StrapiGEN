@@ -5,12 +5,15 @@ const generateUser = require('../services/AuthGenerationCode');
 const { execSync } = require('child_process');
 const { Octokit } = require('@octokit/rest');
 const http = require('http');
+const wss = require('./WebSockets');
+const WebSocket = require('ws');
 
 module.exports = {
   async generateBackend(ctx) {
     console.log('eazeaeaze');
     try {
       const { method, model, route, index, selectedRepo } = ctx.request.body;
+      let backendLogs = ''; // Initialize backend logs variable
 
       let backendCode, backendModels, backendRoutes, backendIndex;
       let backendUserController, backendUserModel , backendUserRoutes;
@@ -48,6 +51,8 @@ module.exports = {
            await pushFilesToGitHub(owner, repo, 'USERS', backendUserController, backendUserModel , backendUserRoutes, backendIndex);
           }
         }
+
+      
         // Return early since files are pushed inside the loop
         ctx.send({ message: 'Code generated and pushed to GitHub successfully!' });
         return;
@@ -119,8 +124,18 @@ module.exports = {
       req.write(JSON.stringify({ ref: 'refs/heads/main', selectedRepo }));
       req.end();
 
+       const logMessage = 'Backend logic executed successfully!';
+      wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(logMessage);
+        }
+      });
+
+      console.log(logMessage);
+
+      ctx.status = 200;
       // Return response to the client
-      ctx.send({ message: 'Code generated and pushed to GitHub successfully!' });
+      ctx.send({ message: 'Code generated and pushed to GitHub successfully!', logs: 'Logs from code generation' });
     } catch (error) {
       console.error('Error generating backend code:', error);
       ctx.throw(500, 'Internal server error');
