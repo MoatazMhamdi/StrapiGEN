@@ -96,21 +96,138 @@ module.exports = {
             `,
             FORGETPASSWORD: `
             exports.forgetPassword = async function (req, res, next) {
-                // Forget password functionality
+                try {
+                    // Extract numTel from the request body
+                    const { numTel } = req.body;
+                
+                    // Check if the user is registered
+                    const user = await User.findOne({ numTel });
+                
+                    if (!user) {
+                      return res.status(401).json({ message: 'User is not registered' });
+                    }
+                
+                    // Generate OTP
+                    const otp = otpGenerator.generate(6, {
+                      secret: process.env.JWT_SECRET,
+                      digits: 6,
+                      algorithm: 'sha256',
+                      epoch: Date.now(),
+                      upperCaseAlphabets: false,
+                      specialChars: false,
+                      lowerCaseAlphabets: false,
+                    });
+                
+                    // Save OTP in the database
+                    const otpDocument = new Otp({
+                      userId: numTel,
+                      otp,
+                    });
+                    await otpDocument.save();
+                //     const accountSid = ' ';
+                //     const authToken = ' ';
+                //     const twilioPhoneNumber = '+ numTel';
+                
+                //     const client = twilio(accountSid, authToken);
+                    
+                //     const phoneNumberE164  ="+216" + req.body.numTel
+                
+                //     console.log('Sending SMS to:', phoneNumberE164);
+                //     // Send SMS using Twilio
+                //     const message = await client.messages.create({
+                //       body: 'Strapi Welcome you!
+                //                 Your OTP is: {otp}'', // add '$ befor the {otp} '
+                //       from: twilioPhoneNumber,
+                //       to: phoneNumberE164,
+                //     });
+                
+                //     console.log('SMS sent with SID: {message.sid}'');
+                //    // sendSMS(numTel, otp);
+                
+                    return res.status(200).json({ otp });
+                  } catch (error) {
+                    console.error('Error in forgetPasssword:', error);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                  }
             }
             `,
             OTP: `
             exports.sendOtp = async function (req, res, next) {
-                // OTP verification functionality
+                try {
+                    const existingUser = await User.findOne(
+                      { numTel: req.body.numTel },
+                    );
+                
+                    if (existingUser) {
+                      return res.status(400).json({ message: "It seems you already have an account, please log in instead." });
+                    }
+                    const otp = otpGenerator.generate(6,{
+                      secret: process.env.JWT_SECRET,
+                      digits: 6,
+                      algorithm: 'sha256',
+                      epoch: Date.now(),
+                      upperCaseAlphabets: false, specialChars: false,
+                      lowerCaseAlphabets: false,
+                  });
+                        const otpDocument = new Otp({
+                            userId: req.body.numTel, 
+                            otp
+                        });
+                
+                         otpDocument.save();
+                       /*  const Tnumtel ="+216" + req.body.numTel
+                        sendSMS(Tnumtel,otp)*/
+                        res.status(200).json({ message: "OTP Sent"});
+                
+                } catch (error) {
+                    console.error('Error generating OTP:', error);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                }
             }
             exports.verifyOtp = async function (req, res, next) {
-                // OTP verification functionality
+                try {
+                    const { numTel, otp } = req.body;
+                    const otpDocument = await Otp.findOne({ userId: numTel });
+                
+                    if (!otpDocument) {
+                      return res.status(404).json({ error: 'OTP not found' });
+                    }
+                
+                    // Verify the OTP
+                    if (otp === otpDocument.otp) {
+                      // Delete the OTP document
+                      await otpDocument.deleteOne();
+                
+                      return res.status(200).json({ message: 'OTP verified' });
+                    } else {
+                      return res.status(401).json({ error: 'Invalid OTP' });
+                    }
+                  } catch (error) {
+                    console.error('Error in verifyOtp:', error);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                  }
             }
             `,
             RESETPASSWORD: `
             exports.resetPassword = async function (req, res, next) {
-                // Reset password functionality
-            }
+                try {
+                   
+                    const hash = await bcrypt.hash(req.body.newPassword, 10);
+                  
+                    const user = await User.findOneAndUpdate(
+                      { numTel: req.body.numTel },
+                      { password: hash },
+                      { new: true } 
+                      );             
+                      if (!user) {
+                       return res.status(404).json({ error: 'User not found' });
+                       }
+                                     
+                      return res.status(200).json({ message: 'Password changed !', user });
+                  } catch (error) {
+                    console.error('Error resetting password:', error);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                  }            }
             
             `,
         };
@@ -238,18 +355,25 @@ async GenerateUserRoutes(method) {
 
       `,
       FORGETPASSWORD: `
-        router.route("/updateBlog/:id")
-            .patch(blogs.PATCHBlog);
+      router
+      .route('/forgetPassword')
+      .post(users.forgetPassword)
 
       `,
       OTP: `
-        router.route("/delete/:id")
-            .delete(blogs.deleteBlog);
+      router
+      .route('/verifyOTP')
+      .post(users.verifyOtp)
+    
+      router
+      .route('/sendOTP')
+      .post(users.sendOtp)
 
       `,
       RESETPASSWORD: `
-      router.route("/delete/:id")
-          .delete(blogs.deleteBlog);
+      router
+      .route('/resetPassword')
+      .post(users.resetPassword)
 
     `,
     };
