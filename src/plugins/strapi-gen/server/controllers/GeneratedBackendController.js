@@ -16,7 +16,7 @@ module.exports = {
       let backendLogs = ''; // Initialize backend logs variable
 
       let backendCode, backendModels, backendRoutes, backendIndex;
-      let backendUserController, backendUserModel , backendUserRoutes;
+      let backendUserController, backendUserModel , backendUserRoutes, backendOTPmodel;
       if (model === 'BLOGS') {
         backendCode = await generateCode.generateCode(method);
         backendModels = await generateCode.generateModels(model);
@@ -26,6 +26,7 @@ module.exports = {
         backendUserController = await generateUser.GenerateUserController(method);
         backendUserModel = await generateUser.GenerateUserModel(model);
         backendUserRoutes = await generateUser.GenerateUserRoutes(method.split(','));
+        backendOTPmodel = await generateUser.generateOtpmodel(model);
         backendIndex = await generateCode.generateServerdotjs(index);
       } else if (model === 'USERS , BLOGS' || model === 'BLOGS , USERS') {
         // Split the model string to get individual models
@@ -45,10 +46,11 @@ module.exports = {
             backendUserController = await generateUser.GenerateUserController(method);
             backendUserModel = await generateUser.GenerateUserModel(model);
             backendUserRoutes = await generateUser.GenerateUserRoutes(method.split(','));
+            backendOTPmodel = await generateUser.generateOtpmodel(model);
             backendIndex = await generateCode.generateServerdotjs(index);
             // Push files for USERS service
            const [owner, repo] = selectedRepo.split('/');
-           await pushFilesToGitHub(owner, repo, 'USERS', backendUserController, backendUserModel , backendUserRoutes, backendIndex);
+           await pushFilesToGitHub(owner, repo, 'USERS', backendUserController, backendUserModel , backendUserRoutes, backendOTPmodel, backendIndex);
           }
         }
 
@@ -91,6 +93,8 @@ module.exports = {
         fs.writeFileSync(path.join(codeDirC, 'backendUSERSCode.js'), backendUserController);
         fs.writeFileSync(path.join(codeDirM, 'backendUSERSModels.js'), backendUserModel);
         fs.writeFileSync(path.join(codeDirR, 'backendUSERSRoutes.js'), backendUserRoutes);
+        fs.writeFileSync(path.join(codeDirM, 'Otp.js'), backendOTPmodel);
+
       }
 
       // Run npm commands to generate package.json and install dependencies
@@ -100,7 +104,7 @@ module.exports = {
 
       // Push code to GitHub repository
       const [owner, repo] = selectedRepo.split('/');
-      await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendUserRoutes);
+      await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendOTPmodel, backendUserRoutes );
 
       // Log the payload before sending
       console.log('Payload:', JSON.stringify({ ref: 'refs/heads/main', selectedRepo }));
@@ -143,7 +147,7 @@ module.exports = {
   },
 };
 
-async function pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendUserRoutes) {
+async function pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendOTPmodel,backendUserRoutes) {
   const octokit = new Octokit({
     auth: 'token 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', // Replace with your GitHub personal access token
   });
@@ -199,6 +203,7 @@ async function pushFilesToGitHub(owner, repo, model, backendCode, backendModels,
     // Define file paths based on model
     const codeFilePath = `controllers/backendUSERSCode.js`;
     const modelsFilePath = `models/backendUSERSModels.js`;
+    const modelFilePath = `models/Otp.js`;
     const routesFilePath = `routes/backendUSERSRoutes.js`;
     const indexFilePath = `Server.js`;
 
@@ -217,6 +222,14 @@ async function pushFilesToGitHub(owner, repo, model, backendCode, backendModels,
       path: modelsFilePath,
       message: `Add backend models for ${model}`,
       content: Buffer.from(backendUserModel).toString('base64'),
+    });
+
+    await octokit.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: modelFilePath,
+      message: `Add backend models for ${model}`,
+      content: Buffer.from(backendOTPmodel).toString('base64'),
     });
 
     await octokit.repos.createOrUpdateFileContents({

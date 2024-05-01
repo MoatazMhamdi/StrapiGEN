@@ -21,68 +21,97 @@ module.exports = {
         // Define templates for different request types
         const templates = {
             LOGIN: `
-            exports.login function (req, res, next) {
-              
-                  
-                }
+            exports.login = async function (req, res, next) {
+                User.findOne({ name: req.body.name })
+                .then(user => {
+                    if (!user) {
+                        return res.status(401).json({ message: 'User is not registered' });
+                    }
+            
+                    bcrypt.compare(req.body.password, user.password)
+                        .then(valid => {
+                            if (!valid) {
+                                return res.status(401).json({ message: 'Password incorrect' });
+                            } else {
+                                const maxAge = 1 * 60 * 60;
+                                const token = jwt.sign(
+                                    { userId: user._id, role: user.role, numTel: user.numTel },
+                                    "" + process.env.JWT_SECRET,
+                                    { expiresIn: maxAge } // 1hr in sec
+                                );
+                                res.cookie("jwt", token, {
+                                    httpOnly: true,
+                                    maxAge: maxAge * 1000, // 1hr in ms
+                                    Secure: true,
+                                });
+            
+                                res.status(200).json({
+                                    userId: user._id,
+                                    message: "User successfully Logged in",
+                                    jwt: token,
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error in bcrypt.compare:', error);
+                            res.status(500).json({ error: 'Internal Server Error' });
+                        });
+                })
+                .catch(error => {
+                    console.error('Error in User.findOne:', error);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                });
+            
+            }
             `,
             REGISTER: `
-                export.Register async function (req, res, next) {
-                    User.findOne({ name: req.body.name })
-                    .then(user => {
-                        if (!user) {
-                            return res.status(401).json({ message: 'User is not registered' });
-                        }
-              
-                        bcrypt.compare(req.body.password, user.password)
-                            .then(valid => {
-                                if (!valid) {
-                                    return res.status(401).json({ message: 'Password incorrect' });
-                                } else {
-                                    const maxAge = 1 * 60 * 60;
-                                    const token = jwt.sign(
-                                        { userId: user._id, role: user.role, numTel: user.numTel },
-                                        "" + process.env.JWT_SECRET,
-                                        { expiresIn: maxAge } // 1hr in sec
-                                    );
-                                    res.cookie("jwt", token, {
-                                        httpOnly: true,
-                                        maxAge: maxAge * 1000, // 1hr in ms
-                                        Secure: true,
-                                    });
-              
-                                    res.status(200).json({
-                                        userId: user._id,
-                                        message: "User successfully Logged in",
-                                        jwt: token,
-                                    });
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error in bcrypt.compare:', error);
-                                res.status(500).json({ error: 'Internal Server Error' });
-                            });
-                    })
-                    .catch(error => {
-                        console.error('Error in User.findOne:', error);
-                        res.status(500).json({ error: 'Internal Server Error' });
+            exports.Register = async function (req, res, next) {
+                try {
+                    const hash = await bcrypt.hash(req.body.password, 10);
+                    const existingUser = await User.findOne({
+                        numTel: req.body.numTel,
                     });
-                 }
+                    if (existingUser) {
+                        return res.status(400).json({ message: "It seems you already have an account, please log in instead." });
+                    }
+            
+            
+            
+                    const user = new User({
+                        username: req.body.username,
+                        email: req.body.email,
+                        password: hash,
+                        numTel: req.body.numTel,
+            
+                    });
+            
+                    await user.save();
+            
+                    return res.status(200).json({ message: 'User created' });
+            
+                } catch (error) {
+                    return res.status(500).json({ error: error.message });
+                }
+            }
             `,
             FORGETPASSWORD: `
-                export async function forgetPassword(req, res, next) {
-                    // Forget password functionality
-                }
+            exports.forgetPassword = async function (req, res, next) {
+                // Forget password functionality
+            }
             `,
             OTP: `
-                export async function verifyOtp(req, res, next) {
-                    // OTP verification functionality
-                }
+            exports.sendOtp = async function (req, res, next) {
+                // OTP verification functionality
+            }
+            exports.verifyOtp = async function (req, res, next) {
+                // OTP verification functionality
+            }
             `,
             RESETPASSWORD: `
-                export async function resetPassword(req, res, next) {
-                    // Reset password functionality
-                }
+            exports.resetPassword = async function (req, res, next) {
+                // Reset password functionality
+            }
+            
             `,
         };
     
@@ -98,7 +127,11 @@ module.exports = {
         // Generate code for all valid methods in the request
         let renderedCode = '';
         let importsAdded = false; 
-        const imports = `const User = require("../models/backendUSERSModels.js");\n\n`;
+        const imports = `const User = require("../models/backendUSERSModels.js");\n bcrypt = require('bcrypt');\n jwt = require ('jsonwebtoken');\n 
+         const Otp = require('../models/Otp.js');\n
+         twilio = require ('twilio');\n
+         otpGenerator = require ('otp-generator')
+         `;
 
         methods.forEach(m => {
             const template = templates[m];
@@ -144,7 +177,7 @@ async GenerateUserModel(model) {
             username: { type: 'string', required: true, maxLength: 20 },
             email: { type: 'string', required: true },
             numTel: { type: 'string', required: true },
-            paswword: { type: 'string', required: true },  
+            password: { type: 'string', required: true },  
         });
     
         const users = mongoose.model('users', usersSchema);
@@ -180,26 +213,28 @@ async GenerateUserRoutes(method) {
 
     const modelSchema = {
         kind: 'collectionType',
-        collectionName: 'blogs',
+        collectionName: 'users',
         attributes: {
-            Title: { type: 'string', required: true, maxLength: 20 },
-            Description: { type: 'string', required: true },
-            image: { type: 'string', required: true },
-            Sujet: { type: 'string' },
+            username: { type: 'string', required: true, maxLength: 20 },
+            email: { type: 'string', required: true },
+            numTel: { type: 'string' },
+            password: { type: 'string', required: true },
+    
         },
-    };
+        };
 
     const requestType = 'routes';
 
     const templates = {
         LOGIN: `
         router.route("/login")
-            .post(users.login);
+        .post(users.login);
 
       `,
       REGISTER: `
-        router.route("/register")
-            .post(users.Register);
+      router.route("/register")
+      .post(users.Register);
+
 
       `,
       FORGETPASSWORD: `
@@ -241,13 +276,61 @@ async GenerateUserRoutes(method) {
     return renderedCode;
 },
 
+async generateOtpmodel(model) {
+
+    const modelSchema = {
+        kind: 'collectionType',
+        collectionName: 'users',
+        attributes: {
+            username: { type: 'string', required: true, maxLength: 20 },
+            email: { type: 'string', required: true },
+            numTel: { type: 'string' },
+            password: { type: 'string', required: true },
+    
+        },
+        };
+
+    const requestType = 'Otp model';
+
+const template = `
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const otpSchema =new mongoose.Schema({
+    userId: String,  
+    otp: String,
+    createdAt: { type: Date, default: Date.now },
+    expires: { type: Date, default: Date.now, expires: 1500 },
+  })
+const Otp = mongoose.model('Otp', otpSchema);
+
+module.exports = Otp;
+
+
+
+`;
+
+// Extract attribute names from the model schema
+const attributes = Object.keys(modelSchema.attributes);
+
+// Render the template with the extracted attributes and request type
+const renderedCode = Mustache.render(template, {
+    RequestType: requestType.toUpperCase(),
+    Attributes: attributes.join(', '),
+});
+
+// Return the rendered code
+return renderedCode;
+},
+
 
 async generateBackend(request) {
     const { method, model } = request;
 
     const GenerateUserController = await this.GenerateUserController(method);
     const GenerateUserModel = await this.GenerateUserModel(model);
-    const GenerateUserRoutes = await this.GenerateUserRoutes(method.split(','));
+    const GenerateUserRoutes = await this.GenerateUserRoutes([method]);
+    const generateOtpmodel = await this.generateOtpmodel(model)
 
     
     return { GenerateUserController,GenerateUserModel, GenerateUserRoutes };

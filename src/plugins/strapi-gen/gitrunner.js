@@ -69,7 +69,8 @@ function handleWebhook(req, res) {
         "version": "1.0.0",
         "main": "Server.js",
         "scripts": {
-          "start": "node server.js"
+          "start": "node server.js",
+          "dev": "node server.js"
         },
         "keywords": [],
         "author": "",
@@ -81,7 +82,16 @@ function handleWebhook(req, res) {
           "http-errors": "^2.0.0",
           "jade": "^1.11.0",
           "mongoose": "^8.3.3",
-          "morgan": "^1.10.0"
+          "morgan": "^1.10.0",
+          "bcrypt": "^5.1.1",
+          "bcryptjs": "^2.4.3",
+          "jsonwebtoken": "^9.0.2",
+          "otp-generator": "^4.0.1",
+          "twilio": "^4.19.3",
+          "nodemailer": "^6.9.7",
+           "nodemailer-smtp-transport": "^2.7.4"
+
+
         },
         "description": ""
       }
