@@ -28,7 +28,7 @@ const CodeGenerator = () => {
   const history = useHistory();
   const location = useLocation();
   const selectedRepo = location.state ? location.state.selectedRepo : null;
-
+  const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; 
 
   const handleModelNameChange = (event) => {
     setModelName(event.target.value);
@@ -50,7 +50,8 @@ const CodeGenerator = () => {
         {
           method: Object.keys(method).filter((key) => method[key]).join(','),
           model: modelName,
-          selectedRepo: selectedRepo
+          selectedRepo: selectedRepo,
+          tokenGitOauth: tokenGitOauth
         }
       );
       setResponseJson(response.data.message);

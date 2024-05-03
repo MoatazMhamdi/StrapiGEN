@@ -1,26 +1,28 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import './AddEntity.css';
-import strapigenImage from './logoStrapiGen.png'; // Import the image
 
 
 const AddEntity = () => {
   const history = useHistory();
   const location = useLocation();
   const selectedRepo = location.state ? location.state.selectedRepo : null;
+  const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; // Access tokenGitOauth from location state
+
 
   // Fonction de redirection vers AddAuthPage
   const redirectToAddAuth = () => {
     history.push({
       pathname: '/plugins/strapi-gen/AddAuth',
-      state: { selectedRepo: selectedRepo }
+      state: { selectedRepo: selectedRepo, 
+      tokenGitOauth: tokenGitOauth }, // Include token in state
     });
   };
+  console.log(' hedha houwa ',tokenGitOauth)
 
   return (
     <div className="home-page">
       <img 
-            src={strapigenImage} 
             alt="StrapiGEN" 
             className="strapigen-image" 
             style={{ width: '400px', height: 'auto', marginBottom: '-70px', marginTop: '-100px'}} // Adjusted width and height

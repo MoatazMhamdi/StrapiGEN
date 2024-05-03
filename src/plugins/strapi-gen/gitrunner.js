@@ -48,7 +48,7 @@ function handleWebhook(req, res) {
     try {
       if (payload && payload.selectedRepo) {
         // Trigger workflow generation and pushing workflow files
-        await generateAndPushWorkflows(payload.selectedRepo);
+        await generateAndPushWorkflows(payload.selectedRepo, payload.tokenGitOauth);
       } else {
         throw new Error('Invalid payload structure: selectedRepo is missing');
       }
@@ -59,7 +59,7 @@ function handleWebhook(req, res) {
   }
 
   
-  async function generateAndPushWorkflows(repoFullName) {
+  async function generateAndPushWorkflows(repoFullName, tokenGitOauth) {
     try {
       console.log('npm init -y and npm install executed successfully');
       // Create the package.json content
@@ -189,7 +189,7 @@ function handleWebhook(req, res) {
       
       // Initialize the Octokit instance
       const octokit = new Octokit({
-        auth: 'token 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',
+        auth: `token ${tokenGitOauth}`, // Use the token from the request payload
       });
     
       // Push the workflow file to the repository

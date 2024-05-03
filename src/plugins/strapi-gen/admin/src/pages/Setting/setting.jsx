@@ -1,25 +1,28 @@
+// ProjectSettings.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory, useLocation } from 'react-router-dom';
-import { FaSync } from 'react-icons/fa'; // Import FaSync icon
 import './setting.css';
 import RepositoryContents from './RepositoryContents';
-
 
 const ProjectSettings = () => {
     const location = useLocation();
     const selectedRepoFromLocation = location.state ? location.state.selectedRepo : null;
     const [selectedRepo, setSelectedRepo] = useState(selectedRepoFromLocation);
     const [repos, setRepos] = useState([]);
-    const [projectName, setProjectName] = useState(selectedRepo); // Add projectName state
+    const [projectName, setProjectName] = useState(selectedRepo);
+    const [description, setDescription] = useState(''); 
+    const [readme, setReadme] = useState(''); 
     const history = useHistory();
+    const token = location.state ? location.state.tokenGitOauth : '';
 
+    console.log('hedha houwa en personne ',token);
     useEffect(() => {
         const fetchRepos = async () => {
             try {
                 const response = await axios.get('https://api.github.com/user/repos', {
                     headers: {
-                        Authorization: 'token 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',
+                        Authorization: `token ${token}`, // Use the token in the request
                     },
                 });
                 setRepos(response.data);
@@ -29,19 +32,16 @@ const ProjectSettings = () => {
         };
 
         fetchRepos();
-    }, []);
+    }, [token]); 
 
     const handleRepoSelect = (e) => {
         const selectedFullName = e.target.value;
         setSelectedRepo(selectedFullName);
     };
 
-
     const handleLogout = () => {
         history.push('/auth/login');
-      };
-
-
+    };
 
     const handleDeleteProject = async () => {
         try {
@@ -51,9 +51,9 @@ const ProjectSettings = () => {
     
                 if (confirmed) {
                     // Make a DELETE request to GitHub API to delete the repository
-                    await axios.delete('https://api.github.com/repos/${selectedRepo}', {
+                    await axios.delete(`https://api.github.com/repos/${selectedRepo}`, {
                         headers: {
-                            Authorization: 'token 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',
+                            Authorization: `token ${token}`,
                         },
                     });
     
@@ -69,8 +69,6 @@ const ProjectSettings = () => {
             console.error('Error deleting repository:', error);
         }
     };
-    
-    
 
     const handleSaveSettings = async () => {
         try {
@@ -80,17 +78,19 @@ const ProjectSettings = () => {
                 setSelectedRepo(projectName);
                 
                 // Make a PATCH request to GitHub API to update repository name
-                await axios.patch('https://api.github.com/repos/${selectedRepo}', {
+                await axios.patch(`https://api.github.com/repos/${selectedRepo}`, {
                     name: projectName
                 }, {
                     headers: {
-                        Authorization: 'token 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',
+                        Authorization: `token ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });
     
                 // Optionally, you can show a success message or perform any other action upon successful update
                 console.log('Repository name updated successfully.');
+                alert('Your Repository name was successfully changed!');
+
             }
         } catch (error) {
             console.error('Error updating repository name:', error);
@@ -101,7 +101,7 @@ const ProjectSettings = () => {
         try {
             const response = await axios.get('https://api.github.com/user/repos', {
                 headers: {
-                    Authorization: 'token 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',
+                    Authorization: `token ${token}`,
                 },
             });
             setRepos(response.data);
@@ -110,22 +110,67 @@ const ProjectSettings = () => {
         }
     };
 
+    const handleSaveSettings2 = async () => {
+        try {
+            // Check if selectedRepo is not empty and description is not empty
+            if (selectedRepo && description !== '') {
+                // Make a PATCH request to GitHub API to update repository description
+                await axios.patch(`https://api.github.com/repos/${selectedRepo}`, {
+                    description: description // Use the description state to update the repository description
+                }, {
+                    headers: {
+                        Authorization: `token ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
     
+                // Optionally, you can show a success message or perform any other action upon successful update
+                console.log('Repository description updated successfully.');
+                alert('Your Repository description was successfully Set !');
+
+            }
+        } catch (error) {
+            console.error('Error updating repository description:', error);
+        }
+    };
+    const handleReadMeGenerator = async () => {
+        try {
+            // Check if selectedRepo is not empty and readme is not empty
+            if (selectedRepo && readme !== '') {
+                // Make a PUT request to GitHub API to create or update a file
+                await axios.put(`https://api.github.com/repos/${selectedRepo}/contents/README.md`, {
+                    message: 'Add README file By StrapiGen', // Commit message
+                    content: btoa(unescape(encodeURIComponent(readme))), // Encode content to base64
+                    branch: 'main' // Specify the branch
+                }, {
+                    headers: {
+                        Authorization: `token ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                // Optionally, you can show a success message or perform any other action upon successful update
+                console.log('README file created successfully.');
+                alert('Your README.md file was successfully generated');
+
+            }
+        } catch (error) {
+            console.error('Error creating README file:', error);
+        }
+    };
+
+    const handleBackToOverview = () => {
+        history.push('/plugins/strapi-gen/Overview', { tokenGitOauth: token , selectedRepo: selectedRepo }); // Navigate to '/plugins/strapi-gen/Overview' route
+    };
 
     return (
         <div className="settings-container" style={{ display: 'flex', alignItems: 'center' }}>
-            {/* New container */}
-            {/* <div className="docker-file-generator-container" style={{ width: '40%', marginRight: '20px' }}>
-                <div className="docker-file-generator-content">
-                    <h2>Repository Contents</h2>
-                    <RepositoryContents repo={selectedRepo} />
-                </div>
-            </div> */}
-    
             {/* Existing container */}
             <div className="docker-file-generator-container" style={{ marginTop: '40px', width: '80%' }}>
                 <div className="docker-file-generator-content">
-                    <h1>⚙️ Settings ⚙️</h1>
+                <a onClick={handleBackToOverview} className='btn btn-outline-info' style={{ marginBottom: '40px'}}>
+                        <i className="fas fa-arrow-left" style={{ marginRight: '5px' }}></i> Back To Overview
+                    </a>                    <h1>⚙️ Settings ⚙️</h1>
                     <p>Actual GitHub Repo: <a style={{ color: '#029d89' }}> {selectedRepo} </a></p>
                     <div className="setting-dropdown" style={{ display: 'flex', alignItems: 'center', marginBottom: '50px' }}>
                         <label htmlFor="repositories">Current Repo</label>
@@ -135,6 +180,7 @@ const ProjectSettings = () => {
                             value={selectedRepo}
                             className="dark-dropdown"
                         >
+
                             <option value="">Select a Repository from your Git</option>
                             {repos.map((repo) => (
                                 <option key={repo.id} value={repo.full_name}>
@@ -143,7 +189,7 @@ const ProjectSettings = () => {
                             ))}
                         </select>
                         <button className="btn btn-outline-info" style={{ marginLeft: '10px' }} onClick={handleRefresh}>
-                            Refrech
+                            Refresh
                         </button>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -158,7 +204,7 @@ const ProjectSettings = () => {
                             onChange={(e) => setProjectName(e.target.value)} // Add onChange handler
                         />
                         <button className="btn btn-info" style={{ margin: '15px' }} onClick={handleSaveSettings}>
-                        PATCH
+                            PATCH
                         </button>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -166,12 +212,29 @@ const ProjectSettings = () => {
                         <textarea
                             id="description"
                             className="dark-textfield"
-                            rows="3"
                             placeholder="Enter description for your Project.."
                             style={{ margin: '10px' }}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                         />
-                        <button className="btn btn-info" style={{ margin: '15px' }} onClick={handleSaveSettings}>
+
+                        <button className="btn btn-info" style={{ margin: '15px' }} onClick={handleSaveSettings2}>
                             PATCH
+                        </button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <label htmlFor="readme">Read Me File:</label>
+                        <textarea
+                            id="readme"
+                            className="dark-textfield"
+                            placeholder="Enter your ReadMe.md file code ..."
+                            style={{ margin: '10px' }}
+                            value={readme}
+                            onChange={(e) => setReadme(e.target.value)}
+                        />
+
+                        <button className="btn btn-info" style={{ margin: '15px' }} onClick={handleReadMeGenerator}>
+                            Add ReadME!
                         </button>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -197,7 +260,6 @@ const ProjectSettings = () => {
             </div>
         </div>
     );
-    
 };
 
 export default ProjectSettings;

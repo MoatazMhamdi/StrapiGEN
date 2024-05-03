@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
-import './DockerFileGenerator.css'; // Import the CSS file for styling
+import { useHistory, useLocation } from 'react-router-dom';
+import './DockerFileGenerator.css';
 
 const SelectedRepo = () => {
   const [repos, setRepos] = useState([]);
   const [selectedRepo, setSelectedRepo] = useState('');
-  const [user, setUser] = useState(null); // State to store GitHub user information
+  const [user, setUser] = useState(null); 
   const history = useHistory();
+  const location = useLocation();
+  
 
   useEffect(() => {
     const fetchRepos = async () => {
       try {
         const response = await axios.get('https://api.github.com/user/repos', {
           headers: {
-            Authorization: 'token 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',
+            Authorization: `token ${location.state.tokenGitOauth}`,
           },
         });
         setRepos(response.data);
@@ -27,18 +29,19 @@ const SelectedRepo = () => {
       try {
         const response = await axios.get('https://api.github.com/user', {
           headers: {
-            Authorization: 'token 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',
+            Authorization: `token ${location.state.tokenGitOauth}`,
           },
         });
         setUser(response.data);
       } catch (error) {
         console.error('Error fetching user:', error);
       }
+      
     };
 
     fetchRepos();
     fetchUser();
-  }, []);
+  }, [location.state.tokenGitOauth]);
 
   const handleRepoSelect = (e) => {
     const selectedFullName = e.target.value;
@@ -53,7 +56,8 @@ const SelectedRepo = () => {
 
     history.push({
       pathname: '/plugins/strapi-gen/Services',
-      state: { selectedRepo: selectedRepo },
+      state: { selectedRepo: selectedRepo, 
+      tokenGitOauth: location.state.tokenGitOauth }, 
     });
   };
 
@@ -61,7 +65,6 @@ const SelectedRepo = () => {
     <div className="docker-file-generator-container" style={{marginTop:'40px'}}>
       <div className="docker-file-generator-content">
         <img 
-   
           alt="StrapiGEN" 
           className="strapigen-image" 
           style={{ width: '350px', height: 'auto', marginBottom: '-80px'}} 

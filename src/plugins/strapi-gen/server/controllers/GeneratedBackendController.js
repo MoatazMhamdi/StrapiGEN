@@ -9,10 +9,10 @@ const wss = require('./WebSockets');
 const WebSocket = require('ws');
 
 module.exports = {
-  async generateBackend(ctx) {
+  async generateBackend(ctx, tokenGitOauth) {
     console.log('eazeaeaze');
     try {
-      const { method, model, route, index, selectedRepo } = ctx.request.body;
+      const { method, model, route, index, selectedRepo, tokenGitOauth } = ctx.request.body;
       let backendLogs = ''; // Initialize backend logs variable
 
       let backendCode, backendModels, backendRoutes, backendIndex;
@@ -41,7 +41,7 @@ module.exports = {
             backendIndex = await generateCode.generateServerdotjs(index);
             // Push files for BLOGS service
            const [owner, repo] = selectedRepo.split('/');
-           await pushFilesToGitHub(owner, repo, 'BLOGS', backendCode, backendModels, backendRoutes, backendIndex);
+           await pushFilesToGitHub(owner, repo, 'BLOGS', backendCode, backendModels, backendRoutes, backendIndex, tokenGitOauth);
           } else if (model === 'USERS') {
             backendUserController = await generateUser.GenerateUserController(method);
             backendUserModel = await generateUser.GenerateUserModel(model);
@@ -50,7 +50,7 @@ module.exports = {
             backendIndex = await generateCode.generateServerdotjs(index);
             // Push files for USERS service
            const [owner, repo] = selectedRepo.split('/');
-           await pushFilesToGitHub(owner, repo, 'USERS', backendUserController, backendUserModel , backendUserRoutes, backendOTPmodel, backendIndex);
+           await pushFilesToGitHub(owner, repo, 'USERS', backendUserController, backendUserModel , backendUserRoutes, backendOTPmodel, backendIndex, tokenGitOauth);
           }
         }
 
@@ -104,10 +104,10 @@ module.exports = {
 
       // Push code to GitHub repository
       const [owner, repo] = selectedRepo.split('/');
-      await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendOTPmodel, backendUserRoutes );
+      await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendOTPmodel, backendUserRoutes, tokenGitOauth );
 
       // Log the payload before sending
-      console.log('Payload:', JSON.stringify({ ref: 'refs/heads/main', selectedRepo }));
+      console.log('Payload:', JSON.stringify({ ref: 'refs/heads/main', selectedRepo, tokenGitOauth }));
 
       // Send the webhook payload
       const options = {
@@ -125,31 +125,33 @@ module.exports = {
         console.error('GitRunner.js request error:', error);
       });
 
-      req.write(JSON.stringify({ ref: 'refs/heads/main', selectedRepo }));
+      req.write(JSON.stringify({ ref: 'refs/heads/main', selectedRepo, tokenGitOauth  }));
       req.end();
 
-       const logMessage = 'Backend logic executed successfully!';
-      wss.clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(logMessage);
-        }
-      });
+      //  const logMessage = 'Backend logic executed successfully!';
+      // wss.clients.forEach((client) => {
+      //   if (client.readyState === WebSocket.OPEN) {
+      //     client.send(logMessage);
+      //   }
+      // });
 
-      console.log(logMessage);
+      // console.log(logMessage);
 
-      ctx.status = 200;
+      // ctx.status = 200;
       // Return response to the client
       ctx.send({ message: 'Code generated and pushed to GitHub successfully!', logs: 'Logs from code generation' });
     } catch (error) {
       console.error('Error generating backend code:', error);
+      console.log('GitHub OAuth token:', tokenGitOauth);
+
       ctx.throw(500, 'Internal server error');
     }
   },
 };
 
-async function pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendOTPmodel,backendUserRoutes) {
+async function pushFilesToGitHub(owner, repo,  model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendOTPmodel,backendUserRoutes, tokenGitOauth) {
   const octokit = new Octokit({
-    auth: 'token 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', // Replace with your GitHub personal access token
+    auth: `token ${tokenGitOauth}`, // Use the token from the request payload
   });
   if (model === 'BLOGS') {
     // Define file paths based on model
