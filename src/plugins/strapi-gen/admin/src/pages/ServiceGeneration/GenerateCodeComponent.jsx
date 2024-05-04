@@ -25,6 +25,8 @@ const CodeGenerator = () => {
   const [responseJson, setResponseJson] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState(null); // Track selected model
+  const [workflowStatus, setWorkflowStatus] = useState(null);
+  const [workflowRuns, setWorkflowRuns] = useState([]); // State to hold workflow runs
   const history = useHistory();
   const location = useLocation();
   const selectedRepo = location.state ? location.state.selectedRepo : null;
@@ -33,6 +35,7 @@ const CodeGenerator = () => {
   const handleModelNameChange = (event) => {
     setModelName(event.target.value);
     setSelectedModel(event.target.value); // Set selected model
+    
   };
 
   const toggleMethod = (methodName) => {
@@ -62,7 +65,42 @@ const CodeGenerator = () => {
     }
   };
 
+  const fetchWorkflowStatus = async () => {
+    try {
+      const response = await axios.get(`https://api.github.com/repos/${selectedRepo}/actions/runs`, {
+        headers: {
+          'Authorization': `Bearer ${tokenGitOauth}`,
+        },
+      });
+      console.log('Workflow status:', response.data);
+      // Get the status of the latest workflow run
+      const latestRun = response.data.workflow_runs[0];
+      setWorkflowStatus(latestRun.status);
+      fetchWorkflowRuns(); // Fetch workflow runs after getting status
+    } catch (error) {
+      console.error('Error fetching workflow status:', error);
+    }
+  };
 
+  const fetchWorkflowRuns = async () => {
+    try {
+      const response = await axios.get(`https://api.github.com/repos/${selectedRepo}/actions/runs`, {
+        headers: {
+          'Authorization': `Bearer ${tokenGitOauth}`,
+        },
+      });
+      console.log('Workflow runs:', response.data);
+      setWorkflowRuns(response.data.workflow_runs);
+    } catch (error) {
+      console.error('Error fetching workflow runs:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedRepo) {
+      fetchWorkflowRuns();
+    }
+  }, [selectedRepo]);
 
 
   const navigateBack = () => {
@@ -272,6 +310,21 @@ const CodeGenerator = () => {
         </div>
 
       </div>
+      <div className="row">
+      <div className="col">
+        <h3>Workflow Runs</h3>
+        <ul>
+          {workflowRuns.map((run) => (
+            <li key={run.id}>
+              <p>Run ID: {run.id}</p>
+              <p>Status: {run.status}</p>
+              <p>Conclusion: {run.conclusion}</p>
+              {/* Add more details as needed */}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
     </div>
   );
 };

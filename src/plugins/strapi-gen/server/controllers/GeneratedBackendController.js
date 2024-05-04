@@ -40,8 +40,8 @@ module.exports = {
             backendRoutes = await generateCode.generateRoutes(method.split(','));
             backendIndex = await generateCode.generateServerdotjs(index);
             // Push files for BLOGS service
-           const [owner, repo] = selectedRepo.split('/');
-           await pushFilesToGitHub(owner, repo, 'BLOGS', backendCode, backendModels, backendRoutes, backendIndex, tokenGitOauth);
+          //  const [owner, repo] = selectedRepo.split('/');
+          //  await pushFilesToGitHub(owner, repo, 'BLOGS', backendCode, backendModels, backendRoutes, backendIndex, tokenGitOauth);
           } else if (model === 'USERS') {
             backendUserController = await generateUser.GenerateUserController(method);
             backendUserModel = await generateUser.GenerateUserModel(model);
@@ -49,8 +49,8 @@ module.exports = {
             backendOTPmodel = await generateUser.generateOtpmodel(model);
             backendIndex = await generateCode.generateServerdotjs(index);
             // Push files for USERS service
-           const [owner, repo] = selectedRepo.split('/');
-           await pushFilesToGitHub(owner, repo, 'USERS', backendUserController, backendUserModel , backendUserRoutes, backendOTPmodel, backendIndex, tokenGitOauth);
+          //  const [owner, repo] = selectedRepo.split('/');
+          //  await pushFilesToGitHub(owner, repo, 'USERS', backendUserController, backendUserModel , backendUserRoutes, backendOTPmodel, backendIndex, tokenGitOauth);
           }
         }
 
@@ -103,8 +103,120 @@ module.exports = {
       execSync('npm install express mongoose morgan cors cookie-parser jade http-errors', { cwd: codeDir });
 
       // Push code to GitHub repository
-      // const [owner, repo] = selectedRepo.split('/');
-      // await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUseroMdel , backendOTPmodel, backendUserRoutes, tokenGitOauth );
+      const [owner, repo] = selectedRepo.split('/');
+      const octokit = new Octokit({
+        auth: `token ${tokenGitOauth}`, // Use the token from the request payload
+      });
+      if (model === 'BLOGS') {
+        // Define file paths based on model
+        const codeFilePath = `controllers/backendBLOGSCode.js`;
+        const modelsFilePath = `models/backendBLOGSModels.js`;
+        const routesFilePath = `routes/backendBLOGSRoutes.js`;
+        const indexFilePath = `Server.js`;
+    
+        // Push files to GitHub
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: codeFilePath,
+          message: `Add backend code for ${model}`,
+          content: Buffer.from(backendCode).toString('base64'),
+        });
+    
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: modelsFilePath,
+          message: `Add backend models for ${model}`,
+          content: Buffer.from(backendModels).toString('base64'),
+        });
+    
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: routesFilePath,
+          message: `Add backend routes for ${model}`,
+          content: Buffer.from(backendRoutes).toString('base64'),
+        });
+    
+        // Check if backendIndex file exists
+        const indexFileExists = await checkFileExists(owner, repo, indexFilePath, tokenGitOauth);
+        if (!indexFileExists) {
+          await octokit.repos.createOrUpdateFileContents({
+            owner,
+            repo,
+            path: indexFilePath,
+            message: `Add backend index for ${model}`,
+            content: Buffer.from(backendIndex).toString('base64'),
+          });
+          console.log(`Backend index file created and pushed to GitHub for ${model}`);
+        } else {
+          console.log(`Backend index file already exists for ${model}`);
+        }
+    
+        console.log(`Files pushed to GitHub for ${model}`);
+      } else if (model === 'USERS') {
+        const octokit = new Octokit({
+          auth: `token ${tokenGitOauth}`, // Use the token from the request payload
+        });
+        console.log("ezaeazeaz", tokenGitOauth);
+        // Define file paths based on model
+        const codeFilePath = `controllers/backendUSERSCode.js`;
+        const modelsFilePath = `models/backendUSERSModels.js`;
+        const modelFilePath = `models/Otp.js`;
+        const routesFilePath = `routes/backendUSERSRoutes.js`;
+        const indexFilePath = `Server.js`;
+    
+        // Push files to GitHub
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: codeFilePath,
+          message: `Add backend code for ${model}`,
+          content: Buffer.from(backendUserController).toString('base64'),
+        });
+    
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: modelsFilePath,
+          message: `Add backend models for ${model}`,
+          content: Buffer.from(backendUserModel).toString('base64'),
+        });
+    
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: modelFilePath,
+          message: `Add backend models for ${model}`,
+          content: Buffer.from(backendOTPmodel).toString('base64'),
+        });
+    
+        await octokit.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: routesFilePath,
+          message: `Add backend routes for ${model}`,
+          content: Buffer.from(backendUserRoutes).toString('base64'),
+        });
+    
+        // Check if backendIndex file exists
+        const indexFileExists = await checkFileExists(owner, repo, indexFilePath, tokenGitOauth);
+        if (!indexFileExists) {
+          await octokit.repos.createOrUpdateFileContents({
+            owner,
+            repo,
+            path: indexFilePath,
+            message: `Add backend index for ${model}`,
+            content: Buffer.from(backendIndex).toString('base64'),
+          });
+          console.log(`Backend index file created and pushed to GitHub for ${model}`);
+        } else {
+          console.log(`Backend index file already exists for ${model}`);
+        }
+    
+        console.log(`Files pushed to GitHub for ${model}`);
+      }
 
       // Log the payload before sending
       console.log('Payload:', JSON.stringify({ ref: 'refs/heads/main', selectedRepo, tokenGitOauth }));
@@ -149,117 +261,7 @@ module.exports = {
   },
 };
 
-async function pushFilesToGitHub(owner, repo,  model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendOTPmodel,backendUserRoutes, tokenGitOauth) {
-  const octokit = new Octokit({
-    auth: `token ${tokenGitOauth}`, // Use the token from the request payload
-  });
-  if (model === 'BLOGS') {
-    // Define file paths based on model
-    const codeFilePath = `controllers/backendBLOGSCode.js`;
-    const modelsFilePath = `models/backendBLOGSModels.js`;
-    const routesFilePath = `routes/backendBLOGSRoutes.js`;
-    const indexFilePath = `Server.js`;
 
-    // Push files to GitHub
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: codeFilePath,
-      message: `Add backend code for ${model}`,
-      content: Buffer.from(backendCode).toString('base64'),
-    });
-
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: modelsFilePath,
-      message: `Add backend models for ${model}`,
-      content: Buffer.from(backendModels).toString('base64'),
-    });
-
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: routesFilePath,
-      message: `Add backend routes for ${model}`,
-      content: Buffer.from(backendRoutes).toString('base64'),
-    });
-
-    // Check if backendIndex file exists
-    const indexFileExists = await checkFileExists(owner, repo, indexFilePath, tokenGitOauth);
-    if (!indexFileExists) {
-      await octokit.repos.createOrUpdateFileContents({
-        owner,
-        repo,
-        path: indexFilePath,
-        message: `Add backend index for ${model}`,
-        content: Buffer.from(backendIndex).toString('base64'),
-      });
-      console.log(`Backend index file created and pushed to GitHub for ${model}`);
-    } else {
-      console.log(`Backend index file already exists for ${model}`);
-    }
-
-    console.log(`Files pushed to GitHub for ${model}`);
-  } else if (model === 'USERS') {
-    // Define file paths based on model
-    const codeFilePath = `controllers/backendUSERSCode.js`;
-    const modelsFilePath = `models/backendUSERSModels.js`;
-    const modelFilePath = `models/Otp.js`;
-    const routesFilePath = `routes/backendUSERSRoutes.js`;
-    const indexFilePath = `Server.js`;
-
-    // Push files to GitHub
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: codeFilePath,
-      message: `Add backend code for ${model}`,
-      content: Buffer.from(backendUserController).toString('base64'),
-    });
-
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: modelsFilePath,
-      message: `Add backend models for ${model}`,
-      content: Buffer.from(backendUserModel).toString('base64'),
-    });
-
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: modelFilePath,
-      message: `Add backend models for ${model}`,
-      content: Buffer.from(backendOTPmodel).toString('base64'),
-    });
-
-    await octokit.repos.createOrUpdateFileContents({
-      owner,
-      repo,
-      path: routesFilePath,
-      message: `Add backend routes for ${model}`,
-      content: Buffer.from(backendUserRoutes).toString('base64'),
-    });
-
-    // Check if backendIndex file exists
-    const indexFileExists = await checkFileExists(owner, repo, indexFilePath, tokenGitOauth);
-    if (!indexFileExists) {
-      await octokit.repos.createOrUpdateFileContents({
-        owner,
-        repo,
-        path: indexFilePath,
-        message: `Add backend index for ${model}`,
-        content: Buffer.from(backendIndex).toString('base64'),
-      });
-      console.log(`Backend index file created and pushed to GitHub for ${model}`);
-    } else {
-      console.log(`Backend index file already exists for ${model}`);
-    }
-
-    console.log(`Files pushed to GitHub for ${model}`);
-  }
-}
 
 async function checkFileExists(owner, repo, filePath, tokenGitOauth) {
   const octokit = new Octokit({
