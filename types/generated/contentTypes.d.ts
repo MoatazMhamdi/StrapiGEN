@@ -368,6 +368,7 @@ export interface ApiBlogBlog extends Schema.CollectionType {
     singularName: 'blog';
     pluralName: 'blogs';
     displayName: 'blog';
+    description: '';
   };
   options: {
     draftAndPublish: true;
@@ -376,6 +377,12 @@ export interface ApiBlogBlog extends Schema.CollectionType {
     titre: Attribute.String;
     description: Attribute.String;
     DatePublication: Attribute.Date;
+    users_permissions_users: Attribute.Relation<
+      'api::blog.blog',
+      'oneToMany',
+      'plugin::users-permissions.user'
+    >;
+    admin_user: Attribute.Relation<'api::blog.blog', 'oneToOne', 'admin::user'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -787,6 +794,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'plugin::users-permissions.user',
       'manyToOne',
       'plugin::users-permissions.role'
+    >;
+    blog: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'manyToOne',
+      'api::blog.blog'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
