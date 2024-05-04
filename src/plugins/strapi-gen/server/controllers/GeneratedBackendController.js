@@ -9,7 +9,7 @@ const wss = require('./WebSockets');
 const WebSocket = require('ws');
 
 module.exports = {
-  async generateBackend(ctx) {
+  async generateBackend(ctx, tokenGitOauth) {
     console.log('eazeaeaze');
     try {
       const { method, model, route, index, selectedRepo, tokenGitOauth } = ctx.request.body;
@@ -104,7 +104,7 @@ module.exports = {
 
       // Push code to GitHub repository
       // const [owner, repo] = selectedRepo.split('/');
-      // await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUserModel , backendOTPmodel, backendUserRoutes, tokenGitOauth );
+      // await pushFilesToGitHub(owner, repo, model, backendCode, backendModels, backendRoutes, backendIndex, backendUserController, backendUseroMdel , backendOTPmodel, backendUserRoutes, tokenGitOauth );
 
       // Log the payload before sending
       console.log('Payload:', JSON.stringify({ ref: 'refs/heads/main', selectedRepo, tokenGitOauth }));
@@ -142,7 +142,7 @@ module.exports = {
       ctx.send({ message: 'Code generated and pushed to GitHub successfully!', logs: 'Logs from code generation' });
     } catch (error) {
       console.error('Error generating backend code:', error);
-      
+      console.log('GitHub OAuth token:', tokenGitOauth);
 
       ctx.throw(500, 'Internal server error');
     }
@@ -153,9 +153,6 @@ async function pushFilesToGitHub(owner, repo,  model, backendCode, backendModels
   const octokit = new Octokit({
     auth: `token ${tokenGitOauth}`, // Use the token from the request payload
   });
-
-
-
   if (model === 'BLOGS') {
     // Define file paths based on model
     const codeFilePath = `controllers/backendBLOGSCode.js`;
@@ -189,8 +186,8 @@ async function pushFilesToGitHub(owner, repo,  model, backendCode, backendModels
     });
 
     // Check if backendIndex file exists
-    // const indexFileExists = await checkFileExists(owner, repo, indexFilePath);
-    // if (!indexFileExists) {
+    const indexFileExists = await checkFileExists(owner, repo, indexFilePath, tokenGitOauth);
+    if (!indexFileExists) {
       await octokit.repos.createOrUpdateFileContents({
         owner,
         repo,
@@ -199,9 +196,9 @@ async function pushFilesToGitHub(owner, repo,  model, backendCode, backendModels
         content: Buffer.from(backendIndex).toString('base64'),
       });
       console.log(`Backend index file created and pushed to GitHub for ${model}`);
-    // } else {
-    //   console.log(`Backend index file already exists for ${model}`);
-    // }
+    } else {
+      console.log(`Backend index file already exists for ${model}`);
+    }
 
     console.log(`Files pushed to GitHub for ${model}`);
   } else if (model === 'USERS') {
@@ -284,4 +281,3 @@ async function checkFileExists(owner, repo, filePath, tokenGitOauth) {
     }
   }
 }
-

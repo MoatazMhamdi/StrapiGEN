@@ -23,8 +23,6 @@ const CodeGenerator = () => {
 
   const [modelName, setModelName] = useState('');
   const [responseJson, setResponseJson] = useState(null);
-  const [workflowStatus, setWorkflowStatus] = useState(null);
-  const [workflowRuns, setWorkflowRuns] = useState([]); // State to hold workflow runs
   const [isLoading, setIsLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState(null); // Track selected model
   const history = useHistory();
