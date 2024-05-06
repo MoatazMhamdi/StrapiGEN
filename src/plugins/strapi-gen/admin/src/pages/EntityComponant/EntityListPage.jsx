@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faToggleOn, faToggleOff, faSearchMinus, faSearchPlus } from '@fortawesome/free-solid-svg-icons';
+import { faToggleOn, faToggleOff, faSearchMinus, faSearchPlus, faFileDownload } from '@fortawesome/free-solid-svg-icons';
 import { FaDatabase } from 'react-icons/fa';
 import axios from 'axios';
 import * as go from 'gojs';
 import './EntitiesListPage.css';
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
 
 const ContentTypeList = () => {
   const [contentTypeList, setContentTypeList] = useState([]);
@@ -52,7 +54,7 @@ const ContentTypeList = () => {
       scale: diagramScale // Set initial scale
     });
 
-    diagramRef.current = diagram; 
+    diagramRef.current = diagram;
     // Définition du template pour les noeuds
     diagram.nodeTemplate =
       $(go.Node, "Auto",
@@ -117,11 +119,38 @@ const ContentTypeList = () => {
   const zoomIn = () => {
     setDiagramScale(prevScale => Math.min(prevScale + 0.1, 3));
   };
-  
+
   const zoomOut = () => {
     setDiagramScale(prevScale => Math.max(prevScale - 0.1, 0.1));
   };
+  const [imageFormat, setImageFormat] = useState('png'); // Default format is PNG
 
+  const handleConvertToImage = () => {
+    const diagramContainer = document.getElementById('diagram-container');
+  
+    html2canvas(diagramContainer)
+     .then((canvas) => {
+        let dataUrl;
+        switch (imageFormat) {
+          case 'png':
+            dataUrl = canvas.toDataURL('image/png');
+            saveAs(dataUrl, 'diagram.png');
+            break;
+          case 'jpg':
+            dataUrl = canvas.toDataURL('image/jpeg');
+            saveAs(dataUrl, 'diagram.jpg');
+            break;
+         
+          default:
+            console.error('Invalid image format');
+            break;
+        }
+      })
+     .catch((error) => {
+        console.error('Error converting to image:', error);
+      });
+  };
+  
 
   const toggleView = () => {
     setShowDiagram(!showDiagram);
@@ -183,17 +212,35 @@ const ContentTypeList = () => {
             </div>
             <div className="content">
               {showDiagram && (
-                <div className="zoom-buttons" style={{ position: 'relative', zIndex: 9999 }}> {/* Add styles to force buttons to be clickable */}
-                  <button className="zoom-button" onClick={zoomIn}>
-                    <FontAwesomeIcon icon={faSearchPlus} />
-                  </button>
-                  <button className="zoom-button" onClick={zoomOut}>
-                    <FontAwesomeIcon icon={faSearchMinus} />
+                <div className="toolbar-right">
+                  <div className="image-format">
+                    <label htmlFor="image-format-select"></label>
+                    <select
+                      id="image-format-select"
+                      value={imageFormat}
+                      onChange={(e) => setImageFormat(e.target.value)}
+                    >
+                      <option value="png">PNG</option>
+                      <option value="jpg">JPG</option>
+                    </select>
+                  </div>
+                  <button onClick={handleConvertToImage}>
+                    <FontAwesomeIcon icon={faFileDownload} />
                   </button>
                 </div>
               )}
               {showDiagram ? (
-                <div ref={diagramRef} style={{ width: '1000px', height: '400px' }}></div>
+                <div>
+                  <div id="diagram-container" ref={diagramRef} className="diagram-container" style={{ width: '1000px', height: '400px' }}></div>
+                  <div className="zoom-buttons">
+                    <button className="zoom-button" onClick={zoomIn}>
+                      <FontAwesomeIcon icon={faSearchPlus} />
+                    </button>
+                    <button className="zoom-button" onClick={zoomOut}>
+                      <FontAwesomeIcon icon={faSearchMinus} />
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <ul className="entities">
                   {filteredContentTypes.map((contentType, index) => (
