@@ -16,12 +16,13 @@ const ProjectSettings = () => {
     const history = useHistory();
     const token = location.state ? location.state.tokenGitOauth : '';
 
+    console.log('hedha houwa en personne ',token);
     useEffect(() => {
         const fetchRepos = async () => {
             try {
                 const response = await axios.get('https://api.github.com/user/repos', {
                     headers: {
-                        Authorization: `token ${token}`, // Use the token in the request
+                        Authorization: `token ${token}`, 
                     },
                 });
                 setRepos(response.data);
@@ -45,7 +46,6 @@ const ProjectSettings = () => {
     const handleDeleteProject = async () => {
         try {
             if (selectedRepo) {
-             
                 const confirmed = window.confirm('Are you sure you want to delete this project? This action cannot be undone.');
     
                 if (confirmed) {
@@ -55,12 +55,10 @@ const ProjectSettings = () => {
                         },
                     });
     
-                    // Optionally, you can show a success message or perform any other action upon successful deletion
                     console.log('Repository deleted successfully.');
                     alert('Your Repository was successfully deleted');
     
-                    // Optionally, you can redirect the user to a different page after deletion
-                    // history.push('/redirect-url');
+                
                 }
             }
         } catch (error) {
@@ -70,12 +68,9 @@ const ProjectSettings = () => {
 
     const handleSaveSettings = async () => {
         try {
-            // Check if selectedRepo is not empty and project name is not empty
             if (selectedRepo && projectName !== '') {
-                // Update the selected repository name with the value entered in the text field
                 setSelectedRepo(projectName);
                 
-                // Make a PATCH request to GitHub API to update repository name
                 await axios.patch(`https://api.github.com/repos/${selectedRepo}`, {
                     name: projectName
                 }, {
@@ -85,9 +80,8 @@ const ProjectSettings = () => {
                     }
                 });
     
-                // Optionally, you can show a success message or perform any other action upon successful update
                 console.log('Repository name updated successfully.');
-                alert('Your Repository name patching was successfully changed!');
+                alert('Your Repository name was successfully changed!');
 
             }
         } catch (error) {
@@ -110,11 +104,10 @@ const ProjectSettings = () => {
 
     const handleSaveSettings2 = async () => {
         try {
-            // Check if selectedRepo is not empty and description is not empty
             if (selectedRepo && description !== '') {
-                // Make a PATCH request to GitHub API to update repository description
+                
                 await axios.patch(`https://api.github.com/repos/${selectedRepo}`, {
-                    description: description // Use the description state to update the repository description
+                    description: description 
                 }, {
                     headers: {
                         Authorization: `token ${token}`,
@@ -122,7 +115,6 @@ const ProjectSettings = () => {
                     }
                 });
     
-                // Optionally, you can show a success message or perform any other action upon successful update
                 console.log('Repository description updated successfully.');
                 alert('Your Repository description was successfully Set !');
 
@@ -147,7 +139,6 @@ const ProjectSettings = () => {
                     }
                 });
 
-                // Optionally, you can show a success message or perform any other action upon successful update
                 console.log('README file created successfully.');
                 alert('Your README.md file was successfully generated');
 
@@ -198,7 +189,7 @@ const ProjectSettings = () => {
                             className="dark-textfield"
                             style={{ margin: '10px' }}
                             placeholder="Change your Project name.."
-                            value={selectedRepo} 
+                            value={projectName}
                             onChange={(e) => setProjectName(e.target.value)} 
                         />
                         <button className="btn btn-info" style={{ margin: '15px' }} onClick={handleSaveSettings}>

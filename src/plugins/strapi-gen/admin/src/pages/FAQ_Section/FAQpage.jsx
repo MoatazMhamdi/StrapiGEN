@@ -1,17 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory ,useLocation} from 'react-router-dom'; // Import useHistory hook
 import './FAQPage.css'; // Import CSS for styling
 import faqVector from './5066368.jpg'; // Import the image
 
-
 const FAQPage = () => {
+  const location = useLocation();
+  const history = useHistory();
+
+  const selectedRepo = location.state ? location.state.selectedRepo : null;
+  const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; // Access tokenGitOauth from location state
+
+  const handleBackToOverview = () => {
+    history.push('/plugins/strapi-gen/Overview', { tokenGitOauth: tokenGitOauth , selectedRepo: selectedRepo }); };
+
   return (
     <div className="faq-container">
+      <a onClick={handleBackToOverview} className='btn btn-outline-info' style={{ marginBottom: '40px'}}>
+        <i className="fas fa-arrow-left" style={{ marginRight: '5px' }}></i> Back To Overview
+      </a>
       <h1 className="faq-heading" style={{ fontSize: '3rem' , marginBottom: '50px'}}>Frequently Asked Questions 💡</h1>
       <img 
-          src={faqVector} 
-          alt="faqVector" 
-          className="faqVector-image" 
-        /> {/* Image */}
+        src={faqVector} 
+        alt="faqVector" 
+        className="faqVector-image" 
+      /> {/* Image */}
       <div className="faq-item" style={{  marginBottom: '50px',marginTop: '50px'}}>
         <h2 className="faq-question">What is the purpose of this project? ⚡️</h2>
         <p className="faq-answer">

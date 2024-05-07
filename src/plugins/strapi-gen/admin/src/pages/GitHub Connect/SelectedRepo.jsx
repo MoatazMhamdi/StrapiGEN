@@ -4,7 +4,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import './DockerFileGenerator.css';
 import strapigenImage from './logoStrapiGen.png'; 
 
-
 const SelectedRepo = () => {
   const [repos, setRepos] = useState([]);
   const [selectedRepo, setSelectedRepo] = useState('');
@@ -12,7 +11,6 @@ const SelectedRepo = () => {
   const history = useHistory();
   const location = useLocation();
   
-
   useEffect(() => {
     const fetchRepos = async () => {
       try {
@@ -38,7 +36,6 @@ const SelectedRepo = () => {
       } catch (error) {
         console.error('Error fetching user:', error);
       }
-      
     };
 
     fetchRepos();
@@ -83,7 +80,10 @@ const SelectedRepo = () => {
           <select onChange={(e) => handleRepoSelect(e)} className="docker-file-generator-select">
             <option value="">Select a repository</option>
             {repos.map((repo) => (
-              <option key={repo.id} value={repo.full_name}>
+              <option 
+                key={repo.id} 
+                value={repo.full_name} 
+                className={repo.created_at === repos[0].created_at ? 'latest-repo' : ''}>
                 {repo.full_name} - <span style={{ color: repo.private ? 'red' : 'green' }}>{repo.private ? 'Private' : 'Public'}</span>
               </option>
             ))}

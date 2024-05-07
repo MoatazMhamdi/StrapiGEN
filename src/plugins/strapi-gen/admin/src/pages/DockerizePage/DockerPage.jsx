@@ -64,11 +64,14 @@ const DockerFileGenerator = () => {
     }
   };
 
-  
+  const handleBackToOverview = () => {
+    history.push('/plugins/strapi-gen/Overview', { tokenGitOauth: tokenGitOauth , selectedRepo: selectedRepo }); };
 
   return (
     <div className="docker-file-generator-container" style={{marginTop: '40px'}}>
       <div className="docker-file-generator-content">
+      <a onClick={handleBackToOverview} className='btn btn-outline-info' style={{ marginBottom: '40px'}}>
+                        <i className="fas fa-arrow-left" style={{ marginRight: '5px' }}></i> Back To Overview</a>  
         <h2 className="docker-file-generator-title" style={{ fontSize: '3rem' , marginBottom: '20px'}}><strong>Dockerize Your Project 🐳</strong></h2>
         <p className="docker-file-generator-description">Add modifications to your Dockerfile and Docker Compose.</p>
         <p className="docker-file-generator-description">When you finish Dockerize your project , you'll automaticaly generate Dockerfile / docker-compose.yml in your Selected Repository: </p>
