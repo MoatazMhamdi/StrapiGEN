@@ -1,9 +1,10 @@
-// ProjectSettings.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useHistory, useLocation } from 'react-router-dom';
 import './setting.css';
 import RepositoryContents from './RepositoryContents';
+import Prism from 'prismjs';
+import 'prismjs/themes/prism.css';
 
 const ProjectSettings = () => {
     const location = useLocation();
@@ -16,7 +17,6 @@ const ProjectSettings = () => {
     const history = useHistory();
     const token = location.state ? location.state.tokenGitOauth : '';
 
-    console.log('hedha houwa en personne ',token);
     useEffect(() => {
         const fetchRepos = async () => {
             try {
@@ -33,6 +33,10 @@ const ProjectSettings = () => {
 
         fetchRepos();
     }, [token]); 
+
+    useEffect(() => {
+        Prism.highlightAll();
+    }, []);
 
     const handleRepoSelect = (e) => {
         const selectedFullName = e.target.value;
@@ -149,17 +153,17 @@ const ProjectSettings = () => {
     };
 
     const handleBackToOverview = () => {
-        history.push('/plugins/strapi-gen/Overview', { tokenGitOauth: token , selectedRepo: selectedRepo }); };
+        history.push('/plugins/strapi-gen/Overview', { tokenGitOauth: token , selectedRepo: selectedRepo });
+    };
 
     return (
         <div className="settings-container" style={{ display: 'flex', alignItems: 'center' }}>
             {/* Existing container */}
             <div className="docker-file-generator-container" style={{ marginTop: '40px', width: '80%' }}>
                 <div className="docker-file-generator-content">
-                <a onClick={handleBackToOverview} className='btn btn-outline-info' style={{ marginBottom: '40px'}}>
+                    <a onClick={handleBackToOverview} className='btn btn-outline-info' style={{ marginBottom: '40px'}}>
                         <i className="fas fa-arrow-left" style={{ marginRight: '5px' }}></i> Back To Overview</a>  
-                        
-                        <h1>⚙️ Settings ⚙️</h1>
+                    <h1>⚙️ Settings ⚙️</h1>
                     <p>Actual GitHub Repo: <a style={{ color: '#029d89' }}> {selectedRepo} </a></p>
                     <div className="setting-dropdown" style={{ display: 'flex', alignItems: 'center', marginBottom: '50px' }}>
                         <label htmlFor="repositories">Current Repo</label>
@@ -169,7 +173,6 @@ const ProjectSettings = () => {
                             value={selectedRepo}
                             className="dark-dropdown"
                         >
-
                             <option value="">Select a Repository from your Git</option>
                             {repos.map((repo) => (
                                 <option key={repo.id} value={repo.full_name}>
@@ -206,7 +209,6 @@ const ProjectSettings = () => {
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
-
                         <button className="btn btn-info" style={{ margin: '15px' }} onClick={handleSaveSettings2}>
                             PATCH
                         </button>
@@ -215,20 +217,18 @@ const ProjectSettings = () => {
                         <label htmlFor="readme">Read Me File:</label>
                         <textarea
                             id="readme"
-                            className="dark-textfield"
+                            className="dark-textfield code-textarea"
                             placeholder="Enter your ReadMe.md file code ..."
                             style={{ margin: '10px' }}
                             value={readme}
                             onChange={(e) => setReadme(e.target.value)}
                         />
-
                         <button className="btn btn-info" style={{ margin: '15px' }} onClick={handleReadMeGenerator}>
                             Add ReadME!
                         </button>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <label htmlFor="description">Logout from your session:</label>
-                        
+                        <label htmlFor="description">Once you Logout from your Strapi Account your should restart Your workflow</label>
                         <button className="btn btn-danger" style={{ margin: '15px' }} onClick={handleLogout}>
                             Logout <i className="fas fa-sign-out-alt"></i>
                         </button>
@@ -240,7 +240,6 @@ const ProjectSettings = () => {
                                 <button onClick={handleDeleteProject} className="btn btn-outline-danger" style={{ margin: '15px' }}>
                                     Delete <i className="fas fa-trash"></i>
                                 </button>
-    
                             </p>
                         </div>
                         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to top, rgba(255,0,0,0.2) 0%, rgba(255,0,0,0) 100%)', borderRadius: '12px', zIndex: 0 }}></div>
