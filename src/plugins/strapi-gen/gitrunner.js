@@ -105,10 +105,14 @@ function handleWebhook(req, res) {
   ### FIRST 📥 :
  Clone the project then Open it in your IDE 
   ### SECOND 🔗 :  
-  open terminal and pass ' npm install ' 
-  ### THIRD🔗 :  
-  pass command line ( node Server.js )
-  ### FOURTH🔗 :  
+  open terminal and run ' 
+  
+  npm install 
+### THIRD🔗 :  
+pass command line and run  
+
+   node Server.js 
+### FOURTH🔗 :  
   open Postman then test your EndPoints for BLOGS and User 
 
 #Postman test Scripts and EndPoints : 
