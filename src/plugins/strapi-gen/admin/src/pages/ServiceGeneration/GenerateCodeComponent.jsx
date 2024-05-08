@@ -175,7 +175,7 @@ const CodeGenerator = () => {
                 <div className="container">
                   <ul className="ks-cboxtags">
                     <li>
-                      <input type="checkbox" id="checkboxOne" value="BLOGS"
+                      <input type="checkbox" id="checkboxOne" value="BLOGS" style={{ marginBottom: '200px' }}
                         checked={modelName === 'BLOGS'}
                         onChange={handleModelNameChange}
                       />

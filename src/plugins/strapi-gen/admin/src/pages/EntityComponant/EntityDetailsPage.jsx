@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link,useParams } from 'react-router-dom';
+import { Link,useParams,useLocation } from 'react-router-dom';
 import { faTrash, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
@@ -9,6 +9,11 @@ import './EntityDetailsPage.css';
 const EntityDetailsPage = () => {
   const { uid } = useParams(); // Récupère l'uid depuis l'URL
   const [contentType, setContentType] = useState(null);
+  const location = useLocation();
+  const selectedRepo = location.state ? location.state.selectedRepo : null;
+  const tokenGitOauth = location.state ? location.state.tokenGitOauth : null; // Access tokenGitOauth from location state
+
+  
 
   const fetchContentTypeDetails = async () => {
     try {
@@ -34,43 +39,59 @@ const EntityDetailsPage = () => {
 
   return (
     <div className="app">
-      <header className="header">
-        <div className="logo-container">
-          <h1 className="header-title">StrapiGen Plugin</h1>
-        </div>
-        <nav className="nav">
-        <ul className="menu">
-            <li className={`menu-item ${location.pathname === '/overview' ? 'selected' : ''}`}>
-              <Link to="/overview">Overview</Link>
-            </li>
-            <li className={`menu-item ${location.pathname === '/modules' ? 'selected' : ''}`}>
-              <Link to="/modules">Modules</Link>
-            </li>
-            <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/Entities' ? 'selected' : ''}`}>
-              {/* Corrected link for consistency: */}
-              <Link to="/plugins/strapi-gen/Entities">Entities</Link>
-            </li>
-            <li className={`menu-item ${location.pathname === '/data-model' ? 'selected' : ''}`}>
-              <Link to="/data-model">Data Model</Link>
-            </li>
-            <li className={`menu-item ${location.pathname === '/docker-files' ? 'selected' : ''}`}>
-              <Link to="/docker-files">Docker Files</Link>
-            </li>
-            <li className={`menu-item ${location.pathname === '/sync-with-git' ? 'selected' : ''}`}>
-              <Link to="/sync-with-git">Sync with Git</Link>
-            </li>
-            <li className={`menu-item ${location.pathname === '/settings' ? 'selected' : ''}`}>
-              <Link to="/settings">Settings</Link>
-            </li>
-          </ul>
-        </nav>
-      </header>
+      <header className="header" style={{ backgroundColor: '#212134' , borderRadius: '20px', margin:'20px',padding:'10px'}}>
+  <div className="logo-container">
+    <h3 className="header-title" style={{ color: '#029d89' }}>
+      <strong>StrapiGen Plugin </strong>
+      <span className="weak">Dashboard</span>
+    </h3>
+  </div>
+  <nav className="nav">
+    <ul className="menu">
+      <li className={`menu-item ${location.pathname === '/overview' ? 'selected' : ''}`}>
+        <Link to={{
+          pathname: '/plugins/strapi-gen/Overview',
+          state: { selectedRepo: selectedRepo, tokenGitOauth: tokenGitOauth }
+        }}>Overview</Link>
+      </li>
+      
+      <li className={`menu-item ${location.pathname === '/entities' ? 'selected' : ''}`}>
+        <Link to={{
+          pathname: '/plugins/strapi-gen/Entities',
+          state: { selectedRepo: selectedRepo, tokenGitOauth: tokenGitOauth }
+        }}>Entities</Link>
+      </li>
+
+      <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/ServiceGenerate' ? 'selected' : ''}`}>
+        <Link to={{
+          pathname: '/plugins/strapi-gen/ServiceGenerate',
+          state: { selectedRepo: selectedRepo, tokenGitOauth: tokenGitOauth }
+        }}>Service</Link>
+      </li>
+      
+      <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/DockerConfigForm' ? 'selected' : ''}`}>
+        <Link to={{
+          pathname: '/plugins/strapi-gen/DockerConfigForm',
+          state: { selectedRepo: selectedRepo, tokenGitOauth: tokenGitOauth } 
+        }}>Dockerize</Link>
+      </li>
+
+      <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/settings' ? 'selected' : ''}`}>
+        <Link to={{
+          pathname: '/plugins/strapi-gen/settings',
+          state: { selectedRepo: selectedRepo, tokenGitOauth: tokenGitOauth } 
+        }}>Settings</Link>
+      </li>
+      <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/faq_section' ? 'selected' : ''}`}>
+        <Link to={{
+          pathname: '/plugins/strapi-gen/faq_section',
+          state: { selectedRepo: selectedRepo, tokenGitOauth: tokenGitOauth }
+        }}>FAQ</Link>
+      </li>
+    </ul>
+  </nav>
+</header>
       <main>
-        <div className="search-bar">
-          <button className="filter-button" style={{ marginLeft: 10 }}>
-            <FontAwesomeIcon icon={faFilter} style={{ color: 'white' }} />
-          </button>
-        </div>
         <div className="content">
           <h2 style={{ color: 'white' }}>Entities</h2>
           <ul className="entities">
