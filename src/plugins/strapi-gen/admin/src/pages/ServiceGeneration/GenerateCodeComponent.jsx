@@ -131,6 +131,13 @@ const CodeGenerator = () => {
           state: { selectedRepo: selectedRepo, tokenGitOauth: tokenGitOauth }
         }}>Entities</Link>
       </li>
+
+      <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/ServiceGenerate' ? 'selected' : ''}`}>
+        <Link to={{
+          pathname: '/plugins/strapi-gen/ServiceGenerate',
+          state: { selectedRepo: selectedRepo, tokenGitOauth: tokenGitOauth }
+        }}>Service</Link>
+      </li>
       
       <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/DockerConfigForm' ? 'selected' : ''}`}>
         <Link to={{
@@ -145,12 +152,7 @@ const CodeGenerator = () => {
           state: { selectedRepo: selectedRepo, tokenGitOauth: tokenGitOauth } 
         }}>Settings</Link>
       </li>
-      <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/ServiceGenerate' ? 'selected' : ''}`}>
-        <Link to={{
-          pathname: '/plugins/strapi-gen/ServiceGenerate',
-          state: { selectedRepo: selectedRepo, tokenGitOauth: tokenGitOauth }
-        }}>Service</Link>
-      </li>
+     
       <li className={`menu-item ${location.pathname === '/plugins/strapi-gen/faq_section' ? 'selected' : ''}`}>
         <Link to={{
           pathname: '/plugins/strapi-gen/faq_section',
