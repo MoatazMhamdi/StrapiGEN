@@ -6,6 +6,8 @@ import { FaReply } from "react-icons/fa";
 import { FaProjectDiagram } from "react-icons/fa";
 import { FiBox } from "react-icons/fi";
 import { FaDatabase, } from "react-icons/fa";
+import { AiOutlineEdit } from 'react-icons/ai';
+import { FaCommentAlt } from "react-icons/fa"; 
 //import strapigenImage from './logoStrapiGen.png';
 
 const OverViewPage = () => {
@@ -24,6 +26,9 @@ const OverViewPage = () => {
   };
 
   
+  
+
+  
   const handleEntityList = () => {
     history.push('/plugins/strapi-gen/Entities');
   };
@@ -31,7 +36,12 @@ const OverViewPage = () => {
  const handleGenerateService = () => {
   history.push('/plugins/strapi-gen/ServiceGenerate');
 };
-
+const handleCreateButtonClick = () => {
+  history.push({
+    pathname: '/plugins/strapi-gen/Chatbot',
+   
+  });
+};
   const toggleDarkMode = () => {
     setDarkMode(!darkMode); // Toggle dark mode state
   };
@@ -126,8 +136,25 @@ const OverViewPage = () => {
             <p style={{ color: '#fff' }}>Deploy your web Server using render.com </p>
           </div>
           <button className="connect-button" style={{ color: '#fff' }}>Deploy</button>
+          
         </div>
+        <div
+          className="github-box"
+          style={{
+            backgroundColor: '#212134',
+            padding: '30px',
+            borderRadius: '20px',
+            border: '2px solid rgba(255, 255, 255, 0.7)',
+          }}
+        >
+          <div className="box-header" style={{ paddingBottom: '30px', paddingTop: '30px' }}>
+  <FaCommentAlt className="github-icon" style={{ color: '#029d89', marginBottom: '30px', marginTop: '30px', marginLeft: '120px' }} />
+  <h2 style={{ color: '#fff' }}>chatbot</h2>
+  <p style={{ color: '#fff' }}>Your customized helper</p>
+</div>
+<button className="connect-button" style={{ color: '#fff' }} onClick={handleCreateButtonClick}>Create</button>
       </div>
+    </div>
     </div>
   );
 };

@@ -22,7 +22,7 @@ import GenerateCodeComponent from '../ServiceGeneration/GenerateCodeComponent';
 import EntityDetails from '../EntityComponant/EntityDetailsPage';
 import RenderOAuthPage from '../Render/RenderPage';
 import MyForm from '../Render/inputRender';
-
+import chatBotPage from "../ChatBotPage/chatBotPage"
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
@@ -37,7 +37,7 @@ const App = () => {
         <Route path="/plugins/strapi-gen/tokenGithubInput" component={tokenPage} />
 
         <Route path="/plugins/strapi-gen/GitConnect" component={GitConnect} />
-
+        <Route path="/plugins/strapi-gen/chatbot" component={chatBotPage} />
         <Route path="/plugins/strapi-gen/Services" component={ServicesType} />
         <Route path="/plugins/strapi-gen/DockerConfigForm" component={DockerFileGenerator} />
         <Route path="/plugins/strapi-gen/settings" component={ProjectSettings} />
